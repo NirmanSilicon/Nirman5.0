@@ -1,30 +1,53 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import LayoutShell from "./layout/LayoutShell";
 
-import LoginPage from "./pages/LoginPage.jsx";
-import SignUpPage from "./pages/SignUpPage.jsx";
-import HomePage from "./pages/homepage.jsx";
-import Profile from "./pages/Profile.jsx";
-import Allopathy from "./pages/Allopathy.jsx";
-import Ayurveda from "./pages/Ayurveda.jsx";
-import Homeopathy from "./pages/homeopathy.jsx";
+import { AuthProvider } from "./context/AuthContext";
+import { CartProvider } from "./context/CartProvider";
 
-function App() {
+
+import HomePage from "./HomePage";
+import Medicines from "./pages/Medicines";
+import ProductDetails from "./pages/ProductDetails";
+import DoctorConsult from "./pages/DoctorConsult";
+import LabTests from "./pages/LabTests";
+import PlusMembership from "./pages/PlusMembership";
+import Insights from "./pages/Insights";
+import Offers from "./pages/Offers";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
+import CartPage from "./pages/CartPage";
+import Checkout from "./pages/Checkout";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentFailure from "./pages/PaymentFailure";
+
+const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/profile" element={<Profile />} />
-
-        <Route path="/allopathy" element={<Allopathy />} />
-        <Route path="/ayurveda" element={<Ayurveda />} />
-        <Route path="/homeopathy" element={<Homeopathy />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <CartProvider>
+        <Routes>
+          <Route element={<LayoutShell />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/medicine" element={<Medicines />} />
+            <Route path="/medicine/:id" element={<ProductDetails />} />
+            <Route path="/doctor" element={<DoctorConsult />} />
+            <Route path="/lab" element={<LabTests />} />
+            <Route path="/plus" element={<PlusMembership />} />
+            <Route path="/insights" element={<Insights />} />
+            <Route path="/offers" element={<Offers />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-failure" element={<PaymentFailure />} />
+          </Route>
+        </Routes>
+      </CartProvider>
+    </AuthProvider>
   );
-}
+};
 
 export default App;
