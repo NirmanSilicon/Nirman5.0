@@ -126,9 +126,9 @@ const HomePage = () => {
         </div>
         {/* AI MODE BUTTON */}
 <div className="pe-ai-wrapper">
-  <button className="ai-btn" onClick={() => alert("AI Mode Activated!")}>
-   <h1> ✨ AI Mode</h1>
-  </button>
+  <button className="ai-btn" onClick={() => navigate("/ai")}>
+  <h2>✨ AI Mode</h2>
+</button>
 </div>
 
       </section>

@@ -21,6 +21,7 @@ import CartPage from "./pages/CartPage";
 import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailure from "./pages/PaymentFailure";
+import AiPage from "./pages/AiPage";
 
 
 const App = () => {
@@ -44,7 +45,8 @@ const App = () => {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/payment-failure" element={<PaymentFailure />} />
-         
+         <Route path="/ai" element={<AiPage />} />
+
 
           </Route>
         </Routes>
