@@ -1,0 +1,39 @@
+# Python 3.14 compatible requirements
+# Web Framework - use newer versions that support Python 3.14
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+
+# Database
+pymongo>=4.8.0
+aiomysql>=0.2.0
+mysql-connector-python>=9.0.0
+
+# Authentication & Security
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+python-multipart>=0.0.20
+
+# Configuration & Environment - use newer pydantic
+pydantic>=2.10.0
+pydantic-settings>=2.6.0
+python-dotenv>=1.0.1
+
+# NLP & ML - use newer versions
+scikit-learn>=1.5.0
+textblob>=0.19.0
+pandas>=2.2.0
+numpy>=2.1.0
+
+# Caching
+redis>=5.1.0
+
+# SMS & Communication
+twilio>=9.0.0
+
+# Utilities
+python-dateutil>=2.9.0
+typing-extensions>=4.12.0
+slowapi>=0.1.9
+bcrypt>=4.1.0
+jinja2>=3.1.0
+email-validator>=2.1.0
