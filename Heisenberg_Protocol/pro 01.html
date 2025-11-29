@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Smart Crop Advisory System — Rootware</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Smart Crop Advisory System</h1>
+      <p class="subtitle">Rootware — Real advice for small & marginal farmers</p>
+      <div class="lang-switch">
+        <button id="lang-en" class="active">English</button>
+        <button id="lang-hi">हिन्दी</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2 id="title-form">Get crop recommendation</h2>
+
+        <form id="advisorForm">
+          <label>
+            <span id="lbl-state">State / Region</span>
+            <select id="stateSelect" required></select>
+          </label>
+
+          <label>
+            <span id="lbl-soil">Soil Type</span>
+            <select id="soilSelect" required>
+              <option value="">-- Select --</option>
+              <option value="alluvial">Alluvial</option>
+              <option value="black">Black</option>
+              <option value="red">Red</option>
+              <option value="sandy">Sandy</option>
+              <option value="loam">Loam</option>
+            </select>
+          </label>
+
+          <label>
+            <span id="lbl-season">Season</span>
+            <select id="seasonSelect" required>
+              <option value="">-- Select --</option>
+              <option value="kharif">Kharif</option>
+              <option value="rabi">Rabi</option>
+              <option value="zaid">Zaid</option>
+            </select>
+          </label>
+
+          <label>
+            <span id="lbl-image">Pest image (optional)</span>
+            <input id="imageUpload" type="file" accept="image/*" />
+            <small id="imageNote">Image is for demo only (no real detection in MVP)</small>
+          </label>
+
+          <div class="actions">
+            <button type="submit" id="submitBtn">Get Recommendation</button>
+            <button type="button" id="speakBtn">🔊 Read Result</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card results" id="resultsCard" aria-live="polite">
+        <h3 id="resultsTitle">Recommendations</h3>
+        <div id="resultContent">
+          <p class="muted">No recommendation yet. Fill the form and press Get Recommendation.</p>
+        </div>
+      </section>
+
+      <section class="card" id="aboutCard">
+        <h3>About / Demo Notes</h3>
+        <ul>
+          <li>Rule-based demo: suggestions come from a small built-in dataset.</li>
+          <li>Weather alerts and image-based pest detection are planned features (placeholder here).</li>
+          <li>Multilingual-ready: text strings live in a translations object (script.js).</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <small>Rootware • SIH 2025 • Problem ID: 25010</small>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
