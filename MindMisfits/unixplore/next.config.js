@@ -1,17 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images: {
-        unoptimized: true,
+    async rewrites() {
+        return [
+            {
+                source: "/api/:path*",
+                destination: "http://localhost:5000/api/:path*",
+            },
+        ];
     },
-    reactStrictMode: true,
-    poweredByHeader: false,
-    compress: true,
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
-    typescript: {
-        ignoreBuildErrors: true,
-    },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
