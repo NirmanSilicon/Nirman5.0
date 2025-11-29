@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Budgeting Forge — Cash Flow Runner</title>
+    <style>
+        :root {
+            --bg: #f3f7f6;
+            --card: #ffffff;
+            --accent: #2b7a78;
+            --muted: #5b6b6a;
+            --success: #2ea66b;
+            --danger: #e06363;
+            --gold: #f5c142;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background: linear-gradient(180deg, var(--bg), #eef6f5);
+            color: #113;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        header h1 {
+            margin: 6px 0;
+            font-size: 28px;
+            color: var(--accent)
+        }
+
+        header h2 {
+            margin: 0;
+            font-size: 16px;
+            color: var(--muted);
+            font-weight: 600
+        }
+
+        .wrap {
+            max-width: 980px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns:1fr 360px;
+            gap: 18px
+        }
+
+        @media (max-width: 920px) {
+            .wrap {
+                grid-template-columns:1fr;
+                padding: 0 8px
+            }
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 6px 18px rgba(17, 17, 17, 0.06);
+            border: 1px solid rgba(15, 20, 20, 0.03);
+        }
+
+        h3 {
+            margin: 6px 0 12px 0;
+            color: var(--accent)
+        }
+
+        p {
+            color: var(--muted);
+            line-height: 1.5
+        }
+
+        .meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px
+        }
+
+        .pill {
+            background: #f7fffd;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 13px;
+            color: var(--muted);
+            border: 1px solid rgba(15, 20, 20, 0.03)
+        }
+
+        ul {
+            padding-left: 18px;
+            margin-top: 8px
+        }
+
+        li {
+            margin-bottom: 8px
+        }
+
+        /* Interactive area */
+        .interactive .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 6px 14px rgba(43, 122, 120, 0.12);
+        }
+
+        .btn.ghost {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid rgba(43, 122, 120, 0.12);
+            box-shadow: none
+        }
+
+        .small {
+            padding: 6px 8px;
+            font-size: 13px;
+            border-radius: 8px
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns:1fr 1fr;
+            gap: 12px
+        }
+
+        @media (max-width: 640px) {
+            .game-grid {
+                grid-template-columns:1fr
+            }
+        }
+
+        .list {
+            background: #fbfffe;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px dashed rgba(15, 20, 20, 0.03);
+            min-height: 120px;
+        }
+
+        .expense {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: white;
+            border: 1px solid rgba(15, 20, 20, 0.03);
+            margin-bottom: 8px
+        }
+
+        .expense small {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .status {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px
+        }
+
+        .badge {
+            background: var(--gold);
+            padding: 8px 10px;
+            border-radius: 10px;
+            color: #2b2b2b;
+            font-weight: 700
+        }
+
+        /* sprint */
+        .sprint-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 10px
+        }
+
+        .progress {
+            background: #e9f7f4;
+            border-radius: 999px;
+            width: 100%;
+            height: 12px;
+            overflow: hidden
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--accent), var(--gold));
+            transition: width .4s ease
+        }
+
+        footer {
+            margin-top: 18px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px
+        }
+    </style>
+    <style type="text/css" id="operaUserStyle"></style>
+</head>
+<body>
+
+<header>
+    <h1>Budgeting Forge — Beginner</h1>
+    <h2>Cash Flow Runner — Master essentials with time-pressured decisions</h2>
+</header>
+
+<div class="wrap">
+    <!-- Main column -->
+    <main>
+        <section class="card">
+            <h3>Overview</h3>
+            <p>Master the fundamentals of personal finance through interactive, time-pressured decision-making scenarios. Learn to distinguish between
+                needs and wants while managing a simulated monthly salary.</p>
+
+            <div class="meta">
+                <div class="pill"><strong>Duration:</strong> 15–20 minutes</div>
+                <div class="pill"><strong>Objectives:</strong> 4 Goals</div>
+                <div class="pill"><strong>Rewards:</strong> 4 Items</div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h3>Learning Objectives</h3>
+            <ul>
+                <li>Understand the difference between needs, wants, and desires</li>
+                <li>Practice making quick financial decisions under time pressure</li>
+                <li>Learn to prioritize essential expenses over discretionary spending</li>
+                <li>Build awareness of common spending traps and impulse purchases</li>
+            </ul>
+        </section>
+
+        <section class="card interactive">
+            <div class="section-title">
+                <h3>Needs vs Wants Challenge</h3>
+                <div>
+                    <button id="reset-game" class="btn ghost small">Reset</button>
+                    <button id="shuffle-game" class="btn small">Shuffle Items</button>
+                </div>
+            </div>
+            <p style="margin-top:8px;color:var(--muted)">Drag the items into <strong>Needs</strong> or <strong>Wants</strong> by using the buttons —
+                track accuracy and reaction time.</p>
+
+            <div style="margin-top:12px" class="game-grid">
+                <div>
+                    <div class="list" id="pool">
+                        <div class="expense">
+                            <div><strong>Concert ticket</strong>
+                                <div><small></small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="0" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="0" data-action="want">Want</button>
+                            </div>
+                        </div>
+                        <div class="expense">
+                            <div><strong>Electricity bill</strong>
+                                <div><small></small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="1" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="1" data-action="want">Want</button>
+                            </div>
+                        </div>
+                        <div class="expense">
+                            <div><strong>Designer bag</strong>
+                                <div><small></small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="2" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="2" data-action="want">Want</button>
+                            </div>
+                        </div>
+                        <div class="expense">
+                            <div><strong>Groceries</strong>
+                                <div><small>Food &amp; essentials</small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="3" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="3" data-action="want">Want</button>
+                            </div>
+                        </div>
+                        <div class="expense">
+                            <div><strong>Fast food</strong>
+                                <div><small></small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="4" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="4" data-action="want">Want</button>
+                            </div>
+                        </div>
+                        <div class="expense">
+                            <div><strong>Phone plan</strong>
+                                <div><small></small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="5" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="5" data-action="want">Want</button>
+                            </div>
+                        </div>
+                        <div class="expense">
+                            <div><strong>Emergency meds</strong>
+                                <div><small></small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="6" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="6" data-action="want">Want</button>
+                            </div>
+                        </div>
+                        <div class="expense">
+                            <div><strong>Movie night</strong>
+                                <div><small></small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="7" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="7" data-action="want">Want</button>
+                            </div>
+                        </div>
+                        <div class="expense">
+                            <div><strong>Health insurance</strong>
+                                <div><small></small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="8" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="8" data-action="want">Want</button>
+                            </div>
+                        </div>
+                        <div class="expense">
+                            <div><strong>Public transport</strong>
+                                <div><small></small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="9" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="9" data-action="want">Want</button>
+                            </div>
+                        </div>
+                        <div class="expense">
+                            <div><strong>New sneakers</strong>
+                                <div><small>Optional purchase</small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="10" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="10" data-action="want">Want</button>
+                            </div>
+                        </div>
+                        <div class="expense">
+                            <div><strong>Coffee (daily)</strong>
+                                <div><small>Optional habit</small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="11" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="11" data-action="want">Want</button>
+                            </div>
+                        </div>
+                        <div class="expense">
+                            <div><strong>Rent</strong>
+                                <div><small>Place you live</small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="12" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="12" data-action="want">Want</button>
+                            </div>
+                        </div>
+                        <div class="expense">
+                            <div><strong>School books</strong>
+                                <div><small></small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="13" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="13" data-action="want">Want</button>
+                            </div>
+                        </div>
+                        <div class="expense">
+                            <div><strong>Streaming subscription</strong>
+                                <div><small>Entertainment</small></div>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button class="btn small" data-idx="14" data-action="need">Need</button>
+                                <button class="btn ghost small" data-idx="14" data-action="want">Want</button>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="margin-top:8px;color:var(--muted)"><small>Remaining items</small></p>
+                </div>
+
+                <div>
+                    <div style="display:flex;gap:8px;margin-bottom:8px">
+                        <div style="flex:1">
+                            <div class="list" id="needsDrop"></div>
+                            <p style="margin-top:6px;color:var(--muted)"><small>Needs</small></p>
+                        </div>
+                        <div style="flex:1">
+                            <div class="list" id="wantsDrop"></div>
+                            <p style="margin-top:6px;color:var(--muted)"><small>Wants</small></p>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:6px">
+                        <div style="color:var(--muted);font-size:13px">Reaction time: <strong id="rt">0.00s</strong></div>
+                        <button id="next-item" class="btn small">Classify Next</button>
+                    </div>
+
+                    <div class="status" id="gameStatus" aria-live="polite"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h3>30-Day Budget Sprint</h3>
+            <p>Simulate a month of spending decisions with real-time feedback; each "day" presents a spending choice (necessity or discretionary).</p>
+
+            <div class="sprint-controls">
+                <button id="startSprint" class="btn">Start Sprint</button>
+                <button id="fastForward" class="btn ghost">Fast-Forward</button>
+                <div style="flex:1;margin-left:8px;">
+                    <div class="progress" aria-hidden="true">
+                        <div id="sprintBar" class="progress-bar" style="width:0%"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:13px;color:var(--muted)">
+                        <div>Day <strong id="dayCounter">0</strong>/30</div>
+                        <div>Score: <strong id="sprintScore">0</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sprintLog" style="margin-top:12px;color:var(--muted);font-size:14px"></div>
+        </section>
+
+        <section class="card">
+            <h3>Course Modules</h3>
+            <ol>
+                <li><strong>Salary Breakdown Basics</strong> — Categorize income and understand take-home pay after taxes.</li>
+                <li><strong>Needs vs Wants Challenge</strong> — Classify 50+ expenses into necessity categories.</li>
+                <li><strong>30-Day Budget Sprint</strong> — Simulate a month of spending with real-time feedback.</li>
+                <li><strong>Emergency Expense Reaction</strong> — Handle unexpected costs and build resilience.</li>
+            </ol>
+        </section>
+    </main>
+
+    <!-- Side column -->
+    <aside>
+        <div class="card">
+            <h3>Skills You'll Master</h3>
+            <ul>
+                <li>Expense Categorization</li>
+                <li>Budget Allocation</li>
+                <li>Priority Setting</li>
+                <li>Financial Awareness</li>
+                <li>Decision Speed</li>
+            </ul>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+            <h3>Completion Rewards</h3>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+                <div class="badge">Budgeting Basics Badge</div>
+                <div class="pill">Unlock: Debt Trap Escape</div>
+                <div class="pill">Access: Personal Budget Calculator</div>
+                <div class="pill">50 XP Points</div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+            <h3>Quick Tips</h3>
+            <ul>
+                <li>Prioritize essentials.</li>
+                <li>Keep an emergency buffer.</li>
+                <li>Survey spending before decisions.</li>
+                <li>Use rules to avoid impulse buys.</li>
+            </ul>
+        </div>
+    </aside>
+</div>
+
+<footer>
+    FIN-FORGE • Budgeting Forge — Cash Flow Runner
+</footer>
+
+<script>
+    // --- Data (simple expense examples) ---
+    const expenses = [
+        {name: "Groceries", type: "need"},
+        {name: "Rent", type: "need"},
+        {name: "Coffee (daily)", type: "want"},
+        {name: "Electricity bill", type: "need"},
+        {name: "Streaming subscription", type: "want"},
+        {name: "Public transport", type: "need"},
+        {name: "New sneakers", type: "want"},
+        {name: "Phone plan", type: "need"},
+        {name: "Movie night", type: "want"},
+        {name: "Health insurance", type: "need"},
+        {name: "Concert ticket", type: "want"},
+        {name: "School books", type: "need"},
+        {name: "Designer bag", type: "want"},
+        {name: "Emergency meds", type: "need"},
+        {name: "Fast food", type: "want"}
+    ];
+
+    // --- Needs vs Wants Game Logic ---
+    const poolEl = document.getElementById('pool');
+    const needsEl = document.getElementById('needsDrop');
+    const wantsEl = document.getElementById('wantsDrop');
+    const nextBtn = document.getElementById('next-item');
+    const resetBtn = document.getElementById('reset-game');
+    const shuffleBtn = document.getElementById('shuffle-game');
+    const rtEl = document.getElementById('rt');
+    const statusEl = document.getElementById('gameStatus');
+
+    let pool = [];
+    let currentStart = null;
+    let classified = 0;
+    let correct = 0;
+
+    function shuffleArray(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]]
+        }
+        return a
+    }
+
+    function renderPool() {
+        poolEl.innerHTML = '';
+        pool.forEach((it, idx) => {
+            const div = document.createElement('div');
+            div.className = 'expense';
+            div.innerHTML = `<div><strong>${it.name}</strong><div><small>${getHint(it.name)}</small></div></div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+        <button class="btn small" data-idx="${idx}" data-action="need">Need</button>
+        <button class="btn ghost small" data-idx="${idx}" data-action="want">Want</button>
+        </div>`;
+            poolEl.appendChild(div);
+        });
+    }
+
+    function getHint(name) {
+        // small helper hint text
+        const hints = {
+            "Groceries": "Food & essentials",
+            "Rent": "Place you live",
+            "Coffee (daily)": "Optional habit",
+            "Streaming subscription": "Entertainment",
+            "New sneakers": "Optional purchase"
+        };
+        return hints[name] || '';
+    }
+
+    function startGame() {
+        pool = shuffleArray([...expenses]);
+        classified = 0;
+        correct = 0;
+        needsEl.innerHTML = '';
+        wantsEl.innerHTML = '';
+        statusEl.innerHTML = '';
+        rtEl.textContent = '0.00s';
+        renderPool();
+        currentStart = null;
+    }
+
+    function classifyItem(idx, action) {
+        if (idx < 0 || idx >= pool.length) return;
+        const item = pool[idx];
+        const start = currentStart || performance.now();
+        const reaction = (performance.now() - start) / 1000;
+        currentStart = null;
+        // remove item
+        pool.splice(idx, 1);
+        renderPool();
+
+        // add to correct list visually
+        const box = document.createElement('div');
+        box.className = 'expense';
+        box.innerHTML = `<div><strong>${item.name}</strong><div><small>${item.type === 'need' ? 'Essential' : 'Optional'}</small></div></div>`;
+        if (action === 'need') needsEl.appendChild(box); else wantsEl.appendChild(box);
+
+        // evaluate correctness
+        const isCorrect = (action === (item.type === 'need' ? 'need' : 'want'));
+        classified++;
+        if (isCorrect) correct++;
+
+        // update reaction time display
+        rtEl.textContent = reaction.toFixed(2) + 's';
+
+        // update status
+        statusEl.innerHTML = `<div class="pill">Classified: ${classified}</div><div class="pill">Correct: ${correct}</div><div class="pill">Accuracy: ${Math.round((correct / classified) * 100 || 0)}%</div>`;
+        if (pool.length === 0) {
+            // done
+            const acc = Math.round((correct / classified) * 100 || 0);
+            const msg = document.createElement('div');
+            msg.style.marginTop = '8px';
+            msg.innerHTML = `<strong>Round complete</strong> — Accuracy: ${acc}%. Reaction avg: ${rtEl.textContent}`;
+            statusEl.appendChild(msg);
+            // reward if good
+            if (acc >= 70) {
+                const r = document.createElement('div');
+                r.className = 'badge';
+                r.style.marginTop = '8px';
+                r.textContent = 'Unlocked: Needs vs Wants Badge';
+                statusEl.appendChild(r);
+            }
+        }
+    }
+
+    // delegate clicks for pool
+    poolEl.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) {
+            currentStart = performance.now();
+            return;
+        }
+        const idx = parseInt(btn.dataset.idx, 10);
+        const action = btn.dataset.action;
+        classifyItem(idx, action);
+    });
+
+    nextBtn.addEventListener('click', () => {
+        // start timing for next
+        currentStart = performance.now();
+        rtEl.textContent = '...';
+    });
+
+    resetBtn.addEventListener('click', startGame);
+    shuffleBtn.addEventListener('click', () => {
+        pool = shuffleArray(pool);
+        renderPool();
+    });
+
+    // --- Sprint Simulator ---
+    const startSprint = document.getElementById('startSprint');
+    const fastForward = document.getElementById('fastForward');
+    const sprintBar = document.getElementById('sprintBar');
+    const dayCounter = document.getElementById('dayCounter');
+    const sprintScore = document.getElementById('sprintScore');
+    const sprintLog = document.getElementById('sprintLog');
+
+    let sprintDay = 0, sprintRunning = false, sprintPoints = 0, sprintInterval = null;
+
+    function randomEvent() {
+        // simple random event: necessity (70%) or discretionary (30%)
+        return Math.random() < 0.7 ? {type: 'need', text: 'Pay monthly expense (necessity)'} : {type: 'want', text: 'Optional purchase opportunity'};
+    }
+
+    function sprintStep() {
+        if (sprintDay >= 30) {
+            endSprint();
+            return;
+        }
+        sprintDay++;
+        dayCounter.textContent = sprintDay;
+        const ev = randomEvent();
+
+        // Auto "decision": accept want = -1 point, skip want = +1; need accepted = +1 else -2 (simulate consequences)
+        let delta = 0;
+        if (ev.type === 'need') { // must pay
+            delta = +1;
+            sprintLog.innerHTML = `<div style="margin-bottom:6px">Day ${sprintDay}: ${ev.text} → <strong>Paid</strong> (+1)</div>` + sprintLog.innerHTML;
+        } else {
+            // choose randomly to simulate learner; in a real version we'd let user choose
+            const choice = Math.random() < 0.45; // 45% chance will buy
+            if (choice) {
+                delta = -1;
+                sprintLog.innerHTML = `<div style="margin-bottom:6px">Day ${sprintDay}: ${ev.text} → <strong>Bought</strong> (-1)</div>` + sprintLog.innerHTML;
+            } else {
+                delta = +1;
+                sprintLog.innerHTML = `<div style="margin-bottom:6px">Day ${sprintDay}: ${ev.text} → <strong>Skipped</strong> (+1)</div>` + sprintLog.innerHTML;
+            }
+        }
+
+        sprintPoints += delta;
+        sprintScore.textContent = sprintPoints;
+        sprintBar.style.width = ((sprintDay / 30) * 100) + '%';
+    }
+
+    function startSprintRun(fast = false) {
+        if (sprintRunning) return;
+        sprintRunning = true;
+        sprintDay = 0;
+        sprintPoints = 0;
+        sprintLog.innerHTML = '';
+        sprintScore.textContent = '0';
+        sprintBar.style.width = '0%';
+        sprintInterval = setInterval(() => {
+            sprintStep();
+            if (fast) {/* nothing extra */
+            }
+        }, fast ? 120 : 800);
+    }
+
+    function endSprint() {
+        clearInterval(sprintInterval);
+        sprintRunning = false;
+        // Evaluate
+        const win = sprintPoints >= 15; // arbitrary
+        sprintLog.innerHTML = `<div style="margin-top:8px"><strong>Sprint complete.</strong> Final score: ${sprintPoints}. ${win ? 'Great job! Badge unlocked.' : 'Try again to improve.'}</div>` + sprintLog.innerHTML;
+        if (win) {
+            const b = document.createElement('div');
+            b.className = 'badge';
+            b.style.marginTop = '8px';
+            b.textContent = 'Unlocked: 30-Day Sprint Badge';
+            sprintLog.appendChild(b);
+        }
+        sendToModel({
+            cost_in_rs: Math.random() * 5000,
+            frequency: "one-time",
+            decision_time_sec: parseFloat(rtEl.textContent),
+            user_decision: correct > classified / 2 ? "need" : "want"
+        });
+
+    }
+
+    startSprint.addEventListener('click', () => startSprintRun(false));
+    fastForward.addEventListener('click', () => startSprintRun(true));
+
+    async function sendToModel(payload) {
+
+        payload.user_id = "demo_user";
+        payload.session_id = crypto.randomUUID();
+
+        const res = await fetch("http://127.0.0.1:5000/predict/budget", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        console.log("✅ Prediction:", data);
+    }
+
+
+    // initialize
+    startGame();
+
+</script>
+
+
+</body>
+</html>
