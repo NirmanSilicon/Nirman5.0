@@ -22,6 +22,7 @@ import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailure from "./pages/PaymentFailure";
 
+
 const App = () => {
   return (
     <AuthProvider>
@@ -43,6 +44,8 @@ const App = () => {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/payment-failure" element={<PaymentFailure />} />
+         
+
           </Route>
         </Routes>
       </CartProvider>

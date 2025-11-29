@@ -124,6 +124,13 @@ const HomePage = () => {
             Search
           </button>
         </div>
+        {/* AI MODE BUTTON */}
+<div className="pe-ai-wrapper">
+  <button className="ai-btn" onClick={() => alert("AI Mode Activated!")}>
+   <h1> ✨ AI Mode</h1>
+  </button>
+</div>
+
       </section>
        <section className="pe-banners">
         <div className="pe-banner pe-banner-left">
@@ -146,6 +153,9 @@ const HomePage = () => {
           <button className="pe-wa-btn">ORDER ON WHATSAPP</button>
         </div>
       </section>
+      {/* AI MODE BUTTON */}
+
+
     </div>
   );
 };
