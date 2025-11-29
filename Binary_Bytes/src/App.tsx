@@ -1,0 +1,110 @@
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { AppProvider } from './context/AppContext';
+import AuthPage from './components/AuthPage';
+
+const AppContent = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const users = localStorage.getItem('users');
+    if (!users) {
+      const demoUsers = [
+        {
+          id: '1',
+          username: 'admin',
+          email: 'admin@cybersentinel.com',
+          password: 'admin123',
+          role: 'admin',
+          createdAt: new Date().toISOString(),
+        }
+      ];
+      localStorage.setItem('users', JSON.stringify(demoUsers));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser');
+    navigate('/auth', { replace: true });
+  };
+
+  return (
+    <AppProvider>
+      <div className="min-h-screen bg-[#1A120B] text-[#E5E5CB]">
+        {location.pathname === '/home' ? (
+          <Hero onLogout={handleLogout} />
+        ) : (
+          <>
+            <Navigation onLogout={handleLogout} />
+            <main className="pt-20">
+              <Routes>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/scanner" element={<SecurityScanner />} />
+                <Route path="/threats" element={<ThreatDetection />} />
+                <Route path="/hardening" element={<HardeningPlatform />} />
+                <Route path="/lab" element={<VirtualCCTVLab />} />
+                <Route path="/home" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              </Routes>
+            </main>
+          </>
+        )}
+      </div>
+    </AppProvider>
+  );
+};
+
+export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  // Check authentication status on initial load
+  useEffect(() => {
+    const user = localStorage.getItem('currentUser');
+    setIsAuthenticated(!!user);
+  }, []);
+  
+  const handleLogin = (success: boolean) => {
+    setIsAuthenticated(success);
+    return success;
+  };
+
+
+  if (isAuthenticated === null) {
+    return (
+      <div className="min-h-screen bg-[#1A120B] flex items-center justify-center">
+        <div className="text-[#E5E5CB]">Loading...</div>
+      </div>
+    );
+  }
+
+  return (
+    <Router>
+      <AppProvider>
+        <Routes>
+          <Route 
+            path="/auth" 
+            element={
+              isAuthenticated ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <AuthPage onLogin={handleLogin} />
+              )
+            } 
+          />
+          <Route 
+            path="/*" 
+            element={
+              isAuthenticated ? (
+                <AppContent />
+              ) : (
+                <Navigate to="/auth" replace />
+              )
+            } 
+          />
+        </Routes>
+      </AppProvider>
+    </Router>
+  );
+}
