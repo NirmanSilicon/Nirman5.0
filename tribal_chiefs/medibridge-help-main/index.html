@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MediBridge - Your Health, Our Priority</title>
+    <meta name="description" content="Comprehensive healthcare platform with checkup scheduling, pharmacy locator, hospital directory, and emergency SOS services. Access quality medical care anytime, anywhere." />
+    <meta name="author" content="MediBridge Healthcare" />
+    <meta name="keywords" content="healthcare, medical, hospital, pharmacy, emergency, checkup, appointment, SOS, medical services" />
+
+    <meta property="og:title" content="MediBridge - Your Health, Our Priority" />
+    <meta property="og:description" content="Modern healthcare platform with comprehensive medical services, emergency support, and convenient appointment scheduling." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Voiceflow AI Agent Integration -->
+    <script type="text/javascript">
+      (function(d, t) {
+          var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+          v.onload = function() {
+            window.voiceflow.chat.load({
+              verify: { projectID: '68da276c3296af6997da9b7d' },
+              url: 'https://general-runtime.voiceflow.com',
+              versionID: 'production',
+              voice: {
+                url: "https://runtime-api.voiceflow.com"
+              }
+            });
+          }
+          v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+      })(document, 'script');
+    </script>
+  </body>
+</html>
