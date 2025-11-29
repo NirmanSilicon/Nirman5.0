@@ -1,0 +1,11 @@
+/* Global app styles - most styling is handled by Tailwind and index.css design system */
+
+/* Hide scrollbar for discovery tabs */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
