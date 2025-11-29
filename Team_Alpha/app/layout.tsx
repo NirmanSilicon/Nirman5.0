@@ -26,6 +26,9 @@ export const metadata: Metadata = {
   description: "AI-powered healthcare assistance for symptom checking and medical guidance",
   generator: "v0.app",
   viewport: "width=device-width, initial-scale=1",
+  icons: {
+    icon: '/logosymptocare.png',
+  },
 }
 
 export default function RootLayout({

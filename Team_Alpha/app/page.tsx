@@ -39,9 +39,9 @@ export default function HomePage() {
 
   const [currentSlide, setCurrentSlide] = useState(0)
   const slides = [
-    { title: "SymptoCare", subtitle: "Your symptoms, our care!" },
-    { title: "Smart Diagnosis", subtitle: "Get instant insights into your health symptoms" },
-    { title: "Expert Care", subtitle: "Connect with healthcare professionals when needed" },
+    { title: "SymptoCare", subtitle: "Your symptoms, our care!", image: "/carousel1.jpg" },
+    { title: "Smart Diagnosis", subtitle: "Get instant insights into your health symptoms", image: "/carousel2.jpg" },
+    { title: "Expert Care", subtitle: "Connect with healthcare professionals when needed", image: "/carousel3.jpg" },
   ]
 
   const genAI = typeof window !== 'undefined' && process.env.NEXT_PUBLIC_GEMINI_API_KEY
@@ -205,7 +205,7 @@ export default function HomePage() {
               >
                 <Menu className="h-5 w-5" />
               </Button>
-              <p className="text-xl sm:text-2xl font-bold text-primary italic professional-heading">SymptoCare</p>
+              <img src="/logosymptocare.png" alt="SymptoCare Logo" className="h-8 sm:h-10 w-auto" />
             </div>
 
             {/* Right: Theme Switch and Auth Buttons */}
@@ -238,26 +238,31 @@ export default function HomePage() {
           </div>
         </header>
 
-        <section className="bg-gradient-to-br from-accent via-accent/50 to-background py-6 sm:py-8 md:py-10">
-          <div className="container mx-auto px-4">
+        <section className="bg-gradient-to-br from-accent via-accent/50 to-background">
+          <div className="w-full">
             <Carousel className="w-full max-w-6xl mx-auto" opts={{ align: "start", loop: true }}>
               <CarouselContent>
                 {slides.map((slide, index) => (
                   <CarouselItem key={index}>
-                    <div className="text-center py-4 sm:py-6 md:py-8 carousel-slide">
-                      <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-primary glow-text mb-2 sm:mb-3 md:mb-4 professional-heading">
-                        {slide.title}
-                      </h1>
-                      <p className="text-sm sm:text-base md:text-lg lg:text-xl text-foreground/80 professional-body italic px-2">"{slide.subtitle}"</p>
-                      <div className="mt-4 sm:mt-5 flex justify-center gap-2">
-                        {slides.map((_, i) => (
-                          <div
-                            key={i}
-                            className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
-                              i === currentSlide ? "bg-primary scale-125" : "bg-primary/30"
-                            }`}
-                          />
-                        ))}
+                    <div
+                      className="relative h-64 sm:h-80 md:h-96 lg:h-[500px] xl:h-[600px] bg-cover bg-center bg-no-repeat rounded-lg overflow-hidden carousel-slide"
+                      style={{ backgroundImage: `url(${slide.image})` }}
+                    >
+                      <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center px-4">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-2 sm:mb-3 md:mb-4">
+                          {slide.title}
+                        </h1>
+                        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 italic px-2">"{slide.subtitle}"</p>
+                        <div className="mt-4 sm:mt-5 flex justify-center gap-2">
+                          {slides.map((_, i) => (
+                            <div
+                              key={i}
+                              className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
+                                i === currentSlide ? "bg-white scale-125" : "bg-white/50"
+                              }`}
+                            />
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </CarouselItem>
@@ -614,7 +619,7 @@ export default function HomePage() {
                   <div className="p-1.5 bg-primary/10 rounded-md">
                     <Shield className="h-4 w-4 text-primary" />
                   </div>
-                  <span className="font-medium">HIPAA Compliant & Secure</span>
+                  <span>© 2024 SymptoCare. All rights reserved.</span>
                 </div>
               </div>
 
@@ -637,7 +642,7 @@ export default function HomePage() {
                         Coming Soon
                       </Badge>
                     </div>
-                    <p className="text-xs text-muted-foreground ml-6">symptocare@gmail.com</p>
+                    <p className="text-xs text-muted-foreground ml-6">sarthakmahapatra303@gmail.com</p>
                   </div>
                   <div className="p-3 bg-accent/50 rounded-lg border border-border hover-lift smooth-transition">
                     <div className="flex items-center justify-between mb-1">
@@ -649,7 +654,7 @@ export default function HomePage() {
                         Coming Soon
                       </Badge>
                     </div>
-                    <p className="text-xs text-muted-foreground ml-6">+91 720522140</p>
+                    <p className="text-xs text-muted-foreground ml-6">+91XXXXXX</p>
                   </div>
                   <div className="p-3 bg-accent/50 rounded-lg border border-border">
                     <div className="flex items-center gap-2">
