@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MindMesh - Counsellors</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style_peer.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
     <nav class="navbar">
         <div class="logo-container">
@@ -19,17 +19,15 @@
             <li><a href="peer.html">Peer Community</a></li>
             <li><a href="counsel.html">Counsellors</a></li>
             <li><a href="about.html">About Us</a></li>
+            <li><a href="profile.html"><i class="fa-solid fa-user"></i> Profile</a></li>
         </ul>
-
         <div class="menu-toggle">☰</div> <!-- Optional mobile menu icon -->
     </nav>
-
     <section class="hero">
         <div class="hero-container">
             <h1>Connect with Expert Counsellors</h1>
             <p>Get professional, confidential mental health support from qualified counsellors who understand the unique
                 challenges of student life.</p>
-
             <div class="hero-features">
                 <div class="hero-feature">
                     <i class="fas fa-video"></i>
@@ -46,10 +44,11 @@
             </div>
         </div>
     </section>
-
     <div style="text-align: center; margin-top: 30px;">
     </div>
-
+     <div style="text-align: center; margin-top: 30px;">
+  <a href="counsel_profile.html" class="login-btn">Counsellor Login</a>
+</div>
     <section class="counsellors">
         <div class="card">
             <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Counsellor">
@@ -76,11 +75,9 @@
             <a href="call.html" class="call-btn">Call</a>
         </div>
     </section>
-
     <div class="floating-btn" onclick="alert('📞 Dialing 24x7 Helpline...')">
         <i class="fa-solid fa-phone"></i>
     </div>
-    <!-- Call Option Modal -->
     <div id="callModal" class="modal"
         style="display:none; position:fixed; z-index:2000; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
         <div
@@ -95,11 +92,9 @@
                 style="background:#eee; color:#364fc7; border:none; border-radius:8px; padding:8px 18px; margin-top:8px;">Cancel</button>
         </div>
     </div>
-
     <footer>
         <p>© 2025 MindMesh | Team Innovatrix</p>
     </footer>
     <script src="js/script.js"></script>
 </body>
-
 </html>
