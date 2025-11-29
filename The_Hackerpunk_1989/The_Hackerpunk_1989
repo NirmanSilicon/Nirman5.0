@@ -1,0 +1,77 @@
+package com.example.medinvento
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+
+sealed class Screen(val title: String, val icon: ImageVector) {
+    object Dashboard : Screen("Dashboard", Icons.Filled.Home)
+    object Inventory : Screen("Inventory", Icons.Filled.List)
+    object Expiry : Screen("Expiry", Icons.Filled.Warning)
+    object Reports : Screen("Reports", Icons.Filled.List)   // reuse List icon
+    object Settings : Screen("Settings", Icons.Filled.Settings)
+}
+
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            PharmacyApp()
+        }
+    }
+}
+
+@Composable
+fun PharmacyApp() {
+    var currentScreen by remember { mutableStateOf<Screen>(Screen.Dashboard) }
+
+    Scaffold(
+        bottomBar = {
+            NavigationBar {
+                listOf(
+                    Screen.Dashboard,
+                    Screen.Inventory,
+                    Screen.Expiry,
+                    Screen.Reports,
+                    Screen.Settings
+                ).forEach {
+                    NavigationBarItem(
+                        selected = currentScreen == it,
+                        onClick = { currentScreen = it },
+                        icon = { Icon(it.icon, null) },
+                        label = { Text(it.title) }
+                    )
+                }
+            }
+        }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentAlignment = Alignment.Center
+        ) {
+            when (currentScreen) {
+                is Screen.Dashboard -> Text("Dashboard Screen")
+                is Screen.Inventory -> Text("Inventory Screen")
+                is Screen.Expiry -> Text("Expiry List Screen")
+                is Screen.Reports -> Text("Reports Screen")
+                is Screen.Settings -> Text("Settings Screen")
+            }
+        }
+    }
+}
