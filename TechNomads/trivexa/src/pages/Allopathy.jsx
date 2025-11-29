@@ -5,6 +5,7 @@ import "./allopathy.css";
 import logo from "../assets/logo.jpeg";
 import { FaRobot } from "react-icons/fa";
 
+
 export default function Allopathy() {
   const [chatOpen, setChatOpen] = useState(false);
   const [emergencyOpen, setEmergencyOpen] = useState(false);
