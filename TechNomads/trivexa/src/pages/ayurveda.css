@@ -1,0 +1,126 @@
+/* Background */
+.ayurveda-page {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #78adb7ff, #7eb9d3ff, #ffe9a3);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Header Buttons */
+.ayurveda-header-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.header-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background-color: #edf6f9;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.header-btn:hover {
+  background-color: white;
+}
+
+.emergency-btn {
+  background-color: red;
+  color: white;
+}
+
+/* Page Title */
+.ayurveda-title {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 25px;
+  font-weight: bold;
+}
+
+/* Container Layout */
+.ayurveda-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  padding: 10px 30px;
+}
+
+/* Boxes */
+.consultation-box,
+.medicine-box {
+  width: 48%;
+  background: #c9e6ec;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Styling */
+.consult-card {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.consult-btn {
+  margin-top: 10px;
+  padding: 10px 16px;
+  font-size: 14px;
+  background-color: #007d63;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.consult-btn:hover {
+  background-color: #005944;
+}
+
+/* Dropdown */
+.dropdown-label {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.dropdown {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 12px 0;
+  font-size: 15px;
+}
+
+/* Medicines List */
+.medicine-card {
+  background: white;
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.add-btn {
+  background-color: #006494;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background-color: #004a6d;
+}
