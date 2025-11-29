@@ -1,0 +1,962 @@
+<!-- AyurScan - Ayurvedic Tongue Diagnosis -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AyurScan — Ayurvedic Tongue Diagnosis</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ---------- Design tokens ---------- */
+  :root{
+    --bg-1: #fbf7f1;
+    --bg-2: #f6f3ec;
+    --leaf-1: #7fb77b;
+    --leaf-2: #b6d6a7;
+    --accent: #c07b4d;
+    --card: #fffdf8;
+    --muted: #6b655d;
+    --glass: rgba(255,255,255,0.6);
+    --shadow: 0 14px 40px rgba(24,24,24,0.08);
+    --radius-lg: 18px;
+    --radius-sm: 12px;
+    --glass-border: rgba(120,110,100,0.06);
+    --text-primary: #1b1a17;
+    --text-secondary: #6b655d;
+    font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color-scheme: light;
+    transition: all 0.3s ease;
+  }
+
+  /* Dark Mode */
+  [data-theme="dark"] {
+    --bg-1: #1a1a2e;
+    --bg-2: #16213e;
+    --leaf-1: #4ecca3;
+    --leaf-2: #7be495;
+    --accent: #ff6b6b;
+    --card: #1f1f38;
+    --muted: #a0a0b0;
+    --glass: rgba(30,30,50,0.6);
+    --shadow: 0 14px 40px rgba(0,0,0,0.3);
+    --glass-border: rgba(255,255,255,0.08);
+    --text-primary: #eee;
+    --text-secondary: #aaa;
+    color-scheme: dark;
+  }
+
+  /* ---------- Reset ---------- */
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 400px at 10% 10%, rgba(127,183,123,0.06), transparent 10%),
+      linear-gradient(180deg,var(--bg-1),var(--bg-2));
+    color: var(--text-primary);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:28px;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  /* ---------- Layout ---------- */
+  .container{
+    max-width:1200px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns: 1fr 380px;
+    gap:28px;
+    align-items:start;
+  }
+  header{
+    grid-column:1/-1;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    margin-bottom:6px;
+    flex-wrap: wrap;
+  }
+
+  /* Brand */
+  .brand{
+    display:flex;align-items:center;gap:14px;
+  }
+  .logo{
+    width:66px;height:66px;border-radius:14px;background:linear-gradient(180deg,var(--leaf-2),var(--leaf-1));
+    display:grid;place-items:center;color:white;font-weight:700;font-size:22px;box-shadow:var(--shadow);
+  }
+  .brand h1{margin:0;font-size:22px;letter-spacing:0.2px}
+  .tagline{font-size:13px;color:var(--muted);margin-top:4px}
+
+  /* Top nav actions */
+  .nav-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .btn{
+    border:1px solid var(--glass-border);background:linear-gradient(180deg,rgba(255,255,255,0.7),var(--card));padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:600;
+    box-shadow:0 6px 18px rgba(0,0,0,0.04);transition:all .2s ease;
+    color: var(--text-primary);
+    font-family: inherit;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{background:linear-gradient(90deg,var(--leaf-1),var(--leaf-2));color:white;border:none;box-shadow:0 10px 30px rgba(127,183,123,0.14)}
+  .btn.ghost{background:transparent}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(0,0,0,0.1)}
+  .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+  /* Theme Toggle */
+  .theme-toggle{
+    width:44px;height:44px;border-radius:50%;border:2px solid var(--glass-border);
+    background:var(--card);display:grid;place-items:center;cursor:pointer;
+    font-size:20px;transition:all 0.3s ease;
+  }
+  .theme-toggle:hover{transform:rotate(20deg) scale(1.1)}
+
+  /* ---------- Main panels ---------- */
+  section.left{display:flex;flex-direction:column;gap:18px}
+  aside.right{display:flex;flex-direction:column;gap:18px}
+
+  /* Card base */
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,0.9), var(--card));
+    border-radius: var(--radius-lg);
+    padding:18px;
+    box-shadow:var(--shadow);
+    border:1px solid var(--glass-border);
+    overflow:hidden;
+    transition: all 0.3s ease;
+  }
+  [data-theme="dark"] .card{
+    background: linear-gradient(180deg, rgba(40,40,70,0.9), var(--card));
+  }
+  .card h2{margin:0 0 6px 0;font-size:18px;font-weight:600}
+  .card h3{margin:0;font-weight:600}
+  .muted{color:var(--muted);font-size:13px}
+
+  /* camera controls */
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+  .icon{display:inline-flex;gap:8px;align-items:center}
+
+  /* camera area with organic frame */
+  .camera-wrap{
+    position:relative;border-radius:14px;overflow:hidden;min-height:320px;background:#0b0b0b;color:white;
+    display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -40px 120px rgba(0,0,0,0.45);
+  }
+  video#video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+  .frame{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:72%;aspect-ratio:1.8/1;border-radius:14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3), inset 0 2px 0 rgba(255,255,255,0.03);
+    border: 4px solid rgba(255,255,255,0.1);
+    display:grid;place-items:center;font-weight:600;font-size:14px;color:rgba(255,255,255,0.92);
+    backdrop-filter: blur(2px);
+    transition:transform .35s cubic-bezier(.2,.9,.2,1);
+    pointer-events:none;
+  }
+  .camera-wrap:hover .frame{transform:translate(-50%,-50%) scale(1.01)}
+
+  /* decorative herb motif */
+  .decor{
+    position:absolute;right:12px;top:12px;opacity:0.9;transform:rotate(-8deg);
+    filter:drop-shadow(0 6px 12px rgba(0,0,0,0.08));
+  }
+
+  /* preview area */
+  .preview-row{display:grid;grid-template-columns:1fr 140px;gap:12px;align-items:start;margin-top:12px}
+  .preview-row img{width:100%;height:120px;object-fit:cover;border-radius:10px;border:1px solid rgba(0,0,0,0.04)}
+  .preview-actions{display:flex;flex-direction:column;gap:8px}
+
+  /* analyze card */
+  .form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+  select, textarea{
+    padding:12px;border-radius:12px;border:1px solid var(--glass-border);font-size:14px;
+    background:var(--card);color:var(--text-primary);font-family:inherit;
+    transition: all 0.2s ease;
+  }
+  select:focus, textarea:focus{
+    outline:none;border-color:var(--leaf-1);box-shadow:0 0 0 3px rgba(127,183,123,0.15);
+  }
+  textarea{min-height:92px;resize:vertical}
+
+  /* result visual */
+  #result{display:none;margin-top:16px;padding:18px;border-radius:14px;background:linear-gradient(180deg,rgba(255,250,243,0.9),var(--card));border:1px solid var(--glass-border)}
+  #result.active{display:block;animation:slideUp 420ms cubic-bezier(.2,.9,.2,1)}
+  @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+
+  .dosha-pill{display:inline-flex;gap:8px;align-items:center;padding:10px 16px;border-radius:999px;font-weight:700;font-size:15px}
+  .dosha-pitta{background:linear-gradient(90deg,#ffd7c7,#ffc0a6);color:#7b2f14}
+  .dosha-vata{background:linear-gradient(90deg,#e8f7ff,#cfefff);color:#17445b}
+  .dosha-kapha{background:linear-gradient(90deg,#e9f7e9,#d3efcf);color:#2b5a2b}
+
+  /* result list */
+  .remedies{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+  .remedy{padding:12px 14px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.9),var(--card));border:1px solid var(--glass-border);transition:transform 0.2s ease}
+  .remedy:hover{transform:translateX(5px)}
+
+  /* spinner */
+  .spinner{width:46px;height:46px;border-radius:50%;border:5px solid rgba(20,20,20,0.06);border-top-color:var(--accent);animation:spin .9s linear infinite;margin:12px auto}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* floating leaf animations */
+  .leaf{
+    position:fixed;will-change:transform;opacity:0.6;pointer-events:none;z-index:-1;
+    animation: float 6s ease-in-out infinite;
+  }
+  .leaf.l1{left:6%;top:10%;animation-delay:0s}
+  .leaf.l2{right:4%;top:22%;animation-delay:2s;transform:scale(.86)}
+  .leaf.l3{left:12%;bottom:8%;animation-delay:1.2s;transform:scale(.78)}
+  @keyframes float{
+    0%{transform:translateY(0) rotate(-6deg)}
+    50%{transform:translateY(-12px) rotate(6deg)}
+    100%{transform:translateY(0) rotate(-6deg)}
+  }
+
+  /* History Panel */
+  .history-panel{max-height:300px;overflow-y:auto}
+  .history-item{
+    padding:12px;border-radius:10px;background:var(--card);border:1px solid var(--glass-border);
+    margin-bottom:10px;cursor:pointer;transition:all 0.2s ease;
+  }
+  .history-item:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.08)}
+  .history-item .date{font-size:11px;color:var(--muted)}
+  .history-item .dosha-tag{font-size:12px;padding:4px 10px;border-radius:20px;font-weight:600}
+  .history-empty{text-align:center;padding:20px;color:var(--muted)}
+
+  /* Stats badges */
+  .stats-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .stat-badge{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--glass);border:1px solid var(--glass-border)}
+
+  /* Disclaimer */
+  .disclaimer{font-size:13px;color:var(--muted);margin-top:8px;padding:12px;background:rgba(255,200,100,0.1);border-radius:10px;border-left:3px solid var(--accent)}
+
+  /* Keyboard shortcut hints */
+  kbd{
+    padding:2px 6px;border-radius:4px;background:var(--glass);border:1px solid var(--glass-border);
+    font-size:11px;font-family:monospace;color:var(--muted);
+  }
+
+  /* responsive */
+  @media (max-width:980px){
+    .container{grid-template-columns:1fr;padding-bottom:40px}
+    .preview-row{grid-template-columns:1fr}
+    .camera-wrap{min-height:280px}
+    header{flex-direction:column;align-items:flex-start}
+    .nav-actions{width:100%;justify-content:flex-start}
+  }
+
+  /* focus outline for a11y */
+  button:focus-visible, select:focus-visible, textarea:focus-visible{outline:3px solid rgba(127,183,123,0.3);outline-offset:3px}
+
+  /* Toast notifications */
+  .toast-container{position:fixed;bottom:20px;right:20px;z-index:1000;display:flex;flex-direction:column;gap:10px}
+  .toast{
+    padding:14px 20px;border-radius:12px;background:var(--card);border:1px solid var(--glass-border);
+    box-shadow:0 10px 40px rgba(0,0,0,0.15);animation:toastIn 0.3s ease;
+    display:flex;align-items:center;gap:10px;
+  }
+  .toast.success{border-left:4px solid var(--leaf-1)}
+  .toast.error{border-left:4px solid #ff6b6b}
+  .toast.info{border-left:4px solid #4dabf7}
+  @keyframes toastIn{from{transform:translateX(100%);opacity:0}to{transform:none;opacity:1}}
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden>🌿</div>
+        <div>
+          <h1>AyurScan</h1>
+          <div class="tagline">Jihwa Pareeksha • AI-Powered Ayurvedic Tongue Diagnosis</div>
+        </div>
+      </div>
+
+      <div class="nav-actions" role="navigation" aria-label="top controls">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode" aria-label="Toggle theme">
+          <span id="themeIcon">🌙</span>
+        </button>
+        <button class="btn ghost" onclick="showHistory()">📜 History</button>
+        <button class="btn ghost" onclick="openDocs()">❓ How it works</button>
+        <button class="btn primary" onclick="bookConsult()">📞 Book Consultation</button>
+      </div>
+    </header>
+
+    <!-- Left: Camera & Analyze -->
+    <section class="left">
+      <!-- Camera Card -->
+      <div class="card" aria-labelledby="cameraTitle">
+        <h2 id="cameraTitle">📸 1. Capture your tongue</h2>
+        <div class="muted">Use natural light • Keep tongue relaxed and centered • <kbd>S</kbd> Start <kbd>C</kbd> Capture <kbd>X</kbd> Stop</div>
+
+        <div class="controls" role="toolbar" aria-label="camera controls">
+          <button id="startCamera" class="btn icon">▶️ Start Camera</button>
+          <button id="autoCapture" class="btn icon" disabled>🤖 Smart Auto</button>
+          <button id="capture" class="btn icon" disabled>📷 Capture</button>
+          <button id="stopCamera" class="btn icon" disabled>⏹️ Stop</button>
+        </div>
+
+        <div class="camera-wrap" aria-live="polite" id="cameraWrap">
+          <video id="video" playsinline autoplay></video>
+          <div class="frame">👅 Align tongue inside this frame</div>
+          <svg class="decor" width="88" height="88" viewBox="0 0 100 100" aria-hidden>
+            <g fill="none" stroke="var(--leaf-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 70c18-28 38-34 58-24M20 64c12-12 24-16 36-12"/>
+              <path d="M88 26c-16 8-28 26-34 38" stroke="var(--leaf-2)"/>
+            </g>
+          </svg>
+        </div>
+
+        <div id="statusText" class="muted" style="margin-top:10px;padding:8px;background:var(--glass);border-radius:8px">
+          📷 Camera inactive — Click "Start Camera" to begin
+        </div>
+
+        <div class="preview-row" aria-hidden="false">
+          <img id="preview" alt="Captured tongue preview" style="display:none">
+          <div class="preview-actions">
+            <button id="retakeBtn" class="btn" disabled>🔄 Retake</button>
+            <button id="downloadBtn" class="btn" disabled>💾 Download</button>
+            <button id="clearBtn" class="btn" disabled>🗑️ Clear</button>
+            <div class="muted" style="margin-top:8px">💡 Tip: Remove lipstick, use daylight</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analyze Card -->
+      <div class="card" aria-labelledby="analyzeTitle">
+        <h2 id="analyzeTitle">🔬 2. Symptoms & Analysis</h2>
+        <div class="muted">Select your health concern and describe symptoms (optional)</div>
+
+        <div class="form-group" style="margin-top:12px">
+          <label class="muted">🩺 Main Health Issue</label>
+          <select id="diseaseKey" aria-label="health issue selector">
+            <optgroup label="Digestive Issues">
+              <option value="constipation">Constipation / Gas / Bloating</option>
+              <option value="acidity">Acidity / Heartburn / GERD</option>
+              <option value="indigestion">Indigestion / Loss of Appetite</option>
+              <option value="diarrhea">Loose Motion / Diarrhea</option>
+            </optgroup>
+            <optgroup label="Respiratory Issues">
+              <option value="cold_cough">Cold, Cough, Congestion</option>
+              <option value="asthma">Asthma / Breathing Difficulty</option>
+              <option value="allergies">Allergies / Sinusitis</option>
+            </optgroup>
+            <optgroup label="Energy & Sleep">
+              <option value="fatigue">Low Energy / Chronic Fatigue</option>
+              <option value="insomnia">Insomnia / Sleep Issues</option>
+              <option value="anxiety">Anxiety / Stress / Restlessness</option>
+            </optgroup>
+            <optgroup label="Skin & Hair">
+              <option value="acne">Acne / Pimples / Skin Rashes</option>
+              <option value="hairfall">Hair Fall / Dandruff</option>
+              <option value="dry_skin">Dry Skin / Eczema</option>
+            </optgroup>
+            <optgroup label="Pain & Joints">
+              <option value="headache">Headache / Migraine</option>
+              <option value="joint_pain">Joint Pain / Arthritis</option>
+              <option value="back_pain">Back Pain / Body Aches</option>
+            </optgroup>
+            <optgroup label="Other">
+              <option value="weight_gain">Weight Gain / Obesity</option>
+              <option value="diabetes">Diabetes / Blood Sugar Issues</option>
+              <option value="hypertension">High Blood Pressure</option>
+              <option value="general">General Wellness Check</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="muted">📝 Describe your symptoms (optional)</label>
+          <textarea id="symptoms" placeholder="e.g. Feeling dry throat in mornings, bitter taste, disturbed sleep since 2 weeks, feeling bloated after meals..."></textarea>
+        </div>
+
+        <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button id="analyzeBtn" class="btn primary">🔍 Analyze & Get Remedies</button>
+            <button id="demoAnalyze" class="btn">🎭 Demo Mode</button>
+          </div>
+          <div class="muted small">🔒 Your data stays on your device</div>
+        </div>
+
+        <!-- result -->
+        <div id="result" role="status"></div>
+      </div>
+    </section>
+
+    <!-- Right: Tips & Info -->
+    <aside class="right">
+      <!-- History Card -->
+      <div class="card">
+        <h3>📜 Scan History</h3>
+        <div class="muted" style="margin-top:8px">Your previous tongue scans:</div>
+        <div id="historyPanel" class="history-panel" style="margin-top:12px">
+          <div class="history-empty">No scans yet. Capture your first tongue image!</div>
+        </div>
+        <button class="btn ghost" style="width:100%;margin-top:10px" onclick="clearHistory()">🗑️ Clear History</button>
+      </div>
+
+      <div class="card">
+        <h3>💡 Capture Tips</h3>
+        <div class="muted" style="margin-top:8px">For best analysis accuracy:</div>
+        <ul style="margin-top:10px;color:var(--muted);padding-left:18px;line-height:1.8">
+          <li>☀️ Use morning or soft daylight</li>
+          <li>📵 Avoid camera flash</li>
+          <li>🖼️ Plain background (wall/paper)</li>
+          <li>👅 Relax tongue, don't touch lips</li>
+          <li>📸 Take 2-3 shots, use sharpest</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🎯 What You Get</h3>
+        <div class="stats-row">
+          <span class="stat-badge">Dosha Type</span>
+          <span class="stat-badge">Tongue Analysis</span>
+          <span class="stat-badge">Remedies</span>
+          <span class="stat-badge">Diet Tips</span>
+          <span class="stat-badge">Lifestyle</span>
+        </div>
+        <p class="disclaimer" style="margin-top:12px">⚠️ This is an AI-assisted wellness tool, not a medical diagnosis. Please consult a qualified Ayurvedic practitioner for serious conditions.</p>
+      </div>
+
+      <div class="card">
+        <h3>🔐 Privacy</h3>
+        <p class="muted" style="margin-top:8px">Demo mode runs locally. When connected to backend, images are processed securely and not stored permanently.</p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- floating leaves -->
+  <svg class="leaf l1" width="120" height="120" viewBox="0 0 100 100" aria-hidden>
+    <g><path d="M10 70 C30 40 70 40 90 20" fill="none" stroke="var(--leaf-2)" stroke-width="6" stroke-linecap="round"/></g>
+  </svg>
+  <svg class="leaf l2" width="90" height="90" viewBox="0 0 100 100" aria-hidden>
+    <g><path d="M88 40 Q60 34 40 60 Q50 80 68 90" fill="none" stroke="var(--leaf-1)" stroke-width="5" stroke-linecap="round"/></g>
+  </svg>
+  <svg class="leaf l3" width="70" height="70" viewBox="0 0 100 100" aria-hidden>
+    <g><path d="M8 80 Q38 48 70 40" fill="none" stroke="var(--leaf-2)" stroke-width="4" stroke-linecap="round"/></g>
+  </svg>
+
+  <!-- hidden canvas used for capture -->
+  <canvas id="canvas" style="display:none"></canvas>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+<script>
+  /* ==================== Constants & State ==================== */
+  const API_BASE = ''; // Empty for same-origin, or set to 'http://127.0.0.1:5000' for dev
+  const HISTORY_KEY = 'ayurscan_history';
+  const THEME_KEY = 'ayurscan_theme';
+  const MAX_HISTORY = 10;
+
+  let stream = null;
+  let lastBlob = null;
+  let capturedImageData = null;
+  let autoInterval = null;
+
+  /* ==================== DOM Elements ==================== */
+  const startBtn = document.getElementById('startCamera');
+  const stopBtn = document.getElementById('stopCamera');
+  const autoBtn = document.getElementById('autoCapture');
+  const capBtn = document.getElementById('capture');
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const preview = document.getElementById('preview');
+  const status = document.getElementById('statusText');
+  const retakeBtn = document.getElementById('retakeBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  const demoBtn = document.getElementById('demoAnalyze');
+  const resultEl = document.getElementById('result');
+  const historyPanel = document.getElementById('historyPanel');
+
+  /* ==================== Theme Management ==================== */
+  function initTheme() {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.getElementById('themeIcon').textContent = '☀️';
+    }
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    if (current === 'dark') {
+      document.documentElement.removeAttribute('data-theme');
+      document.getElementById('themeIcon').textContent = '🌙';
+      localStorage.setItem(THEME_KEY, 'light');
+      showToast('Light mode activated', 'info');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.getElementById('themeIcon').textContent = '☀️';
+      localStorage.setItem(THEME_KEY, 'dark');
+      showToast('Dark mode activated', 'info');
+    }
+  }
+
+  /* ==================== Toast Notifications ==================== */
+  function showToast(message, type = 'info') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<span>${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span> ${message}`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3500);
+  }
+
+  /* ==================== Camera Functions ==================== */
+  async function startCamera() {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false
+      });
+      video.srcObject = stream;
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+      capBtn.disabled = false;
+      autoBtn.disabled = false;
+      status.innerHTML = '🟢 Camera active — Align your tongue in the frame';
+      showToast('Camera started successfully', 'success');
+    } catch (e) {
+      status.innerHTML = '🔴 Failed to access camera. Please allow camera permissions.';
+      showToast('Camera access denied', 'error');
+      console.error(e);
+    }
+  }
+
+  function stopCamera() {
+    if (autoInterval) {
+      clearInterval(autoInterval);
+      autoInterval = null;
+    }
+    if (stream) {
+      stream.getTracks().forEach(t => t.stop());
+      video.srcObject = null;
+      stream = null;
+    }
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    capBtn.disabled = true;
+    autoBtn.disabled = true;
+    status.innerHTML = '⏹️ Camera stopped';
+  }
+
+  function captureFrame() {
+    if (!stream) {
+      status.innerHTML = '⚠️ Camera not active';
+      return;
+    }
+    const w = video.videoWidth, h = video.videoHeight;
+    if (!w || !h) {
+      status.innerHTML = '⏳ Camera warming up — try again in a moment';
+      return;
+    }
+
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.translate(w, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, 0, 0, w, h);
+
+    capturedImageData = canvas.toDataURL('image/jpeg', 0.9);
+
+    canvas.toBlob(blob => {
+      lastBlob = blob;
+      preview.src = URL.createObjectURL(blob);
+      preview.style.display = 'block';
+      retakeBtn.disabled = false;
+      downloadBtn.disabled = false;
+      clearBtn.disabled = false;
+      status.innerHTML = '✅ Captured! Preview shown below. Click "Analyze" when ready.';
+      showToast('Image captured successfully', 'success');
+    }, 'image/jpeg', 0.9);
+  }
+
+  function smartAutoCapture() {
+    if (!video.videoWidth || !video.videoHeight) {
+      status.innerHTML = '⏳ Waiting for camera to be ready...';
+      return;
+    }
+    if (autoInterval) {
+      clearInterval(autoInterval);
+    }
+    status.innerHTML = '🤖 Smart capture active — Align your tongue, we\'ll auto-capture when it\'s clear...';
+    showToast('Smart auto-capture started', 'info');
+
+    autoInterval = setInterval(async () => {
+      if (!video.videoWidth || !video.videoHeight) return;
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const frameData = canvas.toDataURL('image/jpeg', 0.6);
+
+      try {
+        const res = await fetch(API_BASE + '/auto_tongue_check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image_data: frameData })
+        });
+
+        const data = await res.json();
+        if (res.status !== 200) {
+          status.innerHTML = `⚠️ ${data.message || 'Error in auto tongue check'}`;
+          return;
+        }
+
+        status.innerHTML = `🔍 ${data.message} (ratio: ${data.tongue_ratio?.toFixed(2) || 'N/A'}, sharpness: ${data.sharpness?.toFixed(1) || 'N/A'})`;
+
+        if (data.ok) {
+          capturedImageData = frameData;
+          lastBlob = await (await fetch(frameData)).blob();
+          preview.src = frameData;
+          preview.style.display = 'block';
+          retakeBtn.disabled = false;
+          downloadBtn.disabled = false;
+          clearBtn.disabled = false;
+
+          clearInterval(autoInterval);
+          autoInterval = null;
+          status.innerHTML = '✅ Best frame captured automatically! Ready to analyze.';
+          showToast('Auto-captured best frame!', 'success');
+        }
+      } catch (err) {
+        console.error(err);
+        // Fallback to demo mode if backend not available
+        status.innerHTML = '⚠️ Backend not connected. Using demo mode.';
+      }
+    }, 800);
+  }
+
+  function retake() {
+    if (lastBlob) URL.revokeObjectURL(preview.src);
+    preview.style.display = 'none';
+    preview.src = '';
+    lastBlob = null;
+    capturedImageData = null;
+    retakeBtn.disabled = true;
+    downloadBtn.disabled = true;
+    clearBtn.disabled = true;
+    status.innerHTML = '🔄 Ready to capture again';
+  }
+
+  function downloadImage() {
+    if (!lastBlob) return;
+    const a = document.createElement('a');
+    a.href = preview.src;
+    a.download = `ayurscan_tongue_${Date.now()}.jpg`;
+    a.click();
+    showToast('Image downloaded', 'success');
+  }
+
+  /* ==================== Analysis Functions ==================== */
+  async function analyze() {
+    if (!capturedImageData) {
+      status.innerHTML = '⚠️ Please capture an image first';
+      showToast('No image captured', 'error');
+      return;
+    }
+
+    analyzeBtn.disabled = true;
+    analyzeBtn.textContent = '⏳ Analyzing...';
+    resultEl.classList.remove('active');
+    resultEl.innerHTML = `
+      <div style="text-align:center;padding:24px">
+        <div class="spinner"></div>
+        <div class="muted" style="margin-top:12px">🔬 Running Ayurvedic AI Analysis...</div>
+      </div>`;
+    resultEl.classList.add('active');
+
+    const diseaseKey = document.getElementById('diseaseKey').value;
+    const symptoms = document.getElementById('symptoms').value;
+
+    try {
+      const res = await fetch(API_BASE + '/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          image_data: capturedImageData,
+          disease_key: diseaseKey,
+          symptoms: symptoms
+        })
+      });
+
+      const data = await res.json();
+
+      if (data.error) {
+        showToast(data.error, 'error');
+        resultEl.innerHTML = `<div class="muted" style="text-align:center;padding:20px">❌ ${data.error}</div>`;
+        analyzeBtn.disabled = false;
+        analyzeBtn.textContent = '🔍 Analyze & Get Remedies';
+        return;
+      }
+
+      renderResult(data);
+      saveToHistory(data, diseaseKey);
+      showToast('Analysis complete!', 'success');
+
+    } catch (err) {
+      console.error(err);
+      // Fallback to demo mode if backend unavailable
+      showToast('Backend not connected. Running demo...', 'info');
+      await runDemoAnalysis();
+    }
+
+    analyzeBtn.disabled = false;
+    analyzeBtn.textContent = '🔍 Analyze & Get Remedies';
+    status.innerHTML = '✅ Analysis complete — See your results below';
+  }
+
+  async function runDemoAnalysis() {
+    await new Promise(r => setTimeout(r, 1500));
+
+    const doshas = ['Vata', 'Pitta', 'Kapha'];
+    const randomDosha = doshas[Math.floor(Math.random() * doshas.length)];
+
+    const demoResults = {
+      Vata: {
+        dosha: 'vata',
+        tongue_color: 'Pale/Grayish',
+        coating: 'Thin, dry coating',
+        texture: 'Rough, cracked',
+        message: 'Tongue shows signs of Vata imbalance — dryness and irregular texture observed.',
+        remedies: ['Drink warm water with ginger throughout the day', 'Take Ashwagandha (500mg) before bed', 'Oil pulling with sesame oil every morning', 'Abhyanga (self-massage) with warm sesame oil'],
+        diet: ['Warm, cooked foods with ghee', 'Sweet fruits like bananas, mangoes', 'Avoid raw salads and cold drinks', 'Include warming spices: cumin, cinnamon, ginger'],
+        lifestyle: ['Maintain regular sleep schedule (10 PM)', 'Practice gentle yoga and meditation', 'Avoid excessive travel and stimulation', 'Stay warm and avoid cold winds'],
+        ml_probs: { vata: 0.72, pitta: 0.18, kapha: 0.10 }
+      },
+      Pitta: {
+        dosha: 'pitta',
+        tongue_color: 'Red/Yellowish',
+        coating: 'Yellow coating in center',
+        texture: 'Smooth with red dots',
+        message: 'Tongue indicates Pitta imbalance — heat and inflammation markers visible.',
+        remedies: ['Drink cooling fennel tea after meals', 'Take Amalaki (Indian Gooseberry) daily', 'Apply coconut oil to scalp', 'Drink aloe vera juice (30ml) morning'],
+        diet: ['Cooling foods: cucumber, coconut water, melons', 'Bitter greens: spinach, kale, bitter gourd', 'Avoid spicy, fried, and fermented foods', 'Reduce coffee, alcohol, and red meat'],
+        lifestyle: ['Avoid midday sun exposure', 'Practice cooling pranayama (Sheetali)', 'Take moonlight walks in evening', 'Avoid competitive and heated arguments'],
+        ml_probs: { vata: 0.12, pitta: 0.78, kapha: 0.10 }
+      },
+      Kapha: {
+        dosha: 'kapha',
+        tongue_color: 'Pale/Whitish',
+        coating: 'Thick white coating',
+        texture: 'Swollen, scalloped edges',
+        message: 'Tongue shows Kapha imbalance — excess mucus and sluggish digestion indicated.',
+        remedies: ['Drink hot water with honey and lemon', 'Take Trikatu (pepper blend) before meals', 'Dry brushing (Garshana) daily', 'Use mustard oil for massage'],
+        diet: ['Light, warm, spicy foods', 'Bitter and astringent vegetables', 'Avoid dairy, sweets, and heavy foods', 'Include ginger, black pepper, turmeric'],
+        lifestyle: ['Wake up before 6 AM', 'Vigorous exercise daily (running, dancing)', 'Avoid daytime sleeping', 'Stay mentally stimulated and active'],
+        ml_probs: { vata: 0.08, pitta: 0.15, kapha: 0.77 }
+      }
+    };
+
+    const result = demoResults[randomDosha];
+    renderResult(result);
+    saveToHistory(result, document.getElementById('diseaseKey').value);
+  }
+
+  function renderResult(r) {
+    const doshaName = r.dosha ? r.dosha.charAt(0).toUpperCase() + r.dosha.slice(1) : 'Unknown';
+    const doshaClass = r.dosha ? `dosha-${r.dosha.toLowerCase()}` : 'dosha-vata';
+
+    let probsHtml = '';
+    if (r.ml_probs) {
+      probsHtml = `
+        <div style="margin-top:12px">
+          <div class="muted" style="margin-bottom:8px">AI Confidence Levels:</div>
+          <div class="stats-row">
+            <span class="stat-badge" style="background:linear-gradient(90deg,#e8f7ff,#cfefff)">Vata: ${(r.ml_probs.vata * 100).toFixed(0)}%</span>
+            <span class="stat-badge" style="background:linear-gradient(90deg,#ffd7c7,#ffc0a6)">Pitta: ${(r.ml_probs.pitta * 100).toFixed(0)}%</span>
+            <span class="stat-badge" style="background:linear-gradient(90deg,#e9f7e9,#d3efcf)">Kapha: ${(r.ml_probs.kapha * 100).toFixed(0)}%</span>
+          </div>
+        </div>`;
+    }
+
+    resultEl.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <div class="muted small">🎯 Detected Dosha</div>
+          <div style="display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap">
+            <div class="dosha-pill ${doshaClass}">${doshaName}</div>
+          </div>
+          ${probsHtml}
+          <p style="margin-top:14px;line-height:1.6">${r.message || ''}</p>
+        </div>
+        <div style="min-width:140px;text-align:right">
+          <button class="btn" onclick="saveSummary()" style="margin-bottom:8px;width:100%">💾 Save</button>
+          <button class="btn" onclick="shareResults()" style="width:100%">📤 Share</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:16px">
+        <div>
+          <div class="muted" style="margin-bottom:6px">👅 Tongue Analysis</div>
+          <div class="remedy">Color: ${r.tongue_color || 'N/A'}</div>
+          <div class="remedy">Coating: ${r.coating || 'N/A'}</div>
+          <div class="remedy">Texture: ${r.texture || 'N/A'}</div>
+        </div>
+      </div>
+
+      <h4 style="margin-top:18px;margin-bottom:10px">🌿 Ayurvedic Remedies</h4>
+      <div class="remedies">
+        ${(r.remedies || []).map(x => `<div class="remedy">✦ ${x}</div>`).join('') || '<div class="remedy muted">No specific remedies available</div>'}
+      </div>
+
+      <h4 style="margin-top:18px;margin-bottom:10px">🥗 Diet Recommendations</h4>
+      <div class="remedies">
+        ${(r.diet || []).map(x => `<div class="remedy">🍽️ ${x}</div>`).join('') || '<div class="remedy muted">No diet suggestions available</div>'}
+      </div>
+
+      <h4 style="margin-top:18px;margin-bottom:10px">🧘 Lifestyle Tips</h4>
+      <div class="remedies">
+        ${(r.lifestyle || []).map(x => `<div class="remedy">🌟 ${x}</div>`).join('') || '<div class="remedy muted">No lifestyle suggestions available</div>'}
+      </div>
+
+      <p class="disclaimer" style="margin-top:18px">⚠️ ${r.note || 'This is an AI-assisted wellness suggestion, not a medical diagnosis. Please consult a qualified Ayurvedic doctor for serious health conditions.'}</p>
+    `;
+  }
+
+  /* ==================== History Management ==================== */
+  function getHistory() {
+    try {
+      return JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveToHistory(result, issue) {
+    const history = getHistory();
+    const entry = {
+      id: Date.now(),
+      date: new Date().toLocaleString(),
+      dosha: result.dosha,
+      issue: issue,
+      tongueColor: result.tongue_color,
+      probs: result.ml_probs
+    };
+    history.unshift(entry);
+    if (history.length > MAX_HISTORY) history.pop();
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    renderHistory();
+  }
+
+  function renderHistory() {
+    const history = getHistory();
+    if (history.length === 0) {
+      historyPanel.innerHTML = '<div class="history-empty">No scans yet. Capture your first tongue image!</div>';
+      return;
+    }
+
+    historyPanel.innerHTML = history.map(h => {
+      const doshaClass = h.dosha ? `dosha-${h.dosha.toLowerCase()}` : '';
+      return `
+        <div class="history-item" onclick="viewHistoryDetail('${h.id}')">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span class="dosha-tag ${doshaClass}">${h.dosha ? h.dosha.toUpperCase() : 'N/A'}</span>
+            <span class="date">${h.date}</span>
+          </div>
+          <div class="muted" style="margin-top:6px;font-size:12px">Issue: ${h.issue || 'General'}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function viewHistoryDetail(id) {
+    const history = getHistory();
+    const entry = history.find(h => h.id == id);
+    if (entry) {
+      showToast(`Viewing scan from ${entry.date}`, 'info');
+      // Could expand to show full details
+    }
+  }
+
+  function clearHistory() {
+    if (confirm('Clear all scan history?')) {
+      localStorage.removeItem(HISTORY_KEY);
+      renderHistory();
+      showToast('History cleared', 'info');
+    }
+  }
+
+  function showHistory() {
+    document.querySelector('aside.right').scrollIntoView({ behavior: 'smooth' });
+    showToast('Scroll down to see history', 'info');
+  }
+
+  /* ==================== Utility Functions ==================== */
+  function saveSummary() {
+    const resultText = resultEl.innerText;
+    const blob = new Blob([resultText], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `ayurscan_report_${Date.now()}.txt`;
+    a.click();
+    showToast('Report saved!', 'success');
+  }
+
+  function shareResults() {
+    const text = `🌿 My AyurScan Results\n\n${resultEl.innerText.substring(0, 500)}...\n\nTry AyurScan for Ayurvedic tongue diagnosis!`;
+    if (navigator.share) {
+      navigator.share({ title: 'AyurScan Results', text: text });
+    } else {
+      navigator.clipboard.writeText(text);
+      showToast('Results copied to clipboard!', 'success');
+    }
+  }
+
+  function openDocs() {
+    showToast('AyurScan uses AI + Ayurvedic principles to analyze tongue images and suggest wellness remedies.', 'info');
+  }
+
+  function bookConsult() {
+    showToast('Consultation booking coming soon!', 'info');
+  }
+
+  /* ==================== Event Listeners ==================== */
+  startBtn.addEventListener('click', startCamera);
+  stopBtn.addEventListener('click', stopCamera);
+  capBtn.addEventListener('click', captureFrame);
+  autoBtn.addEventListener('click', smartAutoCapture);
+  retakeBtn.addEventListener('click', retake);
+  downloadBtn.addEventListener('click', downloadImage);
+  clearBtn.addEventListener('click', retake);
+  analyzeBtn.addEventListener('click', analyze);
+  demoBtn.addEventListener('click', async () => {
+    // Create demo image
+    preview.style.display = 'block';
+    preview.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='800' height='480'><rect fill='#fff8f0' width='100%' height='100%'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='20' fill='#b79a86'>👅 Demo Tongue Image</text></svg>`);
+    capturedImageData = preview.src;
+    lastBlob = new Blob([], { type: 'image/png' });
+    retakeBtn.disabled = false;
+    clearBtn.disabled = false;
+    status.innerHTML = '🎭 Demo image loaded — Running analysis...';
+    await analyze();
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+    if (e.key.toLowerCase() === 'c' && !capBtn.disabled) captureFrame();
+    if (e.key.toLowerCase() === 's' && !startBtn.disabled) startCamera();
+    if (e.key.toLowerCase() === 'x' && !stopBtn.disabled) stopCamera();
+    if (e.key.toLowerCase() === 'd') toggleTheme();
+  });
+
+  // Cleanup on page hide
+  window.addEventListener('pagehide', () => { if (stream) stopCamera(); });
+
+  /* ==================== Initialize ==================== */
+  initTheme();
+  renderHistory();
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+/* frontend/static/css/styles.css */
+body {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 10px;
+  background: #faf7f2;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-top: 4px;
+  margin-bottom: 20px;
+}
+
+.card {
+  border: 1px solid #e0d4c2;
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  background: #fffdf9;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+button {
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  border: none;
+  background: #cf7f34;
+  color: white;
+  font-weight: bold;
+}
+
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+label {
+  display: block;
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+select,
+textarea {
+  width: 100%;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #d2c3ac;
+  margin-top: 4px;
+  font-family: inherit;
+}
+
+#video {
+  width: 100%;
+  max-height: 320px;
+  background: #000;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+#preview {
+  max-width: 100%;
+  margin-top: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.result-list {
+  margin-top: 8px;
+  padding-left: 20px;
+}
+
+.meta {
+  font-size: 12px;
+  color: #777;
+  margin-top: 4px;
+}
