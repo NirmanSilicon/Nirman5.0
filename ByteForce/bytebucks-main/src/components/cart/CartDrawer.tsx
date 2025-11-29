@@ -11,7 +11,7 @@ interface CartDrawerProps {
 }
 
 export function CartDrawer({ children }: CartDrawerProps) {
-  const { items, itemCount, totalPrice, isLoading, removeFromCart } = useCart();
+  const { items, itemCount, totalPrice, totalPriceUsd, totalPriceInr, isLoading, removeFromCart } = useCart();
   const navigate = useNavigate();
 
   const blockchainSymbols: Record<string, string> = {
@@ -23,6 +23,10 @@ export function CartDrawer({ children }: CartDrawerProps) {
 
   const handleCheckout = () => {
     navigate('/checkout');
+  };
+  
+  const formatCurrency = (amount: number, currency: string) => {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount);
   };
 
   return (
@@ -75,15 +79,24 @@ export function CartDrawer({ children }: CartDrawerProps) {
                     )}
                     <div className="flex-1 min-w-0">
                       <h4 className="font-medium truncate">{item.nft?.name || 'Unknown NFT'}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {item.nft?.blockchain && blockchainSymbols[item.nft.blockchain]}
-                      </p>
-                      <p className="text-lg font-semibold mt-1">
-                        {item.nft?.price || 0}{' '}
-                        <span className="text-sm text-muted-foreground">
-                          {item.nft?.blockchain && blockchainSymbols[item.nft.blockchain]}
-                        </span>
-                      </p>
+                      <div className="text-sm text-muted-foreground">
+                        <p className="font-semibold text-lg text-foreground">
+                          {item.nft?.price || 0}{' '}
+                          <span className="text-sm font-medium">
+                            {item.nft?.blockchain && blockchainSymbols[item.nft.blockchain]}
+                          </span>
+                        </p>
+                        {item.nft?.priceUsd && (
+                           <p>
+                             {formatCurrency(item.nft.priceUsd, 'USD')}
+                           </p>
+                        )}
+                        {item.nft?.priceInr && (
+                          <p>
+                            {formatCurrency(item.nft.priceInr, 'INR')}
+                          </p>
+                        )}
+                      </div>
                     </div>
                     <Button
                       variant="ghost"
@@ -99,9 +112,19 @@ export function CartDrawer({ children }: CartDrawerProps) {
             </ScrollArea>
 
             <SheetFooter className="flex-col gap-4 border-t border-border pt-4">
-              <div className="w-full flex justify-between items-center">
-                <span className="text-muted-foreground">Total</span>
-                <span className="text-2xl font-bold">{totalPrice.toFixed(2)}</span>
+              <div className="w-full space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Subtotal (Crypto)</span>
+                  <span className="text-xl font-bold">{totalPrice.toFixed(4)}</span>
+                </div>
+                 <div className="flex justify-between items-center text-sm">
+                  <span className="text-muted-foreground">Subtotal (USD)</span>
+                  <span className="font-semibold">{formatCurrency(totalPriceUsd, 'USD')}</span>
+                </div>
+                 <div className="flex justify-between items-center text-sm">
+                  <span className="text-muted-foreground">Subtotal (INR)</span>
+                  <span className="font-semibold">{formatCurrency(totalPriceInr, 'INR')}</span>
+                </div>
               </div>
               <Button
                 className="w-full"

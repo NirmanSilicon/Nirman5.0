@@ -3,6 +3,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
 
+// Mapping from our blockchain names to CoinGecko API IDs
+const COINGECKO_ID_MAP: { [key: string]: string } = {
+  ethereum: 'ethereum',
+  polygon: 'matic-network',
+  solana: 'solana',
+  bitcoin: 'bitcoin',
+};
+
 interface CartItem {
   id: string;
   nft_id: string;
@@ -13,6 +21,8 @@ interface CartItem {
     image_url: string;
     price: number | null;
     blockchain: string | null;
+    priceUsd?: number;
+    priceInr?: number;
   };
 }
 
@@ -20,6 +30,8 @@ interface CartContextType {
   items: CartItem[];
   itemCount: number;
   totalPrice: number;
+  totalPriceUsd: number;
+  totalPriceInr: number;
   isLoading: boolean;
   addToCart: (nftId: string) => Promise<void>;
   removeFromCart: (nftId: string) => Promise<void>;
@@ -28,6 +40,55 @@ interface CartContextType {
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
+
+// Helper function to fetch prices and update items
+const fetchAndSetFiatPrices = async (items: CartItem[]): Promise<CartItem[]> => {
+  const cryptoIds = [
+    ...new Set(
+      items
+        .map((item) => item.nft?.blockchain && COINGECKO_ID_MAP[item.nft.blockchain.toLowerCase()])
+        .filter(Boolean)
+    ),
+  ] as string[];
+
+  if (cryptoIds.length === 0) {
+    return items; // No crypto items to price
+  }
+
+  try {
+    const response = await fetch(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${cryptoIds.join(',')}&vs_currencies=usd,inr`
+    );
+    if (!response.ok) {
+      throw new Error('Failed to fetch fiat prices');
+    }
+    const rates = await response.json();
+
+    return items.map((item) => {
+      const cryptoId = item.nft?.blockchain && COINGECKO_ID_MAP[item.nft.blockchain.toLowerCase()];
+      if (cryptoId && rates[cryptoId] && item.nft?.price) {
+        return {
+          ...item,
+          nft: {
+            ...item.nft,
+            priceUsd: item.nft.price * rates[cryptoId].usd,
+            priceInr: item.nft.price * rates[cryptoId].inr,
+          },
+        };
+      }
+      return item;
+    });
+  } catch (error) {
+    console.error("Error fetching fiat prices:", error);
+    toast({
+        title: "Price Conversion Failed",
+        description: "Could not fetch live USD/INR prices. Displaying crypto value only.",
+        variant: "destructive"
+    });
+    return items; // Return original items on failure
+  }
+};
+
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
@@ -82,11 +143,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       if (error) {
         console.error('Error fetching cart:', error);
+        setItems([]);
       } else if (data) {
-        setItems(data.map(item => ({
+        const itemsWithNfts = data.map(item => ({
           ...item,
           nft: item.nfts as any
-        })));
+        }));
+        const itemsWithFiat = await fetchAndSetFiatPrices(itemsWithNfts);
+        setItems(itemsWithFiat);
       }
       setIsLoading(false);
     };
@@ -122,9 +186,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
         description: "Failed to add item to cart",
         variant: "destructive",
       });
+      setIsLoading(false);
     } else {
       // Fetch updated cart
-      const { data } = await supabase
+      const { data: newData, error: fetchError } = await supabase
         .from('cart_items')
         .select(`
           id,
@@ -140,14 +205,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
         `)
         .eq('user_id', profileId);
 
-      if (data) {
-        setItems(data.map(item => ({
+      if (fetchError) {
+        console.error('Error fetching cart after add:', fetchError);
+      } else if (newData) {
+        const itemsWithNfts = newData.map(item => ({
           ...item,
           nft: item.nfts as any
-        })));
+        }));
+        const itemsWithFiat = await fetchAndSetFiatPrices(itemsWithNfts);
+        setItems(itemsWithFiat);
+        toast({
+          title: "Added to cart",
+          description: "Item has been added to your cart",
+        });
       }
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const removeFromCart = async (nftId: string) => {
@@ -200,12 +273,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const itemCount = items.length;
   const totalPrice = items.reduce((sum, item) => sum + (item.nft?.price || 0) * item.quantity, 0);
+  const totalPriceUsd = items.reduce((sum, item) => sum + (item.nft?.priceUsd || 0) * item.quantity, 0);
+  const totalPriceInr = items.reduce((sum, item) => sum + (item.nft?.priceInr || 0) * item.quantity, 0);
 
   return (
     <CartContext.Provider value={{
       items,
       itemCount,
       totalPrice,
+      totalPriceUsd,
+      totalPriceInr,
       isLoading,
       addToCart,
       removeFromCart,
