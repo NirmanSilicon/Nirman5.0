@@ -18,19 +18,16 @@ const createResponse = async (payload: any) => {
 };
 
 const saveResponse = async (payload: any, call_id: string) => {
-  console.log('saveResponse called with payload:', payload, 'call_id:', call_id);
-  
   const { error, data } = await supabase
     .from("response")
     .update({ ...payload })
     .eq("call_id", call_id);
-    
   if (error) {
-    console.error('Error saving response:', error);
+    console.log(error);
+
     return [];
   }
 
-  console.log('Response saved successfully:', data);
   return data;
 };
 

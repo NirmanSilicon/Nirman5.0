@@ -5,9 +5,6 @@ import {
   AlarmClockIcon,
   XCircleIcon,
   CheckCircleIcon,
-  AlertTriangle,
-  Video,
-  VideoOff,
 } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import { Card, CardHeader, CardTitle } from "../ui/card";
@@ -40,12 +37,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { InterviewerService } from "@/services/interviewers.service";
-import { useVideoCapture } from "@/hooks/useVideoCapture";
-import {
-  useMotionDetection,
-  MotionViolation,
-} from "@/hooks/useMotionDetection";
-import { VideoDisplay } from "./videoDisplay";
 
 const webClient = new RetellWebClient();
 
@@ -92,65 +83,6 @@ function Call({ interview }: InterviewProps) {
   const [currentTimeDuration, setCurrentTimeDuration] = useState<string>("0");
 
   const lastUserResponseRef = useRef<HTMLDivElement | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  // Video capture hook
-  const {
-    videoRef,
-    stream,
-    isVideoEnabled,
-    error: videoError,
-    startVideo,
-    stopVideo,
-    toggleVideo,
-  } = useVideoCapture();
-
-  // Motion detection hook
-  const {
-    stats: motionStats,
-    isDetecting,
-    error: motionError,
-  } = useMotionDetection({
-    enabled: isStarted && !isEnded && isVideoEnabled,
-    videoElement: videoRef.current,
-    onViolation: (violation: MotionViolation) => {
-      console.log("Violation detected:", violation);
-      // Show toast notification for violations
-      if (violation.type === "no_face") {
-        toast.warning("⚠️ Please ensure your face is visible in the camera");
-      } else if (violation.type === "multiple_faces") {
-        toast.error(
-          "🚫 Multiple faces detected. Please ensure only you are visible",
-        );
-      } else if (violation.type === "looking_away") {
-        toast.warning("⚠️ Please look at the camera");
-      } else if (violation.type === "suspicious_movement") {
-        toast.warning("⚠️ Please minimize movement during the interview");
-      }
-    },
-  });
-
-  // Debug logging for video state
-  useEffect(() => {
-    console.log("Video state:", {
-      isVideoEnabled,
-      hasVideoElement: !!videoRef.current,
-      isStarted,
-      isEnded,
-      isDetecting,
-      videoError,
-      motionError,
-      violationCount: motionStats.violations.length,
-    });
-  }, [
-    isVideoEnabled,
-    isStarted,
-    isEnded,
-    isDetecting,
-    videoError,
-    motionError,
-    motionStats.violations.length,
-  ]);
 
   const handleFeedbackSubmit = async (
     formData: Omit<FeedbackData, "interview_id">,
@@ -173,20 +105,6 @@ function Call({ interview }: InterviewProps) {
       toast.error("An error occurred. Please try again later.");
     }
   };
-
-  // Auto-start video when component mounts
-  useEffect(() => {
-    const initVideo = async () => {
-      try {
-        console.log("Auto-starting video on mount...");
-        await startVideo();
-      } catch (err) {
-        console.error("Failed to auto-start video:", err);
-      }
-    };
-    initVideo();
-    setMounted(true);
-  }, [startVideo]);
 
   useEffect(() => {
     if (lastUserResponseRef.current) {
@@ -296,11 +214,6 @@ function Call({ interview }: InterviewProps) {
     if (OldUser) {
       setIsOldUser(true);
     } else {
-      // Video is already started on mount, just verify it's ready
-      if (!stream) {
-        console.warn("Video stream not ready");
-      }
-
       const registerCallResponse: registerCallResponseType = await axios.post(
         "/api/register-call",
         { dynamic_data: data, interviewer_id: interview?.interviewer_id },
@@ -351,34 +264,10 @@ function Call({ interview }: InterviewProps) {
   useEffect(() => {
     if (isEnded) {
       const updateInterview = async () => {
-        // Stop video when interview ends
-        stopVideo();
-
-        const responseData = {
-          is_ended: true,
-          tab_switch_count: tabSwitchCount,
-          motion_violations: motionStats.violations.length,
-          face_detection_warnings:
-            motionStats.noFaceDetectedCount +
-            motionStats.multipleFacesCount +
-            motionStats.lookingAwayCount,
-          video_metadata: {
-            hasVideo: isVideoEnabled,
-            videoDuration: Math.floor(time / 100),
-            motionViolations: motionStats.violations,
-            noFaceDetectedCount: motionStats.noFaceDetectedCount,
-            multipleFacesCount: motionStats.multipleFacesCount,
-            lookingAwayCount: motionStats.lookingAwayCount,
-            suspiciousMovementCount: motionStats.suspiciousMovementCount,
-          },
-        };
-
-        console.log("Saving response data:", responseData);
-
-        // Save response with motion detection data
-        await ResponseService.saveResponse(responseData, callId);
-
-        console.log("Response saved successfully");
+        await ResponseService.saveResponse(
+          { is_ended: true, tab_switch_count: tabSwitchCount },
+          callId,
+        );
       };
 
       updateInterview();
@@ -448,65 +337,12 @@ function Call({ interview }: InterviewProps) {
                   <div className="p-2 font-normal text-sm mb-4 whitespace-pre-line">
                     {interview?.description}
                     <p className="font-bold text-sm">
-                      {"\n"}Ensure your volume is up and grant microphone and
-                      camera access when prompted. Additionally, please make
-                      sure you are in a quiet environment with good lighting.
-                      {"\n\n"}Note: Tab switching and suspicious behavior will
-                      be recorded.
-                      {"\n\n"}🎥 This interview uses video monitoring with
-                      motion detection to ensure interview integrity. Please:
-                      {"\n"}- Keep your face visible and centered
-                      {"\n"}- Avoid looking away from the camera
-                      {"\n"}- Minimize excessive movement
-                      {"\n"}- Ensure no other person appears in the frame
+                      {"\n"}Ensure your volume is up and grant microphone access
+                      when prompted. Additionally, please make sure you are in a
+                      quiet environment.
+                      {"\n\n"}Note: Tab switching will be recorded.
                     </p>
                   </div>
-
-                  {/* Video Preview Section (hydration-safe) */}
-                  <div className="my-4 p-3 border-2 border-gray-300 rounded-lg bg-white">
-                    <div className="text-sm font-semibold mb-2 text-center text-gray-700">
-                      📹 Camera Preview
-                    </div>
-                    <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden">
-                      {/* Render a stable placeholder until mounted to avoid hydration mismatch */}
-                      {!mounted && (
-                        <div className="flex flex-col items-center justify-center h-full text-white">
-                          <VideoOff className="w-12 h-12 mb-2" />
-                          <p className="text-xs">Initializing camera...</p>
-                        </div>
-                      )}
-                      {mounted && (
-                        stream ? (
-                          <video
-                            ref={videoRef}
-                            autoPlay
-                            playsInline
-                            muted
-                            className="w-full h-full object-cover"
-                            style={{ transform: "scaleX(-1)" }}
-                          />
-                        ) : (
-                          <div className="flex flex-col items-center justify-center h-full text-white">
-                            <VideoOff className="w-12 h-12 mb-2" />
-                            <p className="text-xs">
-                              {videoError ? `Error: ${videoError}` : "Waiting for permission..."}
-                            </p>
-                          </div>
-                        )
-                      )}
-                    </div>
-                    {mounted && stream && (
-                      <div className="text-xs text-center mt-2 text-green-600 font-semibold">
-                        ✓ Camera is working properly
-                      </div>
-                    )}
-                    {mounted && videoError && (
-                      <div className="text-xs text-center mt-2 text-red-600 font-semibold">
-                        ⚠️ {videoError}
-                      </div>
-                    )}
-                  </div>
-
                   {!interview?.is_anonymous && (
                     <div className="flex flex-col gap-2 justify-center">
                       <div className="flex justify-center">
@@ -576,57 +412,53 @@ function Call({ interview }: InterviewProps) {
               </div>
             )}
             {isStarted && !isEnded && !isOldUser && (
-              <div className="flex flex-col p-2 grow">
-                {/* Video Display Section */}
-                <VideoDisplay
-                  videoRef={videoRef}
-                  interviewerImg={interviewerImg}
-                  isVideoEnabled={isVideoEnabled}
-                  activeTurn={activeTurn}
-                  themeColor={interview.theme_color}
-                  onToggleVideo={toggleVideo}
-                  violationCount={motionStats.violations.length}
-                  showViolations={true}
-                />
-
-                {/* Transcript Section */}
-                <div className="flex flex-row p-2 mt-4 gap-4">
-                  <div className="border-2 border-gray-200 rounded-lg w-[50%] p-4 bg-gray-50">
-                    <div className="font-semibold text-sm mb-2 text-gray-600">
-                      Interviewer:
-                    </div>
+              <div className="flex flex-row p-2 grow">
+                <div className="border-x-2 border-grey w-[50%] my-auto min-h-[70%]">
+                  <div className="flex flex-col justify-evenly">
                     <div
-                      className={`text-base md:text-lg min-h-[100px] max-h-[150px] overflow-y-auto`}
+                      className={`text-[22px] w-[80%] md:text-[26px] mt-4 min-h-[250px] mx-auto px-6`}
                     >
                       {lastInterviewerResponse}
                     </div>
-                  </div>
-
-                  <div className="border-2 border-gray-200 rounded-lg w-[50%] p-4 bg-gray-50">
-                    <div className="font-semibold text-sm mb-2 text-gray-600">
-                      You:
-                    </div>
-                    <div
-                      ref={lastUserResponseRef}
-                      className={`text-base md:text-lg min-h-[100px] max-h-[150px] overflow-y-auto`}
-                    >
-                      {lastUserResponse}
+                    <div className="flex flex-col mx-auto justify-center items-center align-middle">
+                      <Image
+                        src={interviewerImg}
+                        alt="Image of the interviewer"
+                        width={120}
+                        height={120}
+                        className={`object-cover object-center mx-auto my-auto ${
+                          activeTurn === "agent"
+                            ? `border-4 border-[${interview.theme_color}] rounded-full`
+                            : ""
+                        }`}
+                      />
+                      <div className="font-semibold">Interviewer</div>
                     </div>
                   </div>
                 </div>
 
-                {/* Motion Detection Stats (for debugging/transparency) */}
-                {motionStats.violations.length > 0 && (
-                  <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
-                    <div className="flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-yellow-600" />
-                      <span className="font-semibold text-yellow-800">
-                        Monitoring Active - {motionStats.violations.length}{" "}
-                        warning(s) recorded
-                      </span>
-                    </div>
+                <div className="flex flex-col justify-evenly w-[50%]">
+                  <div
+                    ref={lastUserResponseRef}
+                    className={`text-[22px] w-[80%] md:text-[26px] mt-4 mx-auto h-[250px] px-6 overflow-y-auto`}
+                  >
+                    {lastUserResponse}
                   </div>
-                )}
+                  <div className="flex flex-col mx-auto justify-center items-center align-middle">
+                    <Image
+                      src={`/user-icon.png`}
+                      alt="Picture of the user"
+                      width={120}
+                      height={120}
+                      className={`object-cover object-center mx-auto my-auto ${
+                        activeTurn === "user"
+                          ? `border-4 border-[${interview.theme_color}] rounded-full`
+                          : ""
+                      }`}
+                    />
+                    <div className="font-semibold">You</div>
+                  </div>
+                </div>
               </div>
             )}
             {isStarted && !isEnded && !isOldUser && (

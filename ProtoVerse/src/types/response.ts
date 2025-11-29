@@ -1,19 +1,3 @@
-export interface MotionViolation {
-  type: 'no_face' | 'multiple_faces' | 'looking_away' | 'suspicious_movement';
-  timestamp: number;
-  description: string;
-}
-
-export interface VideoMetadata {
-  hasVideo: boolean;
-  videoDuration?: number;
-  motionViolations?: MotionViolation[];
-  noFaceDetectedCount?: number;
-  multipleFacesCount?: number;
-  lookingAwayCount?: number;
-  suspiciousMovementCount?: number;
-}
-
 export interface Response {
   id: bigint;
   created_at: Date;
@@ -29,9 +13,6 @@ export interface Response {
   analytics: any;
   candidate_status: string;
   tab_switch_count: number;
-  motion_violations?: number;
-  face_detection_warnings?: number;
-  video_metadata?: VideoMetadata;
 }
 
 export interface Analytics {
