@@ -1,0 +1,190 @@
+{
+  "name": "Fin-Forge Design Tokens",
+  "version": "1.0.0",
+  "description": "Complete design token specification for the Fin-Forge gamified finance learning platform",
+  
+  "colors": {
+    "brand": {
+      "navy": "#0B2545",
+      "teal": "#17A2B8",
+      "gold": "#FFC857",
+      "neutral-bg": "#F7FAFC"
+    },
+    "semantic": {
+      "success": "#10b981",
+      "risk": "#f97316",
+      "destructive": "#ef4444"
+    },
+    "light-theme": {
+      "background": "#F7FAFC",
+      "foreground": "#0B2545",
+      "card": "#ffffff",
+      "card-foreground": "#0B2545",
+      "primary": "#17A2B8",
+      "primary-foreground": "#ffffff",
+      "secondary": "#0B2545",
+      "secondary-foreground": "#ffffff",
+      "muted": "#e2e8f0",
+      "muted-foreground": "#64748b",
+      "accent": "#FFC857",
+      "accent-foreground": "#0B2545",
+      "border": "#e2e8f0"
+    },
+    "dark-theme": {
+      "background": "#0f172a",
+      "foreground": "#f1f5f9",
+      "card": "#1e293b",
+      "card-foreground": "#f1f5f9",
+      "primary": "#20c4dc",
+      "primary-foreground": "#0f172a",
+      "secondary": "#334155",
+      "secondary-foreground": "#f1f5f9",
+      "muted": "#334155",
+      "muted-foreground": "#94a3b8",
+      "accent": "#FFD166",
+      "accent-foreground": "#0f172a",
+      "border": "#334155"
+    }
+  },
+  
+  "typography": {
+    "font-family": {
+      "primary": "Inter, system-ui, -apple-system, sans-serif",
+      "alternative": "Poppins, system-ui, -apple-system, sans-serif"
+    },
+    "font-size": {
+      "h1": "36px-48px",
+      "h2": "28px",
+      "h3": "20px",
+      "h4": "16px",
+      "body": "16px",
+      "small": "14px",
+      "caption": "12px"
+    },
+    "font-weight": {
+      "normal": 400,
+      "medium": 500,
+      "bold": 600
+    },
+    "line-height": {
+      "tight": 1.25,
+      "normal": 1.5,
+      "relaxed": 1.75
+    }
+  },
+  
+  "spacing": {
+    "base-unit": "8px",
+    "baseline": "4px",
+    "scale": {
+      "0": "0px",
+      "1": "4px",
+      "2": "8px",
+      "3": "12px",
+      "4": "16px",
+      "5": "20px",
+      "6": "24px",
+      "8": "32px",
+      "10": "40px",
+      "12": "48px",
+      "16": "64px",
+      "20": "80px",
+      "24": "96px"
+    }
+  },
+  
+  "border-radius": {
+    "sm": "4px",
+    "md": "8px",
+    "lg": "12px",
+    "xl": "16px",
+    "2xl": "20px",
+    "full": "9999px"
+  },
+  
+  "shadows": {
+    "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+    "md": "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+    "lg": "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+    "xl": "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+    "2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+  },
+  
+  "breakpoints": {
+    "mobile": "0px",
+    "tablet": "768px",
+    "desktop": "1024px",
+    "wide": "1280px"
+  },
+  
+  "animation": {
+    "duration": {
+      "fast": "150ms",
+      "normal": "300ms",
+      "slow": "600ms",
+      "chart": "800ms"
+    },
+    "easing": {
+      "ease-in": "cubic-bezier(0.4, 0, 1, 1)",
+      "ease-out": "cubic-bezier(0, 0, 0.2, 1)",
+      "ease-in-out": "cubic-bezier(0.4, 0, 0.2, 1)"
+    }
+  },
+  
+  "components": {
+    "button": {
+      "padding": {
+        "small": "8px 12px",
+        "medium": "12px 24px",
+        "large": "16px 32px"
+      },
+      "border-radius": "8px"
+    },
+    "card": {
+      "padding": "24px",
+      "border-radius": "12px",
+      "shadow": "0 1px 3px rgba(0, 0, 0, 0.1)"
+    },
+    "badge": {
+      "padding": "4px 12px",
+      "border-radius": "6px"
+    },
+    "xp-bar": {
+      "height": "10px",
+      "border-radius": "9999px"
+    }
+  },
+  
+  "gamification": {
+    "badge-rarity": {
+      "common": {
+        "gradient-from": "#9ca3af",
+        "gradient-to": "#6b7280"
+      },
+      "rare": {
+        "gradient-from": "#60a5fa",
+        "gradient-to": "#3b82f6"
+      },
+      "epic": {
+        "gradient-from": "#c084fc",
+        "gradient-to": "#9333ea"
+      },
+      "legendary": {
+        "gradient-from": "#fbbf24",
+        "gradient-to": "#f59e0b"
+      }
+    },
+    "difficulty-colors": {
+      "beginner": "#10b981",
+      "intermediate": "#FFC857",
+      "advanced": "#f97316"
+    }
+  },
+  
+  "usage": {
+    "css-variables": "Import /styles/globals.css for CSS custom properties",
+    "component-props": "All components accept className for Tailwind overrides",
+    "theme-switching": "Add 'dark' class to html element for dark mode",
+    "responsive": "Use Tailwind breakpoint prefixes (md:, lg:, etc.)"
+  }
+}
