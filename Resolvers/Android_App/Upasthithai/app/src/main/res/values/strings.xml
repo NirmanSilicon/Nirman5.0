@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Upasthit hai !</string>
+    <!-- User type options -->
+    <string-array name="user_types_array">
+        <item>Teacher</item>
+        <item>Student</item>
+    </string-array>
+
+    <!-- Group options -->
+    <string-array name="group_array">
+        <item>group_1</item>
+        <item>group_2</item>
+        <item>group_3</item>
+    </string-array>
+
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name = "maps">API KEY</string>
+    <string name = "gemini">API KEY</string>
+</resources>

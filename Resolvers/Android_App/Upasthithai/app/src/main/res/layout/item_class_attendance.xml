@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvClassName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Class Name"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:fontFamily="@font/amaranth"/>
+
+            <TextView
+                android:id="@+id/tvClassTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Time: 9:00 AM - 10:00 AM"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/amaranth"/>
+
+            <TextView
+                android:id="@+id/tvClassRoom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Room: A-101"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/amaranth"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnTakeAttendance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take Attendance"
+            android:textAllCaps="false"
+            android:backgroundTint="#FF6B35"
+            android:textColor="#FFFFFF"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:layout_gravity="center_vertical"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
