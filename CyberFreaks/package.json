@@ -1,0 +1,13 @@
+{
+  "name": "cyber-nova",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "server": "npm --prefix server run dev",
+    "server:start": "npm --prefix server run start"
+  }
+}
+
