@@ -4,12 +4,10 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
-  TrendingUp,
   RefreshCw
 } from 'lucide-react';
 import { complaintService, handleApiError } from '../services/api';
-
-
+import '../styles/leaflet.css';
 
 
 // StatsBox component
@@ -87,30 +85,66 @@ const Dashboard = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  // Fetch complaints from API
+  // Fetch complaints from API and fall back to localStorage if needed
   const fetchComplaints = async () => {
     try {
       setLoading(true);
+      console.log('Fetching complaints from API...');
+      
+      // First try to fetch from API
       const data = await complaintService.getComplaints();
-      setComplaints(data);
-      setError('');
+      console.log('Complaints data received from API:', data);
+      
+      // Check if we got data from the API
+      if (data && Array.isArray(data) && data.length > 0) {
+        console.log('Using complaints from API');
+        setComplaints(data);
+        setError('');
+      } else {
+        console.log('API returned empty array, checking localStorage...');
+        // If API returned empty array, try to get from localStorage
+        const localComplaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+        
+        if (localComplaints.length > 0) {
+          console.log('Using complaints from localStorage:', localComplaints);
+          setComplaints(localComplaints);
+          setError('Using locally saved complaints. Some features may be limited.');
+        } else {
+          console.log('No complaints found in localStorage');
+          setComplaints([]);
+          setError('No complaints found. Submit a new complaint to get started!');
+        }
+      }
     } catch (err) {
       console.error('Error loading complaints:', err);
-      const apiError = handleApiError(err);
-      setError(apiError.message || 'Failed to load complaints');
+      const errorMessage = err.message || 'Failed to load complaints';
+      setError(errorMessage);
+      
+      // If we have no complaints and there's an error, set empty array
+      if (complaints.length === 0) {
+        setComplaints([]);
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  // Load complaints on component mount
+  // Load complaints on component mount and when refreshTrigger changes
   useEffect(() => {
+    console.log('Fetching complaints...');
     fetchComplaints();
+  }, [refreshTrigger]);
 
-    // Check for success message from navigation state
+  // Check for success message from navigation state
+  useEffect(() => {
     if (location.state?.showSuccess) {
+      console.log('New complaint submitted, refreshing data...');
       setShowSuccess(true);
+      // Refresh the complaint list
+      setRefreshTrigger(prev => prev + 1);
+      // Clear the success message after 5 seconds
       const timer = setTimeout(() => setShowSuccess(false), 5000);
       return () => clearTimeout(timer);
     }
@@ -231,33 +265,6 @@ const Dashboard = () => {
         </div>
 
 
-
-        {/* Recent Complaints */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">Recent Complaints</h2>
-            <button
-              className="text-sm text-blue-600 hover:text-blue-800 flex items-center"
-              onClick={handleRefresh}
-              disabled={loading}
-            >
-              <RefreshCw className={`h-4 w-4 mr-1 ${loading ? 'animate-spin' : ''}`} />
-              {loading ? 'Refreshing...' : 'Refresh'}
-            </button>
-          </div>
-
-          {filteredComplaints.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <p>No complaints found. Submit a new complaint to see it here.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredComplaints.map(complaint => (
-                <ComplaintCard key={complaint.id} complaint={complaint} />
-              ))}
-            </div>
-          )}
-        </div>
 
         {/* Recent Complaints */}
         <div>
