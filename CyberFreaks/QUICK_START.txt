@@ -1,0 +1,66 @@
+========================================
+  CYBER-NOVA - Quick Start Guide
+========================================
+
+The website needs TWO servers running:
+1. Backend Server (port 4000)
+2. Frontend Server (port 5173)
+
+========================================
+  EASIEST WAY TO START:
+========================================
+
+Double-click: start-all.bat
+(This starts both servers automatically)
+
+OR
+
+Right-click start-all.ps1 → "Run with PowerShell"
+
+========================================
+  MANUAL START (2 Terminals):
+========================================
+
+TERMINAL 1 - Backend:
+  cd server
+  npm run dev
+
+TERMINAL 2 - Frontend:
+  cd frontend
+  npm run dev
+
+========================================
+  OPEN IN BROWSER:
+========================================
+
+Once both servers are running, open:
+  http://localhost:5173
+
+========================================
+  VERIFY IT'S WORKING:
+========================================
+
+Backend should show:
+  ✅ CYBER-NOVA backend ready on http://localhost:4000
+
+Frontend should show:
+  ➜  Local:   http://localhost:5173/
+
+========================================
+  TROUBLESHOOTING:
+========================================
+
+If you see "Failed to load conversations":
+  → Backend server is not running
+  → Start it with: cd server && npm run dev
+
+If website won't open:
+  → Frontend server is not running
+  → Start it with: cd frontend && npm run dev
+
+If ports are in use:
+  → Close other applications using ports 4000 or 5173
+  → Or change ports in .env files
+
+========================================
+
