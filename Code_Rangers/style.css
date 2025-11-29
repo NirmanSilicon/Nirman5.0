@@ -1,0 +1,790 @@
+/* =========================
+1. RESET & BASE
+========================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  background: #050608;
+  color: #f4f4f4;
+}
+
+/* =========================
+2. AUTH SCREEN
+========================= */
+
+.auth-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top left, #1b1b22 0, #050608 55%, #000 100%);
+  padding: 2rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 16px;
+  border: 1px solid #3a3a46;
+  background: rgba(10, 10, 16, 0.9);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.75);
+  padding: 2.5rem 3rem 3rem;
+}
+
+/* top bar */
+.auth-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #2c2c35;
+  padding-bottom: 1rem;
+}
+
+.project-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #e9e9f5;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.logo-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid #f5c46a;
+  box-shadow: 0 0 10px rgba(245, 196, 106, 0.7);
+}
+
+.logo-text {
+  font-size: 0.8rem;
+}
+
+.topbar-center-text {
+  color: #8d8da0;
+  font-size: 0.9rem;
+}
+
+/* auth switch */
+.auth-switch {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.switch-btn {
+  padding: 0.4rem 2.2rem;
+  border-radius: 999px;
+  border: 1px solid #4a4a5a;
+  color: #eaeaf8;
+  font-size: 0.9rem;
+  cursor: pointer;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.switch-btn:first-child {
+  border-radius: 999px 0 0 999px;
+}
+
+.switch-btn:last-child {
+  border-radius: 0 999px 999px 0;
+  border-left: none;
+}
+
+.switch-btn.active {
+  background: #f5a623;
+  color: #050608;
+  border-color: #f5a623;
+}
+
+/* form card */
+.form-card {
+  max-width: 550px;
+  margin: 0 auto;
+  background: #0d0d16;
+  border-radius: 24px;
+  border: 1px solid #39394a;
+  padding: 2.2rem 2.5rem;
+}
+
+.auth-form {
+  display: none;
+}
+
+.auth-form.active {
+  display: block;
+}
+
+/* fields */
+.field-group {
+  margin-bottom: 1.4rem;
+}
+
+.field-group label {
+  display: block;
+  font-size: 0.95rem;
+  color: #e4e4f2;
+  margin-bottom: 0.25rem;
+  opacity: 0.85;
+}
+
+.field-group input,
+.field-group select {
+  width: 100%;
+  padding: 0.3rem 0;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+.field-group select {
+  cursor: pointer;
+}
+
+.underline {
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(to right, #8a8aa3, #2e2e3a);
+  opacity: 0.7;
+}
+
+.password-strength-text {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.password-strength-weak {
+  color: #ff4d4d;
+}
+
+.password-strength-medium {
+  color: #f5a623;
+}
+
+.password-strength-strong {
+  color: #22c55e;
+}
+
+/* auth primary button */
+.primary-cta {
+  margin-top: 1.8rem;
+  width: 100%;
+  padding: 0.8rem 0;
+  border-radius: 999px;
+  background: #f5a623;
+  color: #050608;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 8px 20px rgba(245, 166, 35, 0.45);
+  transition: all 0.2s ease;
+}
+
+.primary-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(245, 166, 35, 0.6);
+}
+
+/* =========================
+3. LANDING PAGE HERO
+========================= */
+
+.landing-page {
+  display: none;
+  min-height: 100vh;
+  width: 100%;
+  background: #050608;
+  color: #f4f4f4;
+  padding: 2.5rem 3rem 3rem;
+}
+
+.landing-page.visible {
+  display: block;
+}
+
+.landing-hero-wrapper {
+  min-height: calc(100vh - 2.5rem - 3rem);
+  display: flex;
+  flex-direction: column;
+}
+
+/* landing header */
+.landing-header {
+  border: 1px solid #f4f4f4;
+  border-radius: 8px;
+  padding: 0.8rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 3rem;
+}
+
+.landing-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.profile-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #f4f4f4;
+}
+
+.profile-label {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.landing-username {
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.sos-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #ff7a30;
+  color: #050608;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sos-btn:hover {
+  transform: scale(1.05);
+}
+
+/* ECO POINTS SECTION STYLES */
+.eco-points-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.eco-points-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 20px;
+  color: #22c55e;
+}
+
+.eco-icon {
+  font-size: 1.1rem;
+}
+
+.eco-points {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.eco-label {
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+.eco-rewards-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid #f5a623;
+  background: transparent;
+  color: #f5a623;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.eco-rewards-btn:hover {
+  background: #f5a623;
+  color: #050608;
+}
+
+/* hero block */
+.landing-hero {
+  flex: 1;
+  border: 1px solid #f4f4f4;
+  border-radius: 8px;
+  padding: 3rem 2rem 2.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.landing-hero-text {
+  max-width: 800px;
+  margin: 0 auto 2.5rem;
+}
+
+.landing-hero-text h1 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  margin-bottom: 1rem;
+  letter-spacing: 0.06em;
+}
+
+.landing-hero-text p {
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+/* actions */
+.landing-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.outline-btn {
+  padding: 0.9rem 2.3rem;
+  border-radius: 999px;
+  border: 2px solid #f4f4f4;
+  background: transparent;
+  color: #f4f4f4;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.outline-btn:hover {
+  background: #f4f4f4;
+  color: #050608;
+}
+
+.landing-logo-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #c54a4a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+/* swipe down button */
+.swipe-down-hint {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  opacity: 0.7;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: center;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid #555;
+  transition: all 0.2s ease;
+}
+
+.swipe-down-hint:hover {
+  opacity: 1;
+  border-color: #f5a623;
+}
+
+/* =========================
+4. BUS STATUS SECTION
+========================= */
+
+.bus-status-section {
+  padding: 3rem 3rem 4rem;
+  background: #050608;
+}
+
+.bus-status-layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 1.4fr;
+  gap: 2.5rem;
+  align-items: stretch;
+}
+
+/* left form */
+.bus-status-form {
+  border-radius: 16px;
+  border: 1px solid #3a3a46;
+  padding: 2rem 2.2rem;
+  background: #0b0b12;
+}
+
+.bus-status-form h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.bus-status-subtitle {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-bottom: 1.8rem;
+}
+
+.bus-field-group {
+  margin-bottom: 1.4rem;
+}
+
+.bus-field-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  color: #e4e4f2;
+}
+
+.bus-field-group input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #3a3a46;
+  background: #050608;
+  color: #f4f4f4;
+  font-size: 0.95rem;
+}
+
+.bus-field-group input::placeholder {
+  opacity: 0.6;
+}
+
+/* time hint text */
+.time-hint {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-top: 0.2rem;
+}
+
+.bus-primary-btn {
+  margin-top: 0.4rem;
+  width: 100%;
+  padding: 0.85rem 0;
+  border-radius: 999px;
+  border: none;
+  background: #f5a623;
+  color: #050608;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: all 0.2s ease;
+}
+
+.bus-primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(245, 166, 35, 0.6);
+}
+
+/* right: map */
+.bus-status-map {
+  border-radius: 16px;
+  border: 1px solid #3a3a46;
+  background: #0b0b12;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-header {
+  padding: 0.9rem 1.4rem;
+  border-bottom: 1px solid #2c2c35;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.map-status {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid #555;
+  opacity: 0.8;
+}
+
+.map-body {
+  flex: 1;
+  min-height: 260px;
+  border-radius: 0 0 16px 16px;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #1b1b22 0, #050608 55%);
+}
+
+.map-body iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* =========================
+5. ECO REWARDS MODAL STYLES
+========================= */
+
+.eco-rewards-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 6, 8, 0.9);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.eco-rewards-modal.active {
+  display: flex;
+}
+
+.eco-rewards-card {
+  background: #0d0d16;
+  border: 1px solid #3a3a46;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.eco-rewards-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #2c2c35;
+}
+
+.eco-rewards-header h2 {
+  color: #22c55e;
+  font-size: 1.5rem;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  color: #8d8da0;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-modal:hover {
+  color: #f4f4f4;
+}
+
+.points-summary {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.points-total {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #22c55e;
+  margin-bottom: 0.5rem;
+}
+
+.points-label {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.rewards-section h3 {
+  color: #f5a623;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.rewards-grid {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.reward-item {
+  background: #0b0b12;
+  border: 1px solid #3a3a46;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.reward-item:hover {
+  border-color: #f5a623;
+  transform: translateY(-2px);
+}
+
+.reward-info h4 {
+  color: #f4f4f4;
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+.reward-info p {
+  color: #8d8da0;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.reward-points {
+  color: #22c55e;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.redeem-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid #f5a623;
+  background: #f5a623;
+  color: #050608;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.redeem-btn:disabled {
+  background: #3a3a46;
+  border-color: #3a3a46;
+  color: #8d8da0;
+  cursor: not-allowed;
+}
+
+.redeem-btn:not(:disabled):hover {
+  background: #e69500;
+  border-color: #e69500;
+}
+
+.how-to-earn {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #2c2c35;
+}
+
+.how-to-earn h3 {
+  color: #f5a623;
+  margin-bottom: 1rem;
+}
+
+.earn-methods {
+  list-style: none;
+}
+
+.earn-methods li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #8d8da0;
+}
+
+.earn-methods li::before {
+  content: "✓";
+  color: #22c55e;
+  font-weight: bold;
+}
+
+/* =========================
+6. RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .bus-status-section {
+    padding: 3rem 1.2rem 3rem;
+  }
+
+  .bus-status-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .bus-status-map {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-card {
+    padding: 1.7rem 1.4rem 2.2rem;
+  }
+
+  .form-card {
+    padding: 1.6rem 1.4rem;
+  }
+
+  .topbar-center-text {
+    display: none;
+  }
+
+  .landing-page {
+    padding: 1.5rem 1rem 2rem;
+  }
+
+  .landing-header {
+    flex-direction: column;
+    gap: 0.7rem;
+    align-items: flex-start;
+  }
+
+  .eco-points-section {
+    gap: 0.5rem;
+  }
+  
+  .eco-points-display {
+    padding: 0.4rem 0.8rem;
+  }
+
+  .landing-actions {
+    flex-direction: column;
+  }
+
+  .landing-logo-circle {
+    width: 120px;
+    height: 120px;
+  }
+
+  .eco-rewards-card {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+}

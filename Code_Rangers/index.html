@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Yatra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- =========================
+       AUTH SCREEN (LOGIN / SIGNUP)
+       ========================= -->
+  <div class="auth-screen" id="authScreen">
+    <div class="auth-card">
+      <!-- Top bar -->
+      <div class="auth-topbar">
+        <div class="project-logo">
+          <span class="logo-dot"></span>
+          <span class="logo-text">Smart Yatra</span>
+        </div>
+      </div>
+
+      <!-- Signup / Login switch -->
+      <div class="auth-switch">
+        <button class="switch-btn active" data-tab="signup">Signup</button>
+        <button class="switch-btn" data-tab="login">Login</button>
+      </div>
+
+      <!-- Inner forms card -->
+      <div class="form-card">
+        <!-- SIGNUP FORM -->
+        <form id="signupForm" class="auth-form active">
+          <div class="field-group">
+            <label for="signupName">Name</label>
+            <input type="text" id="signupName" required />
+            <span class="underline"></span>
+          </div>
+
+          <div class="field-group">
+            <label for="signupGender">Gender</label>
+            <select id="signupGender" required>
+              <option value="">Select gender</option>
+              <option value="female">Female</option>
+              <option value="male">Male</option>
+              <option value="other">Other</option>
+              <option value="prefer_not">Prefer not to say</option>
+            </select>
+            <span class="underline"></span>
+          </div>
+
+          <div class="field-group">
+            <label for="signupEmail">Gmail ID</label>
+            <input
+              type="email"
+              id="signupEmail"
+              placeholder="example@gmail.com"
+              required
+            />
+            <span class="underline"></span>
+          </div>
+
+          <div class="field-group">
+            <label for="signupMobile">Mobile number</label>
+            <input
+              type="tel"
+              id="signupMobile"
+              placeholder="10-digit mobile"
+              required
+            />
+            <span class="underline"></span>
+          </div>
+
+          <div class="field-group">
+            <label for="signupPassword">Password</label>
+            <input type="password" id="signupPassword" required />
+            <span class="underline"></span>
+            <small id="passwordStrength" class="password-strength-text">
+              Strength: -
+            </small>
+          </div>
+
+          <div class="field-group">
+            <label for="signupConfirmPassword">Confirm password</label>
+            <input type="password" id="signupConfirmPassword" required />
+            <span class="underline"></span>
+          </div>
+
+          <button type="submit" class="primary-cta">
+            Create Passenger Account
+          </button>
+        </form>
+
+        <!-- LOGIN FORM -->
+        <form id="loginForm" class="auth-form">
+          <div class="field-group">
+            <label for="loginId">Gmail / Mobile</label>
+            <input
+              type="text"
+              id="loginId"
+              placeholder="example@gmail.com or 10-digit mobile"
+              required
+            />
+            <span class="underline"></span>
+          </div>
+
+          <div class="field-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" required />
+            <span class="underline"></span>
+          </div>
+
+          <button type="submit" class="primary-cta">
+            Login as Passenger
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================
+       LANDING PAGE (FULL SCREEN HERO)
+       ========================= -->
+  <main class="landing-page" id="landingPage" style="display: none;">
+    <div class="landing-hero-wrapper">
+      <!-- top bar on landing -->
+      <header class="landing-header">
+        <div class="landing-user-profile">
+          <div class="profile-circle"></div>
+          <span class="profile-label">User_Profile</span>
+        </div>
+        
+        <!-- ECO POINTS SECTION -->
+        <div class="eco-points-section">
+          <div class="eco-points-display">
+            <span class="eco-icon">🌱</span>
+            <span class="eco-points" id="ecoPoints">0</span>
+            <span class="eco-label">Eco Points</span>
+          </div>
+          <button class="eco-rewards-btn" id="ecoRewardsBtn">Rewards</button>
+        </div>
+        
+        <div class="landing-username" id="landingUsername">
+          user name fetched from DB
+        </div>
+        <button class="sos-btn">SOS</button>
+      </header>
+
+      <!-- hero content -->
+      <section class="landing-hero">
+        <div class="landing-hero-text">
+          <h1>Track. Book. Travel. Smart Bus System for Bhubaneswar</h1>
+          <p>
+            Real-time tracking, ETA, seat booking, SOS & eco-rewards for safer journeys.
+          </p>
+        </div>
+
+        <div class="landing-actions">
+          <button class="outline-btn" id="trackBusBtn">Track your bus</button>
+          <div class="landing-logo-circle">Logo/random pic</div>
+          <button class="outline-btn" id="bookTicketBtn">Book your Ticket</button>
+        </div>
+
+        <button type="button" class="swipe-down-hint" id="swipeDownHint">
+          ↓ swipe down
+        </button>
+      </section>
+    </div>
+
+    <!-- =========================
+         BUS STATUS SECTION (AFTER SCROLL)
+         ========================= -->
+    <section id="more-content" class="bus-status-section">
+      <div class="bus-status-layout">
+        <!-- LEFT: form -->
+        <div class="bus-status-form">
+          <h2>Check Bus Status</h2>
+          <p class="bus-status-subtitle">
+            Enter your trip details to see live bus status and ETA.
+          </p>
+
+          <form id="busStatusForm">
+            <div class="bus-field-group">
+              <label for="pickup">Pickup point</label>
+              <input type="text" id="pickup" placeholder="e.g. Master Canteen" required>
+            </div>
+
+            <div class="bus-field-group">
+              <label for="destination">Destination</label>
+              <input type="text" id="destination" placeholder="e.g. KIIT Square" required>
+            </div>
+
+            <div class="bus-field-group">
+              <label for="pickupTime">Pickup time</label>
+              <input
+                type="time"
+                id="pickupTime"
+                required
+                step="60"
+              >
+              <div class="time-hint">
+                If picker doesn't appear, type time as HH:MM (24‑hour).
+              </div>
+            </div>
+
+            <button type="submit" class="bus-primary-btn">
+              Show Bus Status
+            </button>
+          </form>
+        </div>
+
+        <!-- RIGHT: embedded Google Map -->
+        <div class="bus-status-map">
+          <div class="map-header">
+            <span>Live Map</span>
+            <span class="map-status">Demo mode</span>
+          </div>
+          <div class="map-body" id="mapContainer">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d34352.36417845841!2d85.8062848!3d20.247347199999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sen!2sin!4v1764397087668!5m2!1sen!2sin"
+              style="border:0; width:100%; height:100%;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ECO REWARDS MODAL -->
+  <div class="eco-rewards-modal" id="ecoRewardsModal">
+    <div class="eco-rewards-card">
+      <div class="eco-rewards-header">
+        <h2>Eco Rewards</h2>
+        <button class="close-modal" id="closeModal">&times;</button>
+      </div>
+      
+      <div class="points-summary">
+        <div class="points-total" id="modalPointsTotal">0</div>
+        <div class="points-label">Available Points</div>
+      </div>
+      
+      <div class="rewards-section">
+        <h3>Available Rewards</h3>
+        <div class="rewards-grid" id="rewardsGrid">
+          <!-- Rewards will be populated by JavaScript -->
+        </div>
+      </div>
+      
+      <div class="how-to-earn">
+        <h3>How to Earn Points</h3>
+        <ul class="earn-methods">
+          <li>Complete bus journeys: +10 points per trip</li>
+          <li>Book tickets in advance: +5 points</li>
+          <li>Refer friends: +50 points per referral</li>
+          <li>Use eco-friendly routes: +15 points</li>
+          <li>Monthly travel streak: +100 points</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
