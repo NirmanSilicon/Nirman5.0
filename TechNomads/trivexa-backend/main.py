@@ -10,7 +10,10 @@ CORS(app)
 
 # ---------- BASE DIRECTORY + DATABASE PATH ----------
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'medicine.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database/','medicines.db')
+# os._exit()
+print(basedir)
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -114,6 +117,7 @@ def get_all_medicines():
 # ----------------------------------------------------------
 @app.route("/medicines/<int:id>", methods=["GET"])
 def get_medicine(id):
+    print("hitted")
     med = Medicine.query.get(id)
 
     if not med:
@@ -135,6 +139,7 @@ def get_medicine(id):
         "generic_name": med.generic_name,
         "img_urls": json.loads(med.img_urls)
     }), 200
+
 
 
 # ----------------------------------------------------------
