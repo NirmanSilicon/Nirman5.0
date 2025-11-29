@@ -1,0 +1,42 @@
+# Web Framework
+fastapi==0.122.0
+uvicorn[standard]==0.38.0
+
+# Database
+# motor==3.7.1  # MongoDB (replaced with MySQL)
+pymongo==4.15.4  # Keep for any legacy imports
+aiomysql==0.2.0
+mysql-connector-python==8.2.0
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.20
+
+# Configuration & Environment
+pydantic==2.12.4
+pydantic-settings==2.12.0
+python-dotenv==1.0.1
+
+# NLP & ML
+scikit-learn==1.7.2
+textblob==0.19.0
+pandas==2.3.3
+numpy==2.3.5
+
+# Caching
+redis==5.0.1
+
+# SMS & Communication
+twilio==9.0.0
+
+# Utilities
+python-dateutil==2.9.0.post0
+typing-extensions==4.15.0
+slowapi==0.1.9
+bcrypt==4.1.2
+jinja2==3.1.2
+email-validator==2.1.0
+
+# Firebase
+firebase-admin==6.5.0
