@@ -19,7 +19,16 @@ async def lifespan(app: FastAPI):
     # Connect to MySQL
     try:
         await connect_to_mysql()
+        await connect_to_mysql()
         app_logger.info("Successfully connected to MySQL")
+        
+        from .services.firebase_service import firebase_service
+        app_logger.info(f"Firebase Service Enabled: {firebase_service.enabled}")
+        print(f"🔥 Firebase Service Enabled: {firebase_service.enabled}")
+        if firebase_service.enabled:
+            print("🔥 Firebase initialized successfully")
+        else:
+            print("❌ Firebase NOT initialized")
     except Exception as e:
         app_logger.error(f"Failed to connect to MySQL: {e}")
         raise

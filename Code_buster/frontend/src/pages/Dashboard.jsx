@@ -8,7 +8,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { complaintService, handleApiError } from '../services/api';
-import ComplaintHeatmap from '../components/ComplaintHeatmap';
+
 
 
 
@@ -230,11 +230,7 @@ const Dashboard = () => {
           />
         </div>
 
-        {/* Heatmap Section */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 className="text-lg font-semibold mb-4">Complaint Distribution</h2>
-          <ComplaintHeatmap complaints={filteredComplaints} />
-        </div>
+
 
         {/* Recent Complaints */}
         <div className="bg-white rounded-lg shadow p-6 mb-6">

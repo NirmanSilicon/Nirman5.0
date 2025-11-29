@@ -29,7 +29,21 @@ class FirebaseService:
                 return
             
             # Get credentials path
-            cred_path = os.getenv("FIREBASE_CREDENTIALS_PATH", "firebase-credentials.json")
+            cred_paths = [
+                os.getenv("FIREBASE_CREDENTIALS_PATH"),
+                "firebase-credentials.json",
+                "backend/firebase-credentials.json",
+                "../firebase-credentials.json"
+            ]
+            
+            cred_path = None
+            for path in cred_paths:
+                if path and os.path.exists(path):
+                    cred_path = path
+                    break
+            
+            if not cred_path:
+                cred_path = "firebase-credentials.json"  # Default for error message
             
             # Check if credentials file exists
             if not os.path.exists(cred_path):
@@ -75,7 +89,9 @@ class FirebaseService:
             
             # Add to Firestore
             doc_ref = self.db.collection('complaints').document(complaint_data.get('id'))
+            print(f"🔥 Saving complaint to Firebase: {complaint_data.get('id')}")
             doc_ref.set(firestore_data)
+            print(f"✅ Complaint saved successfully: {complaint_data.get('id')}")
             
             app_logger.info(f"Complaint saved to Firebase: {complaint_data.get('id')}")
             return complaint_data.get('id')
@@ -191,45 +207,22 @@ class FirebaseService:
                     if value is not None:
                         query = query.where(field, '==', value)
             
-            # Try to order by created_at descending (requires index)
-            # If it fails, fall back to unordered query
-            try:
-                query = query.order_by('created_at', direction=firestore.Query.DESCENDING)
-                query = query.offset(skip).limit(limit)
-                docs = query.stream()
-                
-                complaints = []
-                for doc in docs:
-                    complaint_data = doc.to_dict()
-                    complaints.append(complaint_data)
-                
-                return complaints
-                
-            except Exception as order_error:
-                # Ordering failed (likely missing index), try without ordering
-                app_logger.warning(f"Ordering by created_at failed, using unordered query: {order_error}")
-                query = self.db.collection('complaints')
-                
-                # Reapply filters
-                if filters:
-                    for field, value in filters.items():
-                        if value is not None:
-                            query = query.where(field, '==', value)
-                
-                # Apply pagination without ordering
-                query = query.offset(skip).limit(limit)
-                docs = query.stream()
-                
-                complaints = []
-                for doc in docs:
-                    complaint_data = doc.to_dict()
-                    complaints.append(complaint_data)
-                
-                return complaints
+            # Simple query without ordering to avoid index requirements
+            query = query.limit(limit)
+            docs = query.stream()
+            
+            complaints = []
+            for doc in docs:
+                complaint_data = doc.to_dict()
+                complaints.append(complaint_data)
+            
+            app_logger.info(f"Retrieved {len(complaints)} complaints from Firebase")
+            return complaints
             
         except Exception as e:
             app_logger.error(f"Error listing complaints from Firebase: {e}")
             return []
+    
     
     def delete_complaint(self, complaint_id: str) -> bool:
         """

@@ -98,6 +98,13 @@ try:
             print(f"Complaint {complaint['id']} already exists.")
             
     print(f"\n✅ Seeding complete. Added {count} new complaints.")
+    
+    # Verify
+    print("Verifying data...")
+    saved = firebase_service.list_complaints(limit=10)
+    print(f"Found {len(saved)} complaints in DB.")
+    for c in saved:
+        print(f"- {c.get('id')}")
         
 except Exception as e:
     print(f"❌ Error: {e}")

@@ -27,7 +27,9 @@ async def submit_complaint(complaint: ComplaintCreate) -> Dict[str, Any]:
         # Create complaint document
         complaint_doc = ComplaintModel(
             address=complaint.address,
-            complaint_text=complaint.complaint_text
+            complaint_text=complaint.complaint_text,
+            latitude=complaint.latitude,
+            longitude=complaint.longitude
         )
         
         # Perform NLP analysis
@@ -52,7 +54,9 @@ async def submit_complaint(complaint: ComplaintCreate) -> Dict[str, Any]:
             'confidence_score': complaint_doc.confidence_score,
             'status': complaint_doc.status,
             'created_at': complaint_doc.created_at,
-            'updated_at': complaint_doc.updated_at
+            'updated_at': complaint_doc.updated_at,
+            'latitude': complaint_doc.latitude,
+            'longitude': complaint_doc.longitude
         }
         
         firebase_id = firebase_service.save_complaint(firebase_data)

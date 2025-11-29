@@ -6,6 +6,10 @@ Startup script with comprehensive Python 3.14 compatibility fix
 import sys
 
 # Apply comprehensive fix
+import os
+os.environ["FIREBASE_CREDENTIALS_PATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "firebase-credentials.json"))
+print(f"Set FIREBASE_CREDENTIALS_PATH to: {os.environ['FIREBASE_CREDENTIALS_PATH']}")
+
 print("Applying comprehensive Python 3.14 compatibility fix...")
 try:
     import comprehensive_fix

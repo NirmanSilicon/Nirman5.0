@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
-import asyncio
+import pandas as pd
 
 from ..database.models import CategoryEnum, TrendData, PredictionResponse
 from ..services.firebase_service import firebase_service
@@ -128,14 +128,14 @@ class PredictionService:
             app_logger.error(f"Error training model for {category}: {e}")
             return False
     
-    def predict_next_days(self, category: str, days: int = 7) -> List[Tuple[datetime, int]]:
+    async def predict_next_days(self, category: str, days: int = 7) -> List[Tuple[datetime, int]]:
         """Predict complaint counts for next N days"""
         try:
             predictions = []
             current_date = datetime.utcnow()
             
             # Get recent historical data for feature preparation
-            historical_data = self.get_historical_data_sync(category, 30)
+            historical_data = await self.get_historical_data(category, 30)
             
             if len(historical_data) < 7:
                 # Not enough data for prediction, use simple average
@@ -183,21 +183,7 @@ class PredictionService:
             app_logger.error(f"Error predicting for {category}: {e}")
             return []
     
-    def get_historical_data_sync(self, category: str, days: int) -> List[Tuple[datetime, int]]:
-        """Synchronous version of get_historical_data for internal use"""
-        # This is a simplified version - in production, you'd want to handle async properly
-        try:
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            return loop.run_until_complete(self.get_historical_data(category, days))
-        except Exception as e:
-            app_logger.error(f"Error in sync historical data fetch: {e}")
-            return []
-        finally:
-            try:
-                loop.close()
-            except:
-                pass
+
     
     def calculate_trend_direction(self, historical_data: List[Tuple[datetime, int]], 
                                  predicted_data: List[Tuple[datetime, int]]) -> str:
@@ -282,7 +268,7 @@ class PredictionService:
                 self.train_model(category, X, y)
             
             # Make predictions
-            predicted_data = self.predict_next_days(category, 7)
+            predicted_data = await self.predict_next_days(category, 7)
             
             # Calculate trend direction
             trend_direction = self.calculate_trend_direction(historical_data, predicted_data)

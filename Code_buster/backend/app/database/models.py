@@ -45,6 +45,8 @@ class ComplaintModel(BaseModel):
     id: Optional[str] = Field(default_factory=lambda: str(uuid.uuid4()), description="Complaint ID")
     address: str = Field(..., min_length=5, max_length=500, description="Address description")
     complaint_text: str = Field(..., min_length=10, max_length=2000, description="Complaint description")
+    latitude: Optional[float] = Field(None, description="Latitude")
+    longitude: Optional[float] = Field(None, description="Longitude")
     cleaned_text: Optional[str] = Field(None, description="Cleaned complaint text")
     
     # NLP Analysis results
@@ -79,6 +81,8 @@ class ComplaintModel(BaseModel):
 class ComplaintCreate(BaseModel):
     address: str = Field(..., min_length=5, max_length=500)
     complaint_text: str = Field(..., min_length=10, max_length=2000)
+    latitude: Optional[float] = Field(None)
+    longitude: Optional[float] = Field(None)
 
 
 class ComplaintUpdate(BaseModel):
