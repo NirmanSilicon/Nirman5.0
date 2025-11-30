@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EdAlchemy</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header (Same as main page) -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-atom"></i>
+                    </div>
+                    <div class="logo-text">EdAlchemy</div>
+                </div>
+                
+                <div class="nav-links">
+                    <a href="../index.html">Home</a>
+                    <a href="#materials">Study Materials</a>
+                    <a href="#quizzes">Quizzes</a>
+                    <a href="#analytics">Analytics</a>
+                </div>
+                
+                <div class="auth-buttons" id="authButtons"></div>
+                <div class="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Dashboard Main Content -->
+    <section class="dashboard-hero">
+        <div class="container">
+            <div class="dashboard-welcome">
+                <h1>Welcome to Your Learning Dashboard</h1>
+                <p>Your AI-powered study companion is ready to help you learn smarter</p>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="action-card" id="uploadMaterialBtn">
+                    <div class="action-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <h3>Upload Notes</h3>
+                    <p>Upload your study materials to generate quizzes</p>
+                </div>
+                
+                <div class="action-card" id="generateQuizBtn">
+                    <div class="action-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Generate Quiz</h3>
+                    <p>AI-powered quiz from your materials</p>
+                </div>
+                
+                <div class="action-card" id="viewQuizzesBtn">
+                    <div class="action-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3>My Quizzes</h3>
+                    <p>View and take your generated quizzes</p>
+                </div>
+                
+                <div class="action-card" id="analyticsBtn">
+                    <div class="action-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Analytics</h3>
+                    <p>Track your learning progress</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Study Materials Section -->
+    <section id="materials" class="dashboard-section">
+        <div class="container">
+            <h2 class="section-title">My Study Materials</h2>
+            <div class="materials-grid" id="materialsGrid">
+                <!-- Materials will be loaded here -->
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <h3>No study materials yet</h3>
+                    <p>Upload your first study material to get started!</p>
+                    <button class="btn btn-primary" id="uploadFirstMaterial">Upload Material</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quizzes Section -->
+    <section id="quizzes" class="dashboard-section">
+        <div class="container">
+            <h2 class="section-title">My Quizzes</h2>
+            <div class="quizzes-grid" id="quizzesGrid">
+                <!-- Quizzes will be loaded here -->
+                <div class="empty-state">
+                    <i class="fas fa-question-circle"></i>
+                    <h3>No quizzes yet</h3>
+                    <p>Generate your first quiz from your study materials!</p>
+                    <button class="btn btn-primary" id="generateFirstQuiz">Generate Quiz</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Material Modal -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Upload Study Material</h2>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="materialTitle">Title</label>
+                    <input type="text" id="materialTitle" name="title" placeholder="e.g., Physics Chapter 5 Notes" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="materialSubject">Subject</label>
+                    <input type="text" id="materialSubject" name="subject" placeholder="e.g., Physics, Mathematics" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="materialTags">Tags (comma separated)</label>
+                    <input type="text" id="materialTags" name="tags" placeholder="e.g., quantum, mechanics, physics">
+                </div>
+                
+                <div class="form-group">
+                    <label for="materialFile">File</label>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to upload or drag and drop</p>
+                        <span>PDF, TXT, DOC, Images (max 10MB)</span>
+                        <input type="file" id="materialFile" name="material" accept=".pdf,.txt,.doc,.docx,.jpg,.jpeg,.png" required>
+                    </div>
+                    <div id="fileName" class="file-name"></div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-full">
+                    <i class="fas fa-upload"></i> Upload Material
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Generate Quiz Modal -->
+    <div id="generateQuizModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Generate AI Quiz</h2>
+            <form id="generateQuizForm">
+                <div class="form-group">
+                    <label for="quizMaterial">Select Study Material</label>
+                    <select id="quizMaterial" name="materialId">
+                        <option value="">Generate from sample content</option>
+                        <!-- Materials will be loaded here -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quizType">Quiz Type</label>
+                    <select id="quizType" name="quizType">
+                        <option value="mixed">Mixed Questions</option>
+                        <option value="mcq">Multiple Choice Only</option>
+                        <option value="true_false">True/False Only</option>
+                        <option value="fill_blank">Fill in the Blanks</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quizDifficulty">Difficulty</label>
+                    <select id="quizDifficulty" name="difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quizQuestions">Number of Questions</label>
+                    <input type="number" id="quizQuestions" name="numQuestions" min="5" max="50" value="10">
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-full">
+                    <i class="fas fa-robot"></i> Generate Quiz
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Quiz Taking Interface -->
+    <div id="quizInterface" class="modal large-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="quiz-header">
+                <h2 id="quizTitle">Quiz</h2>
+                <div class="quiz-progress">
+                    <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quiz-content">
+                <div id="questionContainer">
+                    <!-- Questions will be loaded here -->
+                </div>
+                
+                <div class="quiz-navigation">
+                    <button class="btn btn-secondary" id="prevQuestion">Previous</button>
+                    <button class="btn btn-primary" id="nextQuestion">Next</button>
+                    <button class="btn btn-success" id="submitQuiz" style="display: none;">Submit Quiz</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Results Modal -->
+    <div id="quizResults" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="results-header">
+                <i class="fas fa-trophy"></i>
+                <h2>Quiz Completed!</h2>
+            </div>
+            
+            <div class="results-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="finalScore">0</div>
+                    <div class="stat-label">Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="correctAnswers">0</div>
+                    <div class="stat-label">Correct</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="percentage">0%</div>
+                    <div class="stat-label">Percentage</div>
+                </div>
+            </div>
+            
+            <div class="results-actions">
+                <button class="btn btn-secondary" id="reviewQuiz">Review Answers</button>
+                <button class="btn btn-primary" id="newQuiz">Generate New Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
