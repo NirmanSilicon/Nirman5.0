@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blockchain-Based Blue Carbon Registry</title>
+  <!-- ✅ Single CSS file -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">Blue<span>Carbon</span></div>
+    <nav class="nav-links" id="nav-links">
+      <a href="#home">Home</a>
+      <a href="#problem">Problem</a>
+      <a href="#solution">Solution</a>
+      <a href="#workflow">How It Works</a>
+      <a href="#business">Business Model</a>
+      <a href="#impact">Impact</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+      ☰
+    </button>
+  </header>
+
+  <!-- Hero / Home -->
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <h1>Blockchain-Based <span>Blue Carbon Registry</span></h1>
+      <p>
+        A secure, transparent platform to record blue carbon data, verify credits,
+        and support coastal communities using blockchain technology.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="#solution" class="btn primary">View Solution</a>
+        <a href="#workflow" class="btn secondary">See Workflow</a>
+
+        <!-- ✅ Wallet Button -->
+        <button id="connect-wallet" class="btn secondary" type="button">
+          Connect Wallet
+        </button>
+      </div>
+
+      <!-- ✅ Connected wallet address text -->
+      <p id="wallet-address" style="font-size: 0.9rem; color: #4f6b80; margin-top: 0.5rem;"></p>
+
+      <div class="hero-tags">
+        <span>Blockchain</span>
+        <span>Climate Tech</span>
+        <span>Carbon Credits</span>
+        <span>Mangroves & Seagrass</span>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <h2>Key Features</h2>
+      <ul>
+        <li>Tamper-proof blue carbon registry</li>
+        <li>Smart-contract based credit issuance</li>
+        <li>Tokenized carbon credits to avoid double counting</li>
+        <li>Simple dashboards & API access</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Problem Section -->
+  <section id="problem" class="section">
+    <div class="section-header">
+      <h2>The Problem</h2>
+      <p>Why blue carbon projects need a better registry system.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Blue Carbon Is Hard to Track</h3>
+        <p>
+          Mangroves, seagrass, and coastal plants capture large amounts of carbon,
+          but current systems make it difficult to measure and track how much is stored.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Current Challenges</h3>
+        <ul class="check-list">
+          <li>No unified registry for blue carbon projects</li>
+          <li>Risk of data tampering and misuse</li>
+          <li>Possibility of double-counted carbon credits</li>
+          <li>Slow, manual verification processes</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution Section -->
+  <section id="solution" class="section alt">
+    <div class="section-header">
+      <h2>Our Solution</h2>
+      <p>A blockchain-based registry for trusted blue carbon credits.</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <h3>Secure Data Storage</h3>
+        <p>
+          All project data is stored on a blockchain ledger, making it
+          tamper-resistant and auditable by any stakeholder.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Smart Contracts</h3>
+        <p>
+          Smart contracts automatically validate incoming data and issue
+          verified carbon credits based on predefined rules.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Tokenized Credits</h3>
+        <p>
+          Each carbon credit is represented as a unique digital token,
+          preventing double counting and making trading seamless.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Workflow Section -->
+  <section id="workflow" class="section">
+    <div class="section-header">
+      <h2>How It Works</h2>
+      <p>From field data to verified digital carbon credits.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-step">
+        <div class="step-number">1</div>
+        <h3>Data Collection</h3>
+        <p>
+          Carbon data is collected from IoT sensors, satellites, or field surveys
+          in mangrove and seagrass ecosystems.
+        </p>
+      </div>
+      <div class="timeline-step">
+        <div class="step-number">2</div>
+        <h3>On-Chain Upload</h3>
+        <p>
+          Collected data is submitted to the registry and stored on the blockchain
+          as immutable records.
+        </p>
+      </div>
+      <div class="timeline-step">
+        <div class="step-number">3</div>
+        <h3>Smart Verification</h3>
+        <p>
+          Smart contracts review the data against project baselines and
+          methodologies to ensure quality.
+        </p>
+      </div>
+      <div class="timeline-step">
+        <div class="step-number">4</div>
+        <h3>Credit Issuance</h3>
+        <p>
+          Verified blue carbon credits are generated and converted into tradable
+          digital tokens.
+        </p>
+      </div>
+      <div class="timeline-step">
+        <div class="step-number">5</div>
+        <h3>Marketplace & Reporting</h3>
+        <p>
+          Buyers purchase tokens on a marketplace, and organizations use
+          dashboards & APIs for carbon reporting.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Business Model Section -->
+  <section id="business" class="section alt">
+    <div class="section-header">
+      <h2>Business Model</h2>
+      <p>Sustainable revenue while supporting climate impact.</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <h3>Transaction Fees</h3>
+        <p>
+          A small commission on each carbon credit sale conducted via the
+          platform’s marketplace.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Subscriptions</h3>
+        <p>
+          Tiered plans for organizations managing multiple blue carbon projects
+          and needing advanced analytics.
+        </p>
+      </div>
+      <div class="card">
+        <h3>API Services</h3>
+        <p>
+          API access for companies integrating verified carbon data into
+          sustainability reports and dashboards.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact Section -->
+  <section id="impact" class="section">
+    <div class="section-header">
+      <h2>Impact</h2>
+      <p>Environmental, economic, and social benefits.</p>
+    </div>
+
+    <div class="grid-3 impact-grid">
+      <div class="card">
+        <h3>Trust & Transparency</h3>
+        <p>
+          A public ledger builds confidence in blue carbon credits and reduces
+          the risk of fraud or double counting.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Support for Communities</h3>
+        <p>
+          Coastal communities gain a new income stream through verified blue
+          carbon projects and fair revenue sharing.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Climate & Ecosystems</h3>
+        <p>
+          Protecting mangroves and seagrass helps cut emissions while preserving
+          biodiversity and coastal resilience.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Simple Dashboard Mock Section -->
+  <section class="section alt">
+    <div class="section-header">
+      <h2>Demo Dashboard (Mock)</h2>
+      <p>Example of how a project owner might view their data.</p>
+    </div>
+
+    <div class="dashboard-card">
+      <div class="dashboard-stat">
+        <span class="label">Total Projects</span>
+        <span class="value" id="projects-count">12</span>
+      </div>
+      <div class="dashboard-stat">
+        <span class="label">Verified Credits</span>
+        <span class="value" id="credits-count">48,500</span>
+      </div>
+      <div class="dashboard-stat">
+        <span class="label">Credits Sold</span>
+        <span class="value" id="sold-count">34,200</span>
+      </div>
+      <button class="btn primary" id="simulate-btn">
+        Simulate New Verified Credits
+      </button>
+      <p class="note">
+        * Button uses simple JavaScript to update mock values for demo purposes.
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section" id="faq">
+    <div class="section-header">
+      <h2>FAQ</h2>
+      <p>Quick answers to common questions.</p>
+    </div>
+
+    <div class="faq">
+      <div class="faq-item">
+        <button class="faq-question">
+          What is blue carbon?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>
+            Blue carbon refers to carbon captured and stored by coastal and
+            marine ecosystems such as mangroves, salt marshes, and seagrass
+            meadows.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Why use blockchain for carbon credits?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>
+            Blockchain provides an immutable ledger that improves transparency,
+            prevents tampering, and reduces double counting of credits.
+          </p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Who can use this platform?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>
+            Project developers, NGOs, governments, carbon credit buyers, and
+            companies needing reliable carbon reporting can all use the registry.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section alt">
+    <div class="section-header">
+      <h2>Contact</h2>
+      <p>Interested in collaborating or testing the platform? Reach out.</p>
+    </div>
+
+    <form class="contact-form" id="contact-form">
+      <div class="form-group">
+        <label for="name">Name*</label>
+        <input id="name" type="text" required placeholder="Your name" />
+      </div>
+      <div class="form-group">
+        <label for="email">Email*</label>
+        <input id="email" type="email" required placeholder="you@example.com" />
+      </div>
+      <div class="form-group">
+        <label for="message">Message*</label>
+        <textarea id="message" rows="4" required placeholder="Tell us about your project or idea"></textarea>
+      </div>
+      <button type="submit" class="btn primary">Send Message</button>
+      <p class="form-status" id="form-status"></p>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© <span id="year"></span> Blue Carbon Registry · Built for a sustainable future.</p>
+  </footer>
+
+  <!-- ✅ JS -->
+  <script src="script.js"></script>
+</body>
+</html>
