@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Government Schemes - YieldWise
+  </title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="style.css" rel="stylesheet"/>
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <!-- Font Awesome 6 -->
+  <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-1j8r8s0oIipCqA1qC1aFZQkQvH9WmK7pCkqv+ZxYQkWc2p3P1WgQF2kV8oYVQhHtmr1Ozb0gEpo3+7sKpKXyHg==" referrerpolicy="no-referrer" rel="stylesheet">
+   <!-- SweetAlert2 -->
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+   </script>
+   <!-- ApexCharts -->
+   <script src="https://cdn.jsdelivr.net/npm/apexcharts">
+   </script>
+   <!-- Alpine.js for lightweight state management -->
+   <script defer="" src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js">
+   </script>
+   <style>
+    /* government_schemes.css - Page specific styles (minimal, no duplication with style.css) */
+    body { font-family: 'Poppins', sans-serif; }
+    .scheme-card { transition: box-shadow 0.2s ease, transform 0.2s ease; }
+    .scheme-card:hover { box-shadow: 0 8px 30px rgba(46, 125, 50, 0.15); transform: translateY(-2px); }
+    .filter-chip { border: 1px dashed #d1d5db; }
+    .badge { display: inline-flex; align-items: center; font-size: 12px; padding: 2px 8px; border-radius: 9999px; }
+    .badge-green { background-color: #ecfdf5; color: #15803d; }
+    .badge-blue { background-color: #e0f2fe; color: #0369a1; }
+    .badge-yellow { background-color: #fffbeb; color: #b45309; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    /* Dark mode helpers */
+    .dark .scheme-card { background-color: #0f172a; border-color: #1f2937; }
+    .dark .filter-chip { border-color: #334155; }
+   </style>
+  </link>
+ 
+<!-- CSS Loader Script -->
+<script src="./css_loader.js"></script>
+</head>
+ <body class="bg-gray-50 text-gray-800">
+  <!-- Header (Common Component) - Do not alter -->
+  <header class="w-full bg-white border-b border-[#2E7D32] sticky top-0 z-50">
+   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+     <div class="flex items-center gap-3">
+      <img alt="YieldWise" class="h-9 w-auto" onerror="this.onerror=null;this.src='https://ibb.co/JW4DnZwH'" src="https://i.ibb.co/p68Y2qBd/Logo-02.png"/>
+      <span class="text-xl font-semibold text-[#2E7D32]">
+      <span class="text-xl font-semibold text-[#2E7D32]">
+       Tools &amp; Schemes
+      </span>
+     </div>
+     <div class="flex-1 max-w-lg mx-6 hidden md:block">
+      <div class="relative">
+       <input class="w-full border border-gray-300 rounded-md pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#2E7D32] focus:border-[#2E7D32]" placeholder="Search tools or schemes..." type="text"/>
+       <i class="fas fa-search absolute left-3 top-2.5 text-gray-400">
+       </i>
+      </div>
+     </div>
+     <div class="flex items-center gap-2">
+      <a class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[#2E7D32] rounded-md hover:opacity-90" href="#tools_page?tool=crop_health">
+       <i class="fas fa-stethoscope">
+       </i>
+       Crop Health
+      </a>
+      <a class="hidden sm:inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#2E7D32] bg-green-50 border border-[#2E7D32] rounded-md hover:bg-green-100" href="#tools_page?tool=soil_health">
+       <i class="fas fa-flask">
+       </i>
+       Soil Health
+      </a>
+      <button class="p-2 rounded hover:bg-gray-100" title="Notifications">
+       <i class="fas fa-bell text-gray-700">
+       </i>
+      </button>
+      <details class="relative">
+       <summary class="list-none cursor-pointer flex items-center gap-2">
+        <img alt="User" class="h-8 w-8 rounded-full" src="https://i.ibb.co/XZNm9pTJ/Default-male-avatar.webp"/>
+        <span class="text-sm text-gray-700">
+         Farmer
+        </span>
+        <i class="fas fa-chevron-down text-gray-500">
+        </i>
+       </summary>
+       <div class="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-md shadow-lg">
+        <a class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" href="./home_dashboard.html">
+         <i class="fas fa-home mr-2">
+         </i>
+         Home
+        </a>
+        <a class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" href="./farmer_profile.html">
+         <i class="fas fa-user mr-2">
+         </i>
+         Profile
+        </a>
+        <div class="border-t border-gray-200">
+        </div>
+        <a class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" href="#">
+         <i class="fas fa-sign-out-alt mr-2">
+         </i>
+         Logout
+        </a>
+       </div>
+      </details>
+     </div>
+    </div>
+   </div>
+  </header>
+  <!-- Main Layout: Sidebar + Content -->
+  <div class="min-h-screen flex">
+   <!-- Sidebar (Common Component) - Active state applied for current page link -->
+   <aside class="hidden md:block w-64 bg-white border-r border-gray-200 min-h-screen pt-4 px-2" id="sidebar-tools">
+    <nav class="space-y-2">
+     <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase">
+      Tools &amp; Schemes
+     </h3>
+     <details class="px-3 py-2 rounded-md" open="">
+      <summary class="flex items-center gap-3 cursor-pointer text-gray-700 hover:text-[#2E7D32]">
+       <i class="fas fa-tools text-[#2E7D32]">
+       </i>
+       <span>
+        Calculators
+       </span>
+      </summary>
+      <div class="mt-2 ml-6 space-y-1">
+       <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" href="#tools_page?tool=soil_health">
+        <i class="fas fa-flask mr-2">
+        </i>
+        Soil Health
+       </a>
+       <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" href="#tools_page?tool=rainwater">
+        <i class="fas fa-cloud-rain mr-2">
+        </i>
+        Rainwater Harvesting
+       </a>
+       <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" href="#tools_page?tool=seed_quantity">
+        <i class="fas fa-seedling mr-2">
+        </i>
+        Seed Quantity
+       </a>
+       <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" href="#tools_page?tool=fertilizer_planner">
+        <i class="fas fa-prescription-bottle-alt mr-2">
+        </i>
+        Fertilizer Planner
+       </a>
+       <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" href="#tools_page?tool=crop_health">
+        <i class="fas fa-stethoscope mr-2">
+        </i>
+        Crop Health Detector
+       </a>
+      </div>
+     </details>
+     <details class="px-3 py-2 rounded-md" open="">
+      <summary class="flex items-center gap-3 cursor-pointer text-gray-700 hover:text-[#2E7D32]">
+       <i class="fas fa-hands-helping text-[#2E7D32]">
+       </i>
+       <span>
+        Government Schemes
+       </span>
+      </summary>
+      <div class="mt-2 ml-6 space-y-1">
+       <!-- Active link for current page -->
+       <a aria-current="page" class="block px-2 py-1 text-sm rounded-md font-semibold text-[#2E7D32] bg-green-50 border border-[#2E7D32]" href="./government_schemes.html">
+        <i class="fas fa-list mr-2">
+        </i>
+        Browse Schemes
+       </a>
+      </div>
+     </details>
+     <a class="group flex items-center gap-3 px-3 py-2 text-gray-700 rounded-md hover:bg-green-50 hover:text-[#2E7D32]" href="./home_dashboard.html">
+      <i class="fas fa-home text-[#2E7D32]">
+      </i>
+      <span>
+       Back to Home
+      </span>
+     </a>
+    </nav>
+   </aside>
+   <!-- Main Content -->
+   <main class="flex-1">
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6" x-data="schemeViewer()" x-init="init()">
+     <!-- Top bar: title + actions -->
+     <div class="flex items-center justify-between mb-4">
+      <div>
+       <h1 class="text-2xl font-semibold text-[#2E7D32]">
+        Government Subsidies &amp; Schemes
+       </h1>
+       <p class="text-sm text-gray-600">
+        Browse, filter, and read full details. Region-wise filtering supported.
+       </p>
+      </div>
+      <div class="flex items-center gap-2">
+       <button @click="toggleDarkMode()" class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#2E7D32] bg-green-50 border border-[#2E7D32] rounded-md hover:bg-green-100" type="button">
+        <i class="fas fa-moon">
+        </i>
+        Dark Mode
+       </button>
+       <a class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[#2E7D32] rounded-md hover:opacity-90" href="./home_dashboard.html">
+        <i class="fas fa-arrow-left">
+        </i>
+        Back to Dashboard
+       </a>
+      </div>
+     </div>
+     <!-- Analytics: Apex Chart -->
+     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div class="lg:col-span-2 p-4 bg-white border border-gray-200 rounded-md">
+       <div class="flex items-center justify-between mb-2">
+        <h2 class="text-lg font-medium text-gray-800">
+         Schemes by Category
+        </h2>
+        <span class="badge badge-blue">
+         <i class="fas fa-chart-bar mr-1">
+         </i>
+         Interactive
+        </span>
+       </div>
+       <div class="w-full" id="schemesChart" style="min-height: 280px;">
+       </div>
+      </div>
+      <div class="p-4 bg-white border border-gray-200 rounded-md">
+       <h2 class="text-lg font-medium text-gray-800 mb-2">
+        Summary
+       </h2>
+       <ul class="space-y-1 text-sm">
+        <li class="flex justify-between">
+         <span>
+          Total Schemes
+         </span>
+         <span class="font-semibold" x-text="schemes.length">
+         </span>
+        </li>
+        <li class="flex justify-between">
+         <span>
+          Regions Covered
+         </span>
+         <span class="font-semibold" x-text="uniqueRegions().length">
+         </span>
+        </li>
+        <li class="flex justify-between">
+         <span>
+          Avg Budget
+         </span>
+         <span class="font-semibold" x-text="formatCurrency(avgBudget())">
+         </span>
+        </li>
+        <li class="flex justify-between">
+         <span>
+          Latest Start
+         </span>
+         <span class="font-semibold" x-text="latestStartDate()">
+         </span>
+        </li>
+       </ul>
+      </div>
+     </div>
+     <!-- Filters -->
+     <div class="bg-white border border-gray-200 rounded-md p-4 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+       <div>
+        <label class="text-sm text-gray-600">
+         Search
+        </label>
+        <div class="relative mt-1">
+         <input @input="applyFilters()" class="w-full border border-gray-300 rounded-md pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#2E7D32] focus:border-[#2E7D32]" placeholder="Search schemes..." type="text" x-model="searchQuery"/>
+         <i class="fas fa-search absolute left-3 top-2.5 text-gray-400">
+         </i>
+        </div>
+       </div>
+       <div>
+        <label class="text-sm text-gray-600">
+         Category
+        </label>
+        <select @change="applyFilters()" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#2E7D32] focus:border-[#2E7D32]" x-model="selectedCategory">
+         <option value="">
+          All
+         </option>
+         <template :key="cat" x-for="cat in uniqueCategories()">
+          <option :value="cat" x-text="cat">
+          </option>
+         </template>
+        </select>
+       </div>
+       <div>
+        <label class="text-sm text-gray-600">
+         Region
+        </label>
+        <select @change="applyFilters()" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#2E7D32] focus:border-[#2E7D32]" x-model="selectedRegion">
+         <option value="">
+          All
+         </option>
+         <template :key="reg" x-for="reg in uniqueRegions()">
+          <option :value="reg" x-text="reg">
+          </option>
+         </template>
+        </select>
+       </div>
+       <div>
+        <label class="text-sm text-gray-600">
+         Sort by
+        </label>
+        <select @change="applyFilters()" class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#2E7D32] focus:border-[#2E7D32]" x-model="sortBy">
+         <option value="newest">
+          Newest
+         </option>
+         <option value="budget_desc">
+          Budget: High to Low
+         </option>
+         <option value="az">
+          A-Z
+         </option>
+        </select>
+       </div>
+      </div>
+      <div class="flex items-center gap-2 mt-3">
+       <span class="badge badge-green">
+        <i class="fas fa-filter mr-1">
+        </i>
+        Filters Active
+       </span>
+       <button @click="resetFilters()" class="text-xs text-[#2E7D32] underline">
+        Reset
+       </button>
+       <span class="ml-auto text-xs text-gray-500" x-text="paginationText()">
+       </span>
+      </div>
+     </div>
+     <!-- SchemeViewer: list or detail view -->
+     <div x-show="currentView === 'list'" x-transition="">
+      <!-- Scheme List -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+       <template :key="scheme.id" x-for="scheme in visibleSchemes">
+        <div class="scheme-card bg-white border border-gray-200 rounded-md p-4 flex flex-col">
+         <div class="flex items-start justify-between">
+          <h3 class="text-lg font-semibold text-gray-800" x-text="scheme.title">
+          </h3>
+          <span class="badge badge-yellow" x-text="scheme.category">
+          </span>
+         </div>
+         <p class="text-sm text-gray-600 mt-1" x-text="scheme.summary">
+         </p>
+         <div class="flex items-center gap-2 mt-3">
+          <span class="badge badge-blue">
+           <i class="fas fa-location-dot mr-1">
+           </i>
+           <span x-text="scheme.region">
+           </span>
+          </span>
+          <span class="badge badge-green">
+           <i class="fas fa-indian-rupee-sign mr-1">
+           </i>
+           <span x-text="formatCurrency(scheme.budget)">
+           </span>
+          </span>
+         </div>
+         <div class="mt-4 flex items-center gap-2">
+          <button @click="onSchemeSelect(scheme.id)" class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[#2E7D32] rounded-md hover:opacity-90">
+           <i class="fas fa-eye">
+           </i>
+           View Details
+          </button>
+          <button @click="applyNow(scheme)" class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#2E7D32] bg-green-50 border border-[#2E7D32] rounded-md hover:bg-green-100">
+           <i class="fas fa-file-signature">
+           </i>
+           Apply Now
+          </button>
+         </div>
+        </div>
+       </template>
+      </div>
+      <!-- Pagination info -->
+      <div class="mt-6 flex items-center justify-between">
+       <p class="text-sm text-gray-600" x-text="paginationText()">
+       </p>
+       <div class="text-xs text-gray-500">
+        Showing region-wise data. For more, visit
+        <a class="text-[#2E7D32] underline" href="./smart_advisory.html">
+         Smart Advisory
+        </a>
+        .
+       </div>
+      </div>
+     </div>
+     <!-- Scheme Detail View -->
+     <div x-show="currentView === 'detail'" x-transition="">
+      <div class="bg-white border border-gray-200 rounded-md p-4">
+       <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold text-gray-800" x-text="selectedScheme()?.title">
+        </h2>
+        <div class="flex items-center gap-2">
+         <button @click="readAloud()" class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#2E7D32] bg-green-50 border border-[#2E7D32] rounded-md hover:bg-green-100">
+          <i class="fas fa-volume-high">
+          </i>
+          Read Aloud
+         </button>
+         <button @click="onNavigateBack()" class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[#2E7D32] rounded-md hover:opacity-90">
+          <i class="fas fa-arrow-left">
+          </i>
+          Back to All Schemes
+         </button>
+        </div>
+       </div>
+       <div class="mt-2 flex items-center gap-2 text-sm">
+        <span class="badge badge-yellow" x-text="selectedScheme()?.category">
+        </span>
+        <span class="badge badge-blue">
+         <i class="fas fa-location-dot mr-1">
+         </i>
+         <span x-text="selectedScheme()?.region">
+         </span>
+        </span>
+        <span class="badge badge-green">
+         <i class="fas fa-indian-rupee-sign mr-1">
+         </i>
+         <span x-text="formatCurrency(selectedScheme()?.budget)">
+         </span>
+        </span>
+       </div>
+       <img :src="selectedScheme()?.image" alt="Scheme image" class="mt-4 w-full h-48 object-cover rounded-md border border-gray-200" onerror="this.onerror=null;this.src='https://picsum.photos/seed/scheme/800/300'"/>
+       <div class="mt-4">
+        <h3 class="text-lg font-medium text-gray-800">
+         Description
+        </h3>
+        <p class="text-sm text-gray-700 mt-1" x-text="selectedScheme()?.description">
+        </p>
+       </div>
+       <div class="mt-4">
+        <h3 class="text-lg font-medium text-gray-800">
+         Benefits
+        </h3>
+        <ul class="list-disc list-inside text-sm text-gray-700 mt-1 space-y-1">
+         <template :key="b" x-for="b in selectedScheme()?.benefits">
+          <li x-text="b">
+          </li>
+         </template>
+        </ul>
+       </div>
+       <div class="mt-4">
+        <h3 class="text-lg font-medium text-gray-800">
+         Eligibility
+        </h3>
+        <ul class="list-disc list-inside text-sm text-gray-700 mt-1 space-y-1">
+         <template :key="e" x-for="e in selectedScheme()?.eligibility">
+          <li x-text="e">
+          </li>
+         </template>
+        </ul>
+       </div>
+       <div class="mt-4">
+        <h3 class="text-lg font-medium text-gray-800">
+         How to Apply
+        </h3>
+        <p class="text-sm text-gray-700 mt-1" x-text="selectedScheme()?.applicationProcess">
+        </p>
+        <div class="mt-3 flex items-center gap-2">
+         <a :href="selectedScheme()?.applyLink || '#'" @click.prevent="applyNow(selectedScheme())" class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[#2E7D32] rounded-md hover:opacity-90" target="_blank">
+          <i class="fas fa-external-link">
+          </i>
+          Go to Application Portal
+         </a>
+         <a class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#2E7D32] bg-green-50 border border-[#2E7D32] rounded-md hover:bg-green-100" href="./advisory_report.html">
+          <i class="fas fa-file-pdf">
+          </i>
+          Export Advisory PDF
+         </a>
+        </div>
+       </div>
+      </div>
+     </div>
+     <!-- Non-intrusive advertisement space -->
+     <div class="mt-6 p-4 bg-white border border-gray-200 rounded-md">
+      <div class="flex items-center justify-between">
+       <div class="flex items-center gap-2">
+        <i class="fas fa-leaf text-[#2E7D32]">
+        </i>
+        <span class="text-sm text-gray-700">
+         Partner Promotion
+        </span>
+       </div>
+       <a class="text-xs text-[#2E7D32] underline" href="./market_price.html">
+        View Market Prices
+       </a>
+      </div>
+      <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-4">
+       <img alt="Ad 1" class="w-full h-24 object-cover rounded-md border border-gray-200" src="https://i.ibb.co/99BgTzxD/Ad1.jpg"/>
+       <img alt="Ad 2" class="w-full h-24 object-cover rounded-md border border-gray-200" src="https://i.ibb.co/rGqVvmrk/Ad2.jpg"/>
+       <img alt="Ad 3" class="w-full h-24 object-cover rounded-md border border-gray-200" src="https://i.ibb.co/9kB2Lvwg/Ad3.jpg"/>
+      </div>
+     </div>
+    </section>
+   </main>
+  </div>
+  <!-- Footer (Common Component) - Do not alter -->
+  <footer class="w-full bg-white border-t border-gray-200">
+   <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+     <img alt="Logo" class="h-5 w-5" onerror="this.onerror=null;this.src='https://ibb.co/JW4DnZwH'" src="https://i.ibb.co/p68Y2qBd/Logo-02.png"/>
+      <span class="text-xl font-semibold text-[#2E7D32]">
+     <span class="text-sm text-gray-600">
+      Tools &amp; Schemes
+     </span>
+    </div>
+    <div class="flex items-center gap-4">
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="./tools_page.html">
+      <i class="fas fa-tools mr-1">
+      </i>
+      All Tools
+     </a>
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="./government_schemes.html">
+      <i class="fas fa-hands-helping mr-1">
+      </i>
+      Schemes
+     </a>
+     <span class="mx-2 text-gray-300">
+      |
+     </span>
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="./language_selection.html">
+      Language
+     </a>
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="./farmer_profile.html">
+      Profile
+     </a>
+    </div>
+   </div>
+  </footer>
+  <!-- SchemeViewer Alpine Component & Logic -->
+  <script>
+   function schemeViewer() {
+    return {
+        // State
+        currentView: 'list',
+        selectedSchemeId: null,
+        searchQuery: '',
+        selectedCategory: '',
+        selectedRegion: '',
+        sortBy: 'newest',
+        schemes: [{
+            id: 1,
+            title: 'PM-Kisan Direct Benefit Transfer',
+            summary: 'Income support of ₹6,000 per year to small and marginal farmers.',
+            description: 'PM-Kisan provides direct income support to eligible farmer families. Amount is transferred in three equal installments through DBT to help with input costs and stabilize income.',
+            benefits: ['₹6,000 per year in three installments', 'Direct bank transfer', 'Improves cash flow for inputs'],
+            eligibility: ['Small and marginal farmers', 'Valid land records', 'Excludes institutional landholders'],
+            applicationProcess: 'Register on PM-Kisan portal with Aadhaar, bank details, and land records via local authorities or online.',
+            category: 'Income Support',
+            region: 'Pan-India',
+            budget: 6000,
+            startDate: '2023-10-01',
+            applyLink: 'https://pmkisan.gov.in/',
+            image: 'https://picsum.photos/seed/pmkisan/800/300'
+        }, {
+            id: 2,
+            title: 'Soil Health Card Scheme',
+            summary: 'Personalized soil health cards for nutrient management and balanced fertilization.',
+            description: 'The scheme provides soil testing and individualized soil health cards to guide farmers on nutrient application for higher productivity and environmental sustainability.',
+            benefits: ['Soil testing and analysis', 'Recommendations for NPK & micronutrients', 'Improved yield and cost savings'],
+            eligibility: ['All farmers', 'Participation through local agriculture department'],
+            applicationProcess: 'Visit the agriculture department or the official portal to register and submit soil samples for testing.',
+            category: 'Soil & Inputs',
+            region: 'Pan-India',
+            budget: 2500,
+            startDate: '2024-02-15',
+            applyLink: 'https://soilhealth.dac.gov.in/',
+            image: 'https://picsum.photos/seed/soilcard/800/300'
+        }, {
+            id: 3,
+            title: 'Pradhan Mantri Fasal Bima Yojana (PMFBY)',
+            summary: 'Affordable crop insurance to protect against natural calamities and yield losses.',
+            description: 'PMFBY offers crop insurance coverage for notified crops against yield losses due to natural calamities, pests, and diseases, ensuring income stability.',
+            benefits: ['Low premium rates', 'Comprehensive coverage', 'Timely claim settlement'],
+            eligibility: ['All farmers growing notified crops', 'Enrollment within season window'],
+            applicationProcess: 'Apply through banks, CSCs, or online portal during the notified season with crop and land details.',
+            category: 'Insurance',
+            region: 'Pan-India',
+            budget: 12000,
+            startDate: '2024-06-20',
+            applyLink: 'https://pmfby.gov.in/',
+            image: 'https://picsum.photos/seed/pmfby/800/300'
+        }, {
+            id: 4,
+            title: 'Micro Irrigation Fund (NABARD)',
+            summary: 'Support for drip and sprinkler irrigation to optimize water use.',
+            description: 'The Micro Irrigation Fund encourages adoption of water-saving irrigation technologies, improving water use efficiency and crop productivity.',
+            benefits: ['Subsidized micro irrigation', 'Reduced water consumption', 'Higher crop yields'],
+            eligibility: ['Farmers, FPOs, Cooperatives', 'Projects vetted by state agencies'],
+            applicationProcess: 'Apply through state horticulture departments or NABARD-supported programs with project proposal.',
+            category: 'Irrigation',
+            region: 'State-wise',
+            budget: 30000,
+            startDate: '2024-01-05',
+            applyLink: 'https://www.nabard.org/',
+            image: 'https://picsum.photos/seed/microirrigation/800/300'
+        }, {
+            id: 5,
+            title: 'National Horticulture Mission',
+            summary: 'Promotion of horticulture: fruits, vegetables, spices, flowers, and plantation crops.',
+            description: 'NHM supports horticulture development through planting material, technology dissemination, and market linkages to boost farmer income.',
+            benefits: ['Subsidies for planting material', 'Training and extension', 'Post-harvest management support'],
+            eligibility: ['Farmers and FPOs engaged in horticulture', 'As per state guidelines'],
+            applicationProcess: 'Apply via state horticulture department portals with project details.',
+            category: 'Horticulture',
+            region: 'State-wise',
+            budget: 18000,
+            startDate: '2023-12-12',
+            applyLink: 'https://nhm.gov.in/',
+            image: 'https://picsum.photos/seed/horticulture/800/300'
+        }, {
+            id: 6,
+            title: 'Kisan Credit Card (KCC)',
+            summary: 'Timely and affordable credit for crop production and allied activities.',
+            description: 'KCC provides farmers with a revolving line of credit for crop inputs and allied activities at concessional interest rates.',
+            benefits: ['Low interest rates', 'Flexible repayment', 'Coverage for allied activities'],
+            eligibility: ['All farmers with valid KYC', 'Through participating banks'],
+            applicationProcess: 'Apply at nearest bank branch with KYC, land records, and crop details.',
+            category: 'Credit',
+            region: 'Pan-India',
+            budget: 50000,
+            startDate: '2024-08-01',
+            applyLink: 'https://www.rbi.org.in/',
+            image: 'https://picsum.photos/seed/kcc/800/300'
+        }],
+        visibleSchemes: [],
+        chart: null,
+
+        init() {
+            this.applyFilters();
+            this.renderChart();
+        },
+        applyFilters() {
+            let list = [...this.schemes];
+            // search
+            if (this.searchQuery) {
+                const q = this.searchQuery.toLowerCase();
+                list = list.filter(s => s.title.toLowerCase().includes(q) || s.summary.toLowerCase().includes(q) || s.description.toLowerCase().includes(q));
+            }
+            // category
+            if (this.selectedCategory) {
+                list = list.filter(s => s.category === this.selectedCategory);
+            }
+            // region
+            if (this.selectedRegion) {
+                list = list.filter(s => s.region === this.selectedRegion);
+            }
+            // sort
+            if (this.sortBy === 'newest') {
+                list.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+            } else if (this.sortBy === 'budget_desc') {
+                list.sort((a, b) => b.budget - a.budget);
+            } else if (this.sortBy === 'az') {
+                list.sort((a, b) => a.title.localeCompare(b.title));
+            }
+            this.visibleSchemes = list;
+            // update chart
+            this.updateChart();
+        },
+        resetFilters() {
+            this.searchQuery = '';
+            this.selectedCategory = '';
+            this.selectedRegion = '';
+            this.sortBy = 'newest';
+            this.applyFilters();
+        },
+        onSchemeSelect(id) {
+            this.selectedSchemeId = id;
+            this.currentView = 'detail';
+            Swal.fire({
+                icon: 'info',
+                title: 'Opening scheme details',
+                text: 'Loaded full information. You can use Read Aloud for accessibility.',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        },
+        onNavigateBack() {
+            this.currentView = 'list';
+            this.selectedSchemeId = null;
+            window.speechSynthesis.cancel();
+        },
+        selectedScheme() {
+            return this.schemes.find(s => s.id === this.selectedSchemeId) || null;
+        },
+        applyNow(scheme) {
+            Swal.fire({
+                title: 'Redirecting to Application Portal',
+                html: `<div class="text-left"><p class="text-sm">You are about to visit the official portal for <strong>${scheme.title}</strong>.</p><p class="text-xs mt-2">Ensure you have your documents ready (ID, land records, bank details).</p></div>`,
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonColor: '#2E7D32',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Proceed',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.open(scheme.applyLink || '#', '_blank');
+                }
+            });
+        },
+        // Accessibility: Read Aloud using Web Speech API
+        readAloud() {
+            const s = this.selectedScheme();
+            if (!s) return;
+            const text = `${s.title}. Description: ${s.description}. Benefits: ${s.benefits.join(', ')}. Eligibility: ${s.eligibility.join(', ')}. How to apply: ${s.applicationProcess}.`;
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'en-IN';
+            utter.rate = 0.95;
+            speechSynthesis.speak(utter);
+            Swal.fire({
+                icon: 'info',
+                title: 'Voice Read Aloud',
+                text: 'Reading the scheme details aloud. You can mute by stopping speech in your browser.',
+                timer: 2000,
+                showConfirmButton: false,
+            });
+        },
+        // Utility functions
+        uniqueCategories() {
+            return [...new Set(this.schemes.map(s => s.category))];
+        },
+        uniqueRegions() {
+            return [...new Set(this.schemes.map(s => s.region))];
+        },
+        formatCurrency(v) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                maximumFractionDigits: 0
+            }).format(v);
+        },
+        avgBudget() {
+            return Math.round(this.schemes.reduce((sum, s) => sum + s.budget, 0) / this.schemes.length);
+        },
+        latestStartDate() {
+            const d = this.schemes.reduce((max, s) => new Date(s.startDate) > max ? new Date(s.startDate) : max, new Date('1900-01-01'));
+            return d.toISOString().slice(0, 10);
+        },
+        paginationText() {
+            return `Showing ${this.visibleSchemes.length} of ${this.schemes.length} schemes`;
+        },
+        // Dark mode toggle
+        toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            document.body.classList.toggle('bg-gray-900');
+            document.body.classList.toggle('text-gray-100');
+        },
+        // ApexCharts
+        renderChart() {
+            try {
+                const data = this.categoryCounts(this.visibleSchemes.length ? this.visibleSchemes : this.schemes);
+                const options = {
+                    chart: {
+                        type: 'bar',
+                        height: 280,
+                        toolbar: {
+                            show: true
+                        }
+                    },
+                    series: [{
+                        name: 'Schemes',
+                        data: data.counts
+                    }],
+                    xaxis: {
+                        categories: data.categories
+                    },
+                    colors: ['#2E7D32'],
+                    dataLabels: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        theme: 'light'
+                    },
+                    grid: {
+                        strokeDashArray: 2
+                    },
+                };
+                this.chart = new ApexCharts(document.querySelector('#schemesChart'), options);
+                this.chart.render();
+            } catch (e) {
+                console.error('Chart render error', e);
+                const el = document.getElementById('schemesChart');
+                if (el) el.innerHTML = '<div class="text-sm text-red-600">Unable to load chart.</div>';
+            }
+        },
+        updateChart() {
+            if (!this.chart) return;
+            const data = this.categoryCounts(this.visibleSchemes);
+            this.chart.updateSeries([{
+                name: 'Schemes',
+                data: data.counts
+            }]);
+            this.chart.updateOptions({
+                xaxis: {
+                    categories: data.categories
+                }
+            });
+        },
+        categoryCounts(list) {
+            const map = {};
+            list.forEach(s => {
+                map[s.category] = (map[s.category] || 0) + 1;
+            });
+            const categories = Object.keys(map);
+            const counts = categories.map(c => map[c]);
+            return {
+                categories,
+                counts
+            };
+        }
+    };
+}
+  </script>
+ </body>
+</html>

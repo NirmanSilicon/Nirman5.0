@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Home Dashboard - YieldWise 
+  </title>
+  <!-- Poppins Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <!-- Font Awesome 6 -->
+  <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKj+4lrF8rZ/2L1rFjF2V6k1bVYU5H0cPZx1FQhPwSsnqvJzP0Y3rTs5R5xjw==" referrerpolicy="no-referrer" rel="stylesheet">
+   <!-- SweetAlert2 -->
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+   </script>
+   <!-- ApexCharts -->
+   <script src="https://cdn.jsdelivr.net/npm/apexcharts">
+   </script>
+   <!-- Global Theme CSS -->
+   <link href="style.css" rel="stylesheet"/>
+   <!-- Page-specific CSS -->
+   <link href="home_dashboard.css" rel="stylesheet"/>
+   <style>
+    /* Minimal page-specific styles (move to home_dashboard.css in production) */
+    .badge-tooltip {
+      position: relative;
+    }
+    .badge-tooltip .tooltip-content {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 130%;
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .badge-tooltip:hover .tooltip-content { opacity: 1; }
+    .skeleton {
+      background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+      background-size: 400% 100%;
+      animation: shimmer 1.4s ease infinite;
+    }
+    @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+   </style>
+  </link>
+ 
+<!-- CSS Loader Script -->
+<script src="./css_loader.js"></script>
+</head>
+ <body class="font-[Poppins] bg-gray-50">
+  <!-- Header (Common Component) -->
+  <header class="w-full bg-white border-b border-[#2E7D32] sticky top-0 z-50">
+   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+     <div class="flex items-center gap-3">
+      <img alt="YieldWise " class="h-9 w-auto" onerror="this.src='https://ibb.co/JW4DnZwH'" src="https://i.ibb.co/p68Y2qBd/Logo-02.png" alt="Logo-02"/>
+      <span class="text-xl font-semibold text-[#2E7D32]">
+       YieldWise 
+      </span>
+      <span class="ml-2 text-sm text-gray-500">
+       Farmer
+      </span>
+     </div>
+     <div class="flex-1 max-w-xl mx-6 hidden md:block">
+      <div class="relative">
+       <input class="w-full border border-gray-300 rounded-md pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#2E7D32] focus:border-[#2E7D32]" id="globalSearch" placeholder="Search features, tips, reports..." type="text"/>
+       <i class="fas fa-search absolute left-3 top-2.5 text-gray-400">
+       </i>
+      </div>
+     </div>
+     <div class="flex items-center gap-2">
+      <a class="hidden sm:inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[#2E7D32] rounded-md hover:opacity-90" href="./smart_advisory.html" id="btnGenerateAdvisory">
+       <i class="fas fa-magic">
+       </i>
+       Generate Advisory
+      </a>
+      <button class="p-2 rounded hover:bg-gray-100" id="btnNotifications" title="Notifications">
+       <i class="fas fa-bell text-gray-700">
+       </i>
+      </button>
+      <button class="p-2 rounded hover:bg-gray-100" id="btnMessages" title="Messages">
+       <i class="fas fa-comment-alt text-gray-700">
+       </i>
+      </button>
+      <details class="relative">
+       <summary class="list-none cursor-pointer flex items-center gap-2">
+        <img alt="User" class="h-8 w-8 rounded-full" onerror="this.src='https://ibb.co/RpZL1PWH'" src="https://i.ibb.co/XZNm9pTJ/Default-male-avatar.webp" a"/>
+        <span class="text-sm text-gray-700" id="headerUserLabel">
+         Farmer
+        </span>
+        <i class="fas fa-chevron-down text-gray-500">
+        </i>
+       </summary>
+       <div class="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-md shadow-lg">
+        <a class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" href="./farmer_profile.html">
+         <i class="fas fa-user mr-2">
+         </i>
+         Profile
+        </a>
+        <a class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" href="./advisory_report.html">
+         <i class="fas fa-folder-open mr-2">
+         </i>
+         My Reports
+        </a>
+        <a class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" href="./tools_page.html">
+         <i class="fas fa-tools mr-2">
+         </i>
+         Tools
+        </a>
+        <div class="border-t border-gray-200">
+        </div>
+        <a class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" href="./language_selection.html">
+         <i class="fas fa-sign-out-alt mr-2">
+         </i>
+         Logout
+        </a>
+       </div>
+      </details>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="flex min-h-screen">
+   <!-- Sidebar (Common Component for Dashboard) -->
+   <aside class="hidden md:block w-64 bg-white border-r border-gray-200 min-h-screen pt-4 px-2" id="sidebar-farmer">
+    <nav class="space-y-3">
+     <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase">
+      Farmer
+     </h3>
+     <a aria-current="page" class="group flex items-center gap-3 px-3 py-2 text-gray-700 rounded-md bg-green-50 text-[#2E7D32] font-medium" href="./home_dashboard.html">
+      <i class="fas fa-home text-[#2E7D32]">
+      </i>
+      <span>
+       Home Dashboard
+      </span>
+     </a>
+     <a class="group flex items-center gap-3 px-3 py-2 text-gray-700 rounded-md hover:bg-green-50 hover:text-[#2E7D32]" href="./farmer_profile.html">
+      <i class="fas fa-user text-[#2E7D32]">
+      </i>
+      <span>
+       Farmer Profile
+      </span>
+     </a>
+     <details class="px-3 py-2 rounded-md">
+      <summary class="flex items-center gap-3 cursor-pointer text-gray-700 hover:text-[#2E7D32]">
+       <i class="fas fa-seedling text-[#2E7D32]">
+       </i>
+       <span>
+        Advisory
+       </span>
+      </summary>
+      <div class="mt-2 ml-6 space-y-1">
+       <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" href="./smart_advisory.html">
+        <i class="fas fa-clipboard-list mr-2">
+        </i>
+        Smart Advisory
+       </a>
+       <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" href="./advisory_report.html">
+        <i class="fas fa-file-alt mr-2">
+        </i>
+        Latest Report
+       </a>
+       <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" href="./farmer_profile.html">
+        <i class="fas fa-folder-open mr-2">
+        </i>
+        Saved Reports
+       </a>
+      </div>
+     </details>
+     <details class="px-3 py-2 rounded-md">
+      <summary class="flex items-center gap-3 cursor-pointer text-gray-700 hover:text-[#2E7D32]">
+       <i class="fas fa-store text-[#2E7D32]">
+       </i>
+       <span>
+        Market &amp; Tools
+       </span>
+      </summary>
+      <div class="mt-2 ml-6 space-y-1">
+       <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" href="./market_price.html">
+        <i class="fas fa-chart-line mr-2">
+        </i>
+        Market Price
+       </a>
+       <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" href="./tools_page.html">
+        <i class="fas fa-tools mr-2">
+        </i>
+        Tools
+       </a>
+      </div>
+     </details>
+     <a class="group flex items-center gap-3 px-3 py-2 text-gray-700 rounded-md hover:bg-green-50 hover:text-[#2E7D32]" href="./government_schemes.html">
+      <i class="fas fa-hands-helping text-[#2E7D32]">
+      </i>
+      <span>
+       Government Schemes
+      </span>
+     </a>
+    </nav>
+   </aside>
+   <!-- Main Content -->
+   <main class="flex-1">
+    <!-- Container -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+     <!-- Dashboard Header -->
+     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+       <h1 class="text-2xl sm:text-3xl font-semibold text-[#2E7D32]" id="welcomeMessage">
+        Welcome, Farmer!
+       </h1>
+       <p class="text-sm text-gray-600">
+        Here’s your quick overview for today.
+       </p>
+      </div>
+      <div class="badge-tooltip inline-flex items-center gap-2 bg-green-100 text-green-800 px-3 py-2 rounded-full">
+       <i class="fas fa-leaf" id="badgeIcon">
+       </i>
+       <span class="text-sm font-medium" id="badgeLabel">
+        Seedling
+       </span>
+       <span class="tooltip-content">
+        Levels: Seedling (0-3 actions), Sprout (4-7), Harvest (8+). Keep using features to grow!
+       </span>
+      </div>
+     </div>
+     <!-- Dashboard Grid: 2x2 on large screens -->
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <!-- Weather Summary Widget -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+       <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-[#2E7D32]">
+         Weather Summary
+        </h2>
+        <span class="text-xs text-gray-500" id="weatherLocation">
+         Loading...
+        </span>
+       </div>
+       <div class="mt-3" id="weatherContainer">
+        <div class="flex items-center gap-4">
+         <img alt="Weather Icon" class="h-14 w-14 rounded-full" id="weatherIcon" onerror="this.src='https://picsum.photos/seed/weathericon/72/72'" src="https://picsum.photos/seed/weather/72/72"/>
+         <div>
+          <div class="text-2xl font-semibold text-gray-800" id="temperature">
+           --°C
+          </div>
+          <div class="text-sm text-gray-600" id="condition">
+           Fetching...
+          </div>
+         </div>
+        </div>
+        <div class="mt-3 text-sm text-gray-600 flex items-center gap-3">
+         <span>
+          <i class="fas fa-droplet mr-1 text-blue-500">
+          </i>
+          <span id="humidity">
+           --%
+          </span>
+          Humidity
+         </span>
+         <span>
+          <i class="fas fa-wind mr-1 text-gray-500">
+          </i>
+          <span id="wind">
+           -- km/h
+          </span>
+          Wind
+         </span>
+         <span>
+          <i class="fas fa-cloud-rain mr-1 text-gray-500">
+          </i>
+          <span id="rain">
+           -- mm
+          </span>
+          Rain
+         </span>
+        </div>
+        <div class="mt-3 h-2 rounded skeleton" id="weatherLoading">
+        </div>
+       </div>
+      </div>
+      <!-- Daily Tip Widget -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+       <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-[#2E7D32]">
+         Daily Farming Tip
+        </h2>
+        <div class="flex items-center gap-2">
+         <button class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-white bg-[#2E7D32] rounded-md hover:opacity-90" id="btnReadTip">
+          <i class="fas fa-volume-up">
+          </i>
+          Read Aloud
+         </button>
+         <button class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-[#2E7D32] border border-[#2E7D32] rounded-md hover:bg-green-50" id="btnNewTip">
+          <i class="fas fa-shuffle">
+          </i>
+          New Tip
+         </button>
+        </div>
+       </div>
+       <p class="mt-3 text-gray-700" id="tipText">
+        Loading tip...
+       </p>
+      </div>
+      <!-- Feature Shortcuts Widget -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+       <h2 class="text-lg font-semibold text-[#2E7D32]">
+        Quick Actions
+       </h2>
+       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
+        <a class="flex items-center justify-center gap-2 px-3 py-3 rounded-lg border border-gray-200 hover:border-[#2E7D32] hover:bg-green-50 transition" href="./smart_advisory.html">
+         <i class="fas fa-magic text-[#2E7D32]">
+         </i>
+         <span class="text-sm font-medium text-gray-800">
+          Smart Advisory
+         </span>
+        </a>
+        <a class="flex items-center justify-center gap-2 px-3 py-3 rounded-lg border border-gray-200 hover:border-[#2E7D32] hover:bg-green-50 transition" href="./market_price.html">
+         <i class="fas fa-chart-line text-[#2E7D32]">
+         </i>
+         <span class="text-sm font-medium text-gray-800">
+          Market Price
+         </span>
+        </a>
+        <a class="flex items-center justify-center gap-2 px-3 py-3 rounded-lg border border-gray-200 hover:border-[#2E7D32] hover:bg-green-50 transition" href="./tools_page.html">
+         <i class="fas fa-tools text-[#2E7D32]">
+         </i>
+         <span class="text-sm font-medium text-gray-800">
+          Tools
+         </span>
+        </a>
+       </div>
+      </div>
+      <!-- Usage Insights (ApexChart) -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+       <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-[#2E7D32]">
+         Your Activity
+        </h2>
+        <span class="text-xs text-gray-500">
+         Last 7 days
+        </span>
+       </div>
+       <div class="mt-3" id="usageChart">
+       </div>
+      </div>
+     </div>
+     <!-- Recent Activity Table -->
+     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mt-6">
+      <div class="flex items-center justify-between">
+       <h2 class="text-lg font-semibold text-[#2E7D32]">
+        Recent Reports
+       </h2>
+       <div class="flex items-center gap-2">
+        <select class="text-sm border border-gray-300 rounded-md px-2 py-1" id="filterCrop">
+         <option value="">
+          All Crops
+         </option>
+         <option>
+          Wheat
+         </option>
+         <option>
+          Rice
+         </option>
+         <option>
+          Tomato
+         </option>
+         <option>
+          Onion
+         </option>
+         <option>
+          Maize
+         </option>
+        </select>
+        <select class="text-sm border border-gray-300 rounded-md px-2 py-1" id="filterDistrict">
+         <option value="">
+          All Districts
+         </option>
+         <option>
+          Nashik
+         </option>
+         <option>
+          Madhubani
+         </option>
+         <option>
+          Belagavi
+         </option>
+         <option>
+          Guntur
+         </option>
+        </select>
+       </div>
+      </div>
+      <div class="mt-3 overflow-x-auto">
+       <table class="min-w-full text-sm">
+        <thead class="bg-gray-50">
+         <tr>
+          <th class="px-3 py-2 text-left text-gray-700 cursor-pointer" data-sort="date">
+           Date
+           <i class="fas fa-sort text-gray-400 ml-1">
+           </i>
+          </th>
+          <th class="px-3 py-2 text-left text-gray-700 cursor-pointer" data-sort="crop">
+           Crop
+           <i class="fas fa-sort text-gray-400 ml-1">
+           </i>
+          </th>
+          <th class="px-3 py-2 text-left text-gray-700 cursor-pointer" data-sort="district">
+           District
+           <i class="fas fa-sort text-gray-400 ml-1">
+           </i>
+          </th>
+          <th class="px-3 py-2 text-left text-gray-700">
+           Status
+          </th>
+          <th class="px-3 py-2 text-right text-gray-700 cursor-pointer" data-sort="score">
+           Score
+           <i class="fas fa-sort text-gray-400 ml-1">
+           </i>
+          </th>
+          <th class="px-3 py-2 text-right text-gray-700">
+           Action
+          </th>
+         </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200" id="reportsBody">
+         <!-- Rows injected by JS -->
+        </tbody>
+       </table>
+      </div>
+      <div class="mt-3 flex items-center justify-between">
+       <div class="text-xs text-gray-500" id="paginationInfo">
+        Showing 1-6 of 12
+       </div>
+       <div class="flex items-center gap-2">
+        <button class="px-2 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50" id="btnPrev">
+         Prev
+        </button>
+        <button class="px-2 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50" id="btnNext">
+         Next
+        </button>
+       </div>
+      </div>
+     </div>
+     <!-- System Feedback Area -->
+     <div class="mt-6">
+      <div class="bg-green-50 border border-green-200 text-green-800 rounded-md p-3 text-sm">
+       <i class="fas fa-info-circle mr-2">
+       </i>
+       Tip: Use the Quick Actions above to jump directly to Smart Advisory or check Market Prices.
+      </div>
+     </div>
+    </section>
+   </main>
+  </div>
+  <!-- Footer (Common Component) -->
+  <footer class="w-full bg-white border-t border-gray-200">
+   <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+     <img alt="Logo" class="h-5 w-5" onerror="this.src='https://ibb.co/JW4DnZwH'" src="https://i.ibb.co/p68Y2qBd/Logo-02.png" />
+     <span class="text-sm text-gray-600">
+      YieldWise 
+     </span>
+    </div>
+    <div class="flex items-center gap-4">
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="./home_dashboard.html">
+      <i class="fas fa-home mr-1">
+      </i>
+      Home
+     </a>
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="./smart_advisory.html">
+      <i class="fas fa-seedling mr-1">
+      </i>
+      Advisory
+     </a>
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="./tools_page.html">
+      <i class="fas fa-tools mr-1">
+      </i>
+      Tools
+     </a>
+     <span class="mx-2 text-gray-300">
+      |
+     </span>
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="./terms.html">
+      Terms
+     </a>
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="./privacy.html">
+      Privacy
+     </a>
+    </div>
+   </div>
+  </footer>
+  <!-- Scripts -->
+  <script>
+   // Utility: format date
+const fmtDate = (d) => new Date(d).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+});
+
+// LocalStorage defaults (for demo)
+const defaults = {
+    userName: 'Ramesh',
+    userDistrict: 'Nashik',
+    lang: 'en',
+    usageMetrics: {
+        reportsGenerated: 5,
+        toolsUsed: 3,
+        advisoryRuns: 2
+    }
+};
+const getLS = (key, def) => {
+    try {
+        const v = localStorage.getItem(key);
+        return v ? JSON.parse(v) : def;
+    } catch {
+        return localStorage.getItem(key) || def;
+    }
+};
+if (!localStorage.getItem('userName')) localStorage.setItem('userName', defaults.userName);
+if (!localStorage.getItem('userDistrict')) localStorage.setItem('userDistrict', defaults.userDistrict);
+if (!localStorage.getItem('lang')) localStorage.setItem('lang', defaults.lang);
+if (!localStorage.getItem('usageMetrics')) localStorage.setItem('usageMetrics', JSON.stringify(defaults.usageMetrics));
+
+// Dashboard Header Logic
+const userName = localStorage.getItem('userName') || 'Farmer';
+const headerUserLabel = document.getElementById('headerUserLabel');
+const welcomeMessage = document.getElementById('welcomeMessage');
+headerUserLabel.textContent = userName || 'Farmer';
+welcomeMessage.textContent = (userName && userName.trim()) ? `Welcome, ${userName}!` : 'Welcome, Farmer!';
+
+// Progress Badge
+const metrics = getLS('usageMetrics', defaults.usageMetrics);
+const totalActions = (metrics.reportsGenerated || 0) + (metrics.toolsUsed || 0) + (metrics.advisoryRuns || 0);
+const badgeIcon = document.getElementById('badgeIcon');
+const badgeLabel = document.getElementById('badgeLabel');
+if (totalActions >= 8) {
+    badgeIcon.className = 'fas fa-wheat-awn';
+    badgeLabel.textContent = 'Harvest';
+} else if (totalActions >= 4) {
+    badgeIcon.className = 'fas fa-seedling';
+    badgeLabel.textContent = 'Sprout';
+} else {
+    badgeIcon.className = 'fas fa-leaf';
+    badgeLabel.textContent = 'Seedling';
+}
+
+// Weather Dummy Data
+const weatherData = {
+    'Nashik': {
+        temp: 26,
+        cond: 'Sunny',
+        icon: 'https://picsum.photos/seed/sun/72/72',
+        humidity: 42,
+        wind: 9,
+        rain: 0
+    },
+    'Madhubani': {
+        temp: 31,
+        cond: 'Humid',
+        icon: 'https://picsum.photos/seed/cloud/72/72',
+        humidity: 68,
+        wind: 6,
+        rain: 1
+    },
+    'Belagavi': {
+        temp: 24,
+        cond: 'Cloudy',
+        icon: 'https://picsum.photos/seed/clouds/72/72',
+        humidity: 55,
+        wind: 12,
+        rain: 0.5
+    },
+    'Guntur': {
+        temp: 29,
+        cond: 'Rainy',
+        icon: 'https://picsum.photos/seed/rain/72/72',
+        humidity: 72,
+        wind: 10,
+        rain: 6
+    },
+    'Default': {
+        temp: 28,
+        cond: 'Clear',
+        icon: 'https://picsum.photos/seed/clear/72/72',
+        humidity: 50,
+        wind: 8,
+        rain: 0
+    }
+};
+const district = localStorage.getItem('userDistrict') || 'Default';
+document.getElementById('weatherLocation').textContent = district ? `Location: ${district}` : 'Location: Unknown';
+const w = weatherData[district] || weatherData['Default'];
+document.getElementById('temperature').textContent = `${w.temp}°C`;
+document.getElementById('condition').textContent = w.cond;
+document.getElementById('humidity').textContent = `${w.humidity}%`;
+document.getElementById('wind').textContent = `${w.wind} km/h`;
+document.getElementById('rain').textContent = `${w.rain} mm`;
+document.getElementById('weatherIcon').src = w.icon;
+setTimeout(() => {
+    const l = document.getElementById('weatherLoading');
+    if (l) l.style.display = 'none';
+}, 800);
+
+// Tips (multilingual)
+const tips = {
+    en: [
+        'Check soil moisture early morning to plan irrigation.',
+        'Use mulching to retain soil moisture and reduce weeds.',
+        'Monitor local weather before spraying pesticides.',
+        'Rotate crops to improve soil health and reduce pests.',
+        'Store grains in clean, dry containers to avoid spoilage.'
+    ],
+    hi: [
+        'सुबह मिट्टी की नमी जाँचें और सिंचाई की योजना बनाएं।',
+        'मल्चिंग से नमी बनी रहती है और खरपतवार घटते हैं।',
+        'कीटनाशक छिड़काव से पहले मौसम देखें।',
+        'फसल चक्र अपनाएँ ताकि मिट्टी बेहतर हो और कीट कम हों।',
+        'अनाज को साफ और सूखे बर्तनों में रखें।'
+    ],
+    bn: [
+        'সকালে মাটির আর্দ্রতা দেখে সেচের পরিকল্পনা করুন।',
+        'মাল্চিং করলে মাটির আর্দ্রতা থাকে ও আগাছা কমে।',
+        'কীটনাশক স্প্রে করার আগে আবহাওয়া দেখুন।',
+        'ফসল পর্যাবৃত্তি মাটির স্বাস্থ্য ভালো রাখে।',
+        'শস্য শুকনো ও পরিষ্কার পাত্রে রাখুন।'
+    ]
+};
+const lang = localStorage.getItem('lang') || 'en';
+const tipTextEl = document.getElementById('tipText');
+
+function loadTip() {
+    const list = tips[lang] || tips.en;
+    const tip = list[Math.floor(Math.random() * list.length)];
+    tipTextEl.textContent = tip;
+}
+loadTip();
+document.getElementById('btnNewTip').addEventListener('click', () => {
+    loadTip();
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1500,
+        icon: 'info',
+        title: 'New tip loaded'
+    });
+});
+
+// Read Aloud (Web Speech API)
+const btnReadTip = document.getElementById('btnReadTip');
+btnReadTip.addEventListener('click', () => {
+    const utter = new SpeechSynthesisUtterance(tipTextEl.textContent);
+    speechSynthesis.speak(utter);
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1200,
+        icon: 'success',
+        title: 'Reading tip aloud'
+    });
+});
+
+// ApexCharts: Activity (Reports, Tools, Advisory Runs)
+const seriesData = [
+    metrics.reportsGenerated || 0,
+    metrics.toolsUsed || 0,
+    metrics.advisoryRuns || 0
+];
+const chartOptions = {
+    chart: {
+        type: 'bar',
+        height: 280,
+        toolbar: {
+            show: false
+        }
+    },
+    series: [{
+        name: 'Actions',
+        data: seriesData
+    }],
+    xaxis: {
+        categories: ['Reports', 'Tools Used', 'Advisory Runs']
+    },
+    colors: ['#2E7D32'],
+    dataLabels: {
+        enabled: true
+    },
+    tooltip: {
+        y: {
+            formatter: (val) => `${val} actions`
+        }
+    },
+    grid: {
+        strokeDashArray: 4
+    },
+    responsive: [{
+        breakpoint: 768,
+        options: {
+            chart: {
+                height: 240
+            }
+        }
+    }]
+};
+const chart = new ApexCharts(document.querySelector('#usageChart'), chartOptions);
+chart.render();
+
+// Reports Table Mock Data
+const allReports = [{
+    date: '2025-11-20',
+    crop: 'Wheat',
+    district: 'Nashik',
+    status: 'Completed',
+    score: 86
+}, {
+    date: '2025-11-19',
+    crop: 'Rice',
+    district: 'Guntur',
+    status: 'Pending',
+    score: 72
+}, {
+    date: '2025-11-18',
+    crop: 'Tomato',
+    district: 'Belagavi',
+    status: 'Completed',
+    score: 90
+}, {
+    date: '2025-11-17',
+    crop: 'Onion',
+    district: 'Nashik',
+    status: 'Completed',
+    score: 78
+}, {
+    date: '2025-11-16',
+    crop: 'Maize',
+    district: 'Madhubani',
+    status: 'Pending',
+    score: 65
+}, {
+    date: '2025-11-15',
+    crop: 'Tomato',
+    district: 'Guntur',
+    status: 'Completed',
+    score: 88
+}, {
+    date: '2025-11-14',
+    crop: 'Rice',
+    district: 'Madhubani',
+    status: 'Completed',
+    score: 81
+}, {
+    date: '2025-11-13',
+    crop: 'Wheat',
+    district: 'Belagavi',
+    status: 'Pending',
+    score: 70
+}, {
+    date: '2025-11-12',
+    crop: 'Onion',
+    district: 'Nashik',
+    status: 'Completed',
+    score: 92
+}, {
+    date: '2025-11-11',
+    crop: 'Maize',
+    district: 'Belagavi',
+    status: 'Completed',
+    score: 77
+}, {
+    date: '2025-11-10',
+    crop: 'Rice',
+    district: 'Guntur',
+    status: 'Pending',
+    score: 60
+}, {
+    date: '2025-11-09',
+    crop: 'Wheat',
+    district: 'Madhubani',
+    status: 'Completed',
+    score: 83
+}];
+let sortState = {
+    key: 'date',
+    dir: 'desc'
+};
+let pageState = {
+    page: 1,
+    size: 6
+};
+
+function applyFilters(data) {
+    const fc = document.getElementById('filterCrop').value;
+    const fd = document.getElementById('filterDistrict').value;
+    return data.filter(r => (!fc || r.crop === fc) && (!fd || r.district === fd));
+}
+
+function sortData(data, key, dir) {
+    return data.slice().sort((a, b) => {
+        const va = a[key];
+        const vb = b[key];
+        if (key === 'date') return dir === 'asc' ? new Date(va) - new Date(vb) : new Date(vb) - new Date(va);
+        if (key === 'score') return dir === 'asc' ? va - vb : vb - va;
+        return dir === 'asc' ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+    });
+}
+
+function renderTable() {
+    const filtered = applyFilters(allReports);
+    const sorted = sortData(filtered, sortState.key, sortState.dir);
+    const start = (pageState.page - 1) * pageState.size;
+    const end = start + pageState.size;
+    const pageData = sorted.slice(start, end);
+    const tbody = document.getElementById('reportsBody');
+    tbody.innerHTML = pageData.map(r => `
+        <tr>
+          <td class="px-3 py-2 text-gray-700">${fmtDate(r.date)}</td>
+          <td class="px-3 py-2 text-gray-700">${r.crop}</td>
+          <td class="px-3 py-2 text-gray-700">${r.district}</td>
+          <td class="px-3 py-2">
+            <span class="px-2 py-1 rounded text-xs ${r.status==='Completed'?'bg-green-100 text-green-700':'bg-yellow-100 text-yellow-700'}">${r.status}</span>
+          </td>
+          <td class="px-3 py-2 text-right text-gray-700">${r.score}</td>
+          <td class="px-3 py-2 text-right">
+            <a href="./advisory_report.html" class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 rounded hover:bg-gray-50"><i class="fas fa-eye"></i> View</a>
+          </td>
+        </tr>
+      `).join('');
+    const total = filtered.length;
+    const shownEnd = Math.min(end, total);
+    document.getElementById('paginationInfo').textContent = `Showing ${start+1}-${shownEnd} of ${total}`;
+    document.getElementById('btnPrev').disabled = pageState.page === 1;
+    document.getElementById('btnNext').disabled = shownEnd >= total;
+}
+renderTable();
+
+// Sorting events
+document.querySelectorAll('th[data-sort]').forEach(th => {
+    th.addEventListener('click', () => {
+        const key = th.getAttribute('data-sort');
+        sortState.dir = (sortState.key === key && sortState.dir === 'asc') ? 'desc' : 'asc';
+        sortState.key = key;
+        pageState.page = 1;
+        renderTable();
+    });
+});
+document.getElementById('filterCrop').addEventListener('change', () => {
+    pageState.page = 1;
+    renderTable();
+});
+document.getElementById('filterDistrict').addEventListener('change', () => {
+    pageState.page = 1;
+    renderTable();
+});
+document.getElementById('btnPrev').addEventListener('click', () => {
+    if (pageState.page > 1) {
+        pageState.page--;
+        renderTable();
+    }
+});
+document.getElementById('btnNext').addEventListener('click', () => {
+    pageState.page++;
+    renderTable();
+});
+
+// Header actions feedback
+document.getElementById('btnNotifications').addEventListener('click', () => {
+    Swal.fire({
+        icon: 'info',
+        title: 'No new notifications',
+        timer: 1500,
+        showConfirmButton: false
+    });
+});
+document.getElementById('btnMessages').addEventListener('click', () => {
+    Swal.fire({
+        icon: 'info',
+        title: 'No new messages',
+        timer: 1500,
+        showConfirmButton: false
+    });
+});
+// Intercept Generate Advisory to show a confirmation then navigate
+document.getElementById('btnGenerateAdvisory').addEventListener('click', (e) => {
+    e.preventDefault();
+    Swal.fire({
+        title: 'Generate Smart Advisory?',
+        text: 'We will use your latest profile and weather data.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Proceed',
+        cancelButtonText: 'Cancel'
+    }).then(res => {
+        if (res.isConfirmed) window.location.href = './smart_advisory.html';
+    });
+});
+
+
+welcomeMessage.addEventListener('click', () => {
+    window.location.href = './farmer_profile.html';
+});
+
+// Global search
+document.getElementById('globalSearch').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Search executed',
+            text: `Query: ${e.target.value}`,
+            timer: 1600,
+            showConfirmButton: false
+        });
+    }
+});
+  </script>
+  
+  }
+  -->
+ </body>
+</html>

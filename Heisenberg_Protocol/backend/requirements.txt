@@ -1,0 +1,9 @@
+PyJWT
+SQLAlchemy
+fastapi
+greenlet
+pydantic
+python-dotenv
+python-jose[cryptography]
+sqlalchemy
+uvicorn
