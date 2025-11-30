@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Eco-Buddy 🌱 | Trashformers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    :root {
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --primary-light: #34d399;
+      --primary-glow: rgba(16, 185, 129, 0.15);
+      --bg-dark: #111827;
+      --bg-darker: #0a0f1c;
+      --bg-card: #1f2937;
+      --bg-card-light: #374151;
+      --bg-card-lighter: #4b5563;
+      --text-primary: #f9fafb;
+      --text-secondary: #d1d5db;
+      --text-muted: #9ca3af;
+      --border: #374151;
+      --border-light: #4b5563;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.25);
+      --shadow-primary: 0 0 15px rgba(16, 185, 129, 0.2);
+      --radius: 16px;
+      --radius-sm: 8px;
+      --radius-lg: 20px;
+      --transition: all 0.3s ease;
+      --transition-slow: all 0.5s ease;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+        background: #222;
+      color: var(--text-primary);
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 30%),
+        radial-gradient(circle at 85% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 30%),
+        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.03) 0%, transparent 50%);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(16, 185, 129, 0.03) 0%, transparent 50%);
+      z-index: -1;
+    }
+
+    .chat-wrapper {
+      max-width: 900px;
+      width: 100%;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg), var(--shadow-primary);
+      border: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: var(--transition-slow);
+      position: relative;
+      backdrop-filter: blur(10px);
+      transform: translateY(0);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .chat-header {
+      padding: 24px 30px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chat-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+      transform: translateX(-100%);
+    }
+
+    .chat-header:hover::before {
+      transform: translateX(100%);
+      transition: transform 1s ease;
+    }
+
+    .chat-header h1 {
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .chat-header h1::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px;
+    }
+
+    .chat-header p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .tagline {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--primary-light);
+      backdrop-filter: blur(10px);
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+      transition: var(--transition);
+    }
+
+    .tagline:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.25);
+    }
+
+    .quick-questions {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: rgba(31, 41, 55, 0.7);
+      backdrop-filter: blur(5px);
+    }
+
+    .quick-btn {
+      border-radius: 9999px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 10px 18px;
+      font-size: 0.9rem;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--primary-light);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quick-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .quick-btn:hover {
+      background: rgba(16, 185, 129, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+
+    .quick-btn:hover::before {
+      left: 100%;
+    }
+
+    .quick-btn:active {
+      transform: translateY(0);
+    }
+
+    .quick-btn i {
+      font-size: 0.9rem;
+    }
+
+    .chat-window {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(16, 185, 129, 0.03) 0%, transparent 50%);
+      min-height: 400px;
+      max-height: 60vh;
+      position: relative;
+    }
+
+    .msg-row {
+      display: flex;
+      margin-bottom: 20px;
+      animation: fadeInUp 0.4s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-row.user {
+      justify-content: flex-end;
+    }
+
+    .msg-row.ai {
+      justify-content: flex-start;
+    }
+
+    .bubble {
+      max-width: 80%;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      box-shadow: var(--shadow);
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .user .bubble {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border-bottom-right-radius: var(--radius-sm);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .ai .bubble {
+      background: var(--bg-card-light);
+      color: var(--text-primary);
+      border-bottom-left-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+    }
+
+    .bubble::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+    }
+
+    .user .bubble::after {
+      right: -8px;
+      border-width: 0 0 12px 12px;
+      border-color: transparent transparent var(--primary-dark) transparent;
+    }
+
+    .ai .bubble::after {
+      left: -8px;
+      border-width: 0 12px 12px 0;
+      border-color: transparent var(--bg-card-light) transparent transparent;
+    }
+
+    .bubble strong {
+      font-weight: 700;
+      color: var(--primary-light);
+      background: rgba(16, 185, 129, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .typing {
+      font-style: italic;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .typing-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .typing-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      animation: typing 1.4s infinite ease-in-out;
+    }
+
+    .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes typing {
+      0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    .idea-buttons {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .idea-btn {
+      padding: 8px 14px;
+      border-radius: 9999px;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.1);
+      font-size: 0.8rem;
+      color: var(--primary-light);
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+    }
+
+    .idea-btn:hover {
+      background: rgba(16, 185, 129, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+      padding: 20px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-card-light);
+      position: relative;
+    }
+
+    .input-row::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+
+    .input-row input {
+      flex: 1;
+      padding: 16px 22px;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      font-size: 0.95rem;
+      outline: none;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      transition: var(--transition);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-row input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-row input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .input-row button {
+      padding: 16px 26px;
+      border-radius: 9999px;
+      border: none;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .input-row button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .input-row button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    }
+
+    .input-row button:hover::before {
+      left: 100%;
+    }
+
+    .input-row button:active {
+      transform: translateY(0);
+    }
+
+    .input-row button:disabled {
+      opacity: 0.6;
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .input-row button:disabled::before {
+      display: none;
+    }
+
+    .error {
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      color: #fca5a5;
+      background: rgba(220, 38, 38, 0.1);
+      border-top: 1px solid rgba(220, 38, 38, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: shake 0.5s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+
+    .error i {
+      font-size: 1.2rem;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: var(--bg-card-light);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      z-index: 10;
+      box-shadow: var(--shadow);
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg-card);
+      transform: rotate(15deg) scale(1.1);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .chat-wrapper {
+        border-radius: 16px;
+      }
+      
+      .chat-header {
+        padding: 20px 24px;
+      }
+      
+      .chat-header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .bubble {
+        max-width: 85%;
+        padding: 14px 18px;
+      }
+      
+      .quick-questions {
+        padding: 16px;
+        gap: 10px;
+      }
+      
+      .quick-btn {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+      }
+      
+      .input-row {
+        padding: 16px;
+      }
+      
+      .input-row input {
+        padding: 14px 18px;
+      }
+      
+      .input-row button {
+        padding: 14px 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+      
+      .chat-wrapper {
+        border-radius: 14px;
+      }
+      
+      .chat-header {
+        padding: 16px 18px;
+      }
+      
+      .chat-header h1 {
+        font-size: 1.4rem;
+      }
+      
+      .chat-window {
+        padding: 18px;
+        max-height: 50vh;
+      }
+      
+      .bubble {
+        max-width: 90%;
+        padding: 12px 16px;
+        font-size: 0.9rem;
+      }
+      
+      .quick-questions {
+        padding: 12px;
+        gap: 8px;
+      }
+      
+      .quick-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+      
+      .input-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      .input-row button {
+        align-self: flex-end;
+        width: fit-content;
+      }
+    }
+
+    /* Animation for new messages */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .msg-row {
+      animation: slideIn 0.4s ease-out;
+    }
+
+    /* Light theme styles */
+    body.light-theme {
+      --bg-dark: #f8fafc;
+      --bg-darker: #e2e8f0;
+      --bg-card: #ffffff;
+      --bg-card-light: #f1f5f9;
+      --bg-card-lighter: #e2e8f0;
+      --text-primary: #1e293b;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --border-light: #e2e8f0;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08);
+      background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 25%),
+        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 25%),
+        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
+    }
+
+    body.light-theme .chat-wrapper {
+      box-shadow: var(--shadow-lg), 0 0 15px rgba(16, 185, 129, 0.15);
+    }
+
+    body.light-theme .chat-header {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+    }
+
+    body.light-theme .ai .bubble {
+      background: var(--bg-card-light);
+      border: 1px solid var(--border);
+    }
+
+    body.light-theme .quick-questions {
+      background: rgba(241, 245, 249, 0.7);
+    }
+
+    body.light-theme .input-row {
+      background: var(--bg-card-light);
+    }
+
+    body.light-theme .input-row input {
+      background: var(--bg-card);
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-wrapper">
+    <div class="theme-toggle" id="themeToggle">
+      <i class="fas fa-moon"></i>
+    </div>
+    
+    <div class="chat-header">
+      <h1><i class="fas fa-leaf"></i> Eco-Buddy</h1>
+      <p>Your AI companion for creative upcycling and waste transformation.</p>
+      <span class="tagline">Tell me what waste you have. I'll give you 3 creative ideas.</span>
+    </div>
+
+    <div class="quick-questions">
+      <button class="quick-btn"><i class="fas fa-wine-bottle"></i> Plastic bottles</button>
+      <button class="quick-btn"><i class="fas fa-newspaper"></i> Newspapers & cardboard</button>
+      <button class="quick-btn"><i class="fas fa-glass-whiskey"></i> Broken glass</button>
+      <button class="quick-btn"><i class="fas fa-laptop"></i> Old electronics</button>
+      <button class="quick-btn"><i class="fas fa-cube"></i> Empty tin cans</button>
+    </div>
+
+    <div id="chatWindow" class="chat-window"></div>
+
+    <div class="input-row">
+      <input
+        id="userInput"
+        type="text"
+        placeholder="Type here... e.g. 'I have plastic bottles for my garden'"
+      />
+      <button id="sendBtn"><i class="fas fa-paper-plane"></i> Send</button>
+    </div>
+
+    <div id="errorBox" class="error" style="display:none;">
+      <i class="fas fa-exclamation-triangle"></i>
+      <span>Could not reach Eco-Buddy. Is the Python server running on port 5050?</span>
+    </div>
+  </div>
+
+  <script>
+    const chatWindow = document.getElementById("chatWindow");
+    const userInput = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const errorBox = document.getElementById("errorBox");
+    const quickButtons = document.querySelectorAll(".quick-btn");
+    const themeToggle = document.getElementById("themeToggle");
+
+    let isLoading = false;
+
+    function appendMessage(sender, text) {
+      const row = document.createElement("div");
+      row.className = "msg-row " + sender;
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+
+      bubble.innerHTML = text
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\n/g, "<br>");
+
+      row.appendChild(bubble);
+      chatWindow.appendChild(row);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function appendTyping() {
+      const row = document.createElement("div");
+      row.className = "msg-row ai";
+      row.id = "typing-indicator";
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble typing";
+      
+      const typingContent = document.createElement("div");
+      typingContent.innerHTML = "Eco-Buddy is thinking";
+      
+      const dots = document.createElement("div");
+      dots.className = "typing-dots";
+      dots.innerHTML = '<span></span><span></span><span></span>';
+      
+      bubble.appendChild(typingContent);
+      bubble.appendChild(dots);
+      row.appendChild(bubble);
+      chatWindow.appendChild(row);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function removeTyping() {
+      const typingRow = document.getElementById("typing-indicator");
+      if (typingRow) typingRow.remove();
+    }
+
+    async function sendMessage(message) {
+      if (!message || !message.trim() || isLoading) return;
+      const clean = message.trim();
+
+      errorBox.style.display = "none";
+      appendMessage("user", clean);
+
+      isLoading = true;
+      sendBtn.disabled = true;
+      appendTyping();
+
+      try {
+        const res = await fetch("http://localhost:5050/api/eco-buddy", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: clean }),
+        });
+
+        removeTyping();
+
+        if (!res.ok) {
+          throw new Error("Server responded with " + res.status);
+        }
+
+        const data = await res.json();
+        const reply = data.reply || "Sorry, I couldn't generate a reply.";
+        appendMessage("ai", reply);
+      } catch (err) {
+        console.error(err);
+        removeTyping();
+        errorBox.style.display = "flex";
+      } finally {
+        isLoading = false;
+        sendBtn.disabled = false;
+      }
+    }
+
+    // Event listeners
+    sendBtn.addEventListener("click", () => {
+      const text = userInput.value;
+      userInput.value = "";
+      sendMessage(text);
+    });
+
+    userInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const text = userInput.value;
+        userInput.value = "";
+        sendMessage(text);
+      }
+    });
+
+    quickButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        sendMessage(btn.textContent);
+      });
+    });
+
+    // Theme toggle functionality
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light-theme");
+      const icon = themeToggle.querySelector("i");
+      if (document.body.classList.contains("light-theme")) {
+        icon.className = "fas fa-sun";
+      } else {
+        icon.className = "fas fa-moon";
+      }
+    });
+
+    // Add initial message
+    appendMessage(
+      "ai",
+      "Hi, I'm <strong>Eco-Buddy</strong> 🌱<br>Tell me what waste item you have, and where you want to use it (home, garden, school, decoration, gifting). I'll suggest 3 creative 'Best Out of Waste' ideas!"
+    );
+  </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment folders
+env/
+venv/
+.venv/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDE specific
+.vscode/
+.idea/
+
+# Environment variables / secrets
+*.env
+.env.*
+
+# Logs
+*.log
+
+# Byte-compiled / optimization files
+*.pyc
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Node modules (if using frontend)
+node_modules/
+
+# Coverage and test artifacts
+.coverage
+coverage.xml
+htmlcov/
+
+# Local database / cache
+*.sqlite3
+*.db
+
+# OS generated files
+.DS_Store
+Thumbs.db
