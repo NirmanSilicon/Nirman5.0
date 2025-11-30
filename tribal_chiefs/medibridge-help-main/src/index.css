@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* MediBridge Healthcare Design System - Medical blue with green accents */
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 213 27% 9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 213 27% 9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 213 27% 9%;
+
+    /* Medical blue primary */
+    --primary: 213 94% 68%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 213 94% 85%;
+    --primary-dark: 213 94% 45%;
+
+    /* Medical green accent */
+    --accent: 142 69% 58%;
+    --accent-foreground: 213 27% 9%;
+    --accent-light: 142 69% 85%;
+
+    --secondary: 213 27% 96%;
+    --secondary-foreground: 213 27% 9%;
+
+    --muted: 213 27% 96%;
+    --muted-foreground: 213 10% 46%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 213 27% 91%;
+    --input: 213 27% 91%;
+    --ring: 213 94% 68%;
+
+    --radius: 0.75rem;
+
+    /* Medical gradient backgrounds */
+    --gradient-hero: linear-gradient(135deg, hsl(213 94% 68%), hsl(213 94% 45%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(213 27% 98%));
+    --gradient-accent: linear-gradient(135deg, hsl(142 69% 58%), hsl(142 69% 45%));
+    
+    /* Emergency colors */
+    --emergency: 0 84% 60%;
+    --emergency-foreground: 0 0% 100%;
+    --emergency-glow: 0 84% 60% / 0.3;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 213 27% 9%;
+    --foreground: 0 0% 98%;
+
+    --card: 213 27% 12%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 213 27% 12%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 213 94% 68%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 213 94% 85%;
+    --primary-dark: 213 94% 45%;
+
+    --accent: 142 69% 58%;
+    --accent-foreground: 213 27% 9%;
+    --accent-light: 142 69% 85%;
+
+    --secondary: 213 27% 15%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 213 27% 15%;
+    --muted-foreground: 213 10% 65%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 213 27% 20%;
+    --input: 213 27% 20%;
+    --ring: 213 94% 68%;
+
+    --gradient-hero: linear-gradient(135deg, hsl(213 94% 45%), hsl(213 27% 12%));
+    --gradient-card: linear-gradient(135deg, hsl(213 27% 12%), hsl(213 27% 15%));
+    --gradient-accent: linear-gradient(135deg, hsl(142 69% 45%), hsl(142 69% 35%));
+    
+    --emergency: 0 84% 60%;
+    --emergency-foreground: 0 0% 100%;
+    --emergency-glow: 0 84% 60% / 0.4;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
