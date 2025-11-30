@@ -136,6 +136,36 @@ const Syllabusextracted = async(req,res) =>{
     }
 }
 
+
+
+const chat = async (req, res) => {
+  try {
+    const userMessage = req.body.message;
+
+    if (!userMessage) {
+      return res.status(400).json({ error: "Message is required" });
+    }
+
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+    const result = await model.generateContent(userMessage);
+    const aiResponse = result.response.text();
+
+    return res.json({
+      success: true,
+      message: aiResponse,
+    });
+
+  } catch (error) {
+    console.error("CHAT ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      error: error.message || "Something went wrong",
+    });
+  }
+};
+
 module.exports = {
-    Syllabusextracted
+    Syllabusextracted,
+    chat
 }

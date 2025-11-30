@@ -1,0 +1,135 @@
+/* @import "tailwindcss";
+
+
+.root{
+    @apply bg-[##ADD8E6]
+}
+
+#chat-bubble {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  z-index: 1000;
+  transition: height 0.3s ease;
+}
+
+#chat-header {
+  background-color: #FFD700;
+  color: rgb(0, 0, 0);
+  padding: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#chat-body {
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+}
+
+#messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+#messages .message {
+  margin: 5px 0;
+  padding: 8px 12px;
+  border-radius: 15px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.user-msg {
+  background-color: #ADD8E6;
+  align-self: flex-end;
+}
+
+.ai-msg {
+  background-color: #0000ff;
+  color: white;
+  align-self: flex-start;
+}
+
+#chat-body input {
+  border: none;
+  border-top: 1px solid #ddd;
+  padding: 10px;
+  outline: none;
+} */
+@import "tailwindcss";
+
+/* Floating circular button */
+.floating-btn {
+  @apply fixed bottom-5 right-5 w-16 h-16 rounded-full bg-blue-600 text-white text-2xl flex items-center justify-center shadow-lg hover:bg-blue-500 transition;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+/* Chat Window */
+.chat-window {
+  @apply fixed bottom-5 right-5 w-80 h-96 bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50 border-2 border-blue-500;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+/* Header */
+.chat-header {
+  @apply bg-blue-500 text-white font-bold px-4 py-3 cursor-pointer select-none flex justify-between items-center shadow-inner;
+}
+
+/* Close Button */
+.close-btn {
+  @apply text-white font-bold text-lg;
+}
+
+/* Body */
+.chat-body {
+  @apply flex flex-col flex-1 p-3 bg-gray-50;
+}
+
+/* Messages */
+#messages {
+  @apply flex-1 overflow-y-auto space-y-2 mb-2;
+}
+
+/* Message bubbles */
+.message {
+  @apply px-4 py-2 rounded-2xl max-w-[75%] wrap-break-word transition-all duration-200;
+}
+
+.user-msg {
+  @apply bg-blue-300 self-end shadow-md;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.ai-msg {
+  @apply bg-blue-700 text-white self-start shadow-md;
+  border-bottom-left-radius: 0.25rem;
+}
+
+/* Input */
+.chat-body input {
+  @apply border-t border-gray-300 rounded-b-2xl px-4 py-2 outline-none focus:ring-2 focus:ring-blue-400 transition;
+}
+
+/* New message animation */
+.message {
+  @apply opacity-0 translate-y-2;
+  animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
