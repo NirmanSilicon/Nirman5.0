@@ -1,4 +1,3 @@
-//Contarct Controller
 const Contract = require('../models/Contract');
 const Room = require('../models/Room');
 const Hostel = require('../models/Hostel');
