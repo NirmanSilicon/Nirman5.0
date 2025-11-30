@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Smart Advisory | YieldWise
+  </title>
+  <!-- Brand Typography: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <!-- Font Awesome 6 -->
+  <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-SVL7YJQeWwQyKQsfApcF7aOeXHf4p2q6CNGgPjQdS2lH9FQn2QfG1f9bqQF2C+s1oVf2QO5vYoK9bFQvQkG9kA==" referrerpolicy="no-referrer" rel="stylesheet">
+   <!-- SweetAlert2 -->
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+   </script>
+   <!-- ApexCharts -->
+   <script src="https://cdn.jsdelivr.net/npm/apexcharts">
+   </script>
+   <!-- Global Theme & Components CSS -->
+   <link href="style.css" rel="stylesheet"/>
+   <!-- Page-specific CSS (Optional: can be moved to smart_advisory.css) -->
+   <style>
+    /* smart_advisory.css */
+    .advisory-hero {
+      background: linear-gradient(135deg, rgba(46, 125, 50, 0.08) 0%, rgba(14, 165, 233, 0.06) 100%);
+    }
+    .form-card {
+      box-shadow: 0 6px 20px rgba(46, 125, 50, 0.08);
+      border: 1px solid #e5e7eb;
+    }
+    .ad-banner {
+      border: 1px dashed #cbd5e1;
+    }
+    .table-action-btn {
+      transition: transform 150ms ease;
+    }
+    .table-action-btn:hover { transform: translateY(-1px); }
+    .select-invalid { border-color: #dc2626 !important; }
+    .select-valid { border-color: #16a34a !important; }
+   </style>
+  </link>
+ 
+<!-- CSS Loader Script -->
+<script src="./css_loader.js"></script>
+</head>
+ <body class="font-[Poppins] bg-gray-50 min-h-screen">
+  <!-- Header (use provided component unchanged) -->
+  <header class="w-full bg-white border-b border-[#2E7D32] sticky top-0 z-50">
+   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+     <div class="flex items-center gap-3">
+      <img alt="Yeild Wise" class="h-9 w-auto" onerror="this.src='https://ibb.co/JW4DnZwH'" src="https://i.ibb.co/p68Y2qBd/Logo-02.png"/>
+      <span class="text-xl font-semibold text-[#2E7D32]">
+       Smart Advisory
+      </span>
+     </div>
+     <div class="flex-1 max-w-lg mx-6 hidden md:block">
+      <div class="relative">
+       <input class="w-full border border-gray-300 rounded-md pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#2E7D32] focus:border-[#2E7D32]" placeholder="Search crops, fertilizers..." type="text"/>
+       <i class="fas fa-search absolute left-3 top-2.5 text-gray-400">
+       </i>
+      </div>
+     </div>
+     <div class="flex items-center gap-2">
+      <a class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[#2E7D32] rounded-md hover:opacity-90" href="#advisory_report?action=export">
+       <i class="fas fa-file-pdf">
+       </i>
+       Export PDF
+      </a>
+      <a class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[#2E7D32] rounded-md hover:opacity-90" href="#advisory_report?action=save">
+       <i class="fas fa-save">
+       </i>
+       Save to Profile
+      </a>
+      <button class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#2E7D32] bg-green-50 border border-[#2E7D32] rounded-md hover:bg-green-100" id="readAloudBtn" title="Read Aloud">
+       <i class="fas fa-volume-up">
+       </i>
+       Read Aloud
+      </button>
+      <button class="p-2 rounded hover:bg-gray-100" title="Notifications">
+       <i class="fas fa-bell text-gray-700">
+       </i>
+      </button>
+      <details class="relative">
+       <summary class="list-none cursor-pointer flex items-center gap-2">
+        <img alt="User" class="h-8 w-8 rounded-full" onerror="this.src=src='https://ibb.co/RpZL1PWH'" src="https://i.ibb.co/XZNm9pTJ/Default-male-avatar.webp"/>
+        <span class="text-sm text-gray-700">
+         Farmer
+        </span>
+        <i class="fas fa-chevron-down text-gray-500">
+        </i>
+       </summary>
+       <div class="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-md shadow-lg">
+        <a class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" href="#farmer_profile">
+         <i class="fas fa-user mr-2">
+         </i>
+         Profile
+        </a>
+        <a class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" href="#home_dashboard">
+         <i class="fas fa-home mr-2">
+         </i>
+         Home
+        </a>
+        <div class="border-t border-gray-200">
+        </div>
+        <a class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" href="#">
+         <i class="fas fa-sign-out-alt mr-2">
+         </i>
+         Logout
+        </a>
+       </div>
+      </details>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="flex min-h-[calc(100vh-4rem)]">
+   <!-- Sidebar (left) - use provided component; apply active state to current page link -->
+   <aside class="hidden md:block w-64 bg-white border-r border-gray-200 min-h-screen pt-4 px-2" id="sidebar-advisory">
+    <nav class="space-y-2">
+     <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase">
+      Advisory Workflow
+     </h3>
+     <a aria-current="page" class="group flex items-center gap-3 px-3 py-2 text-gray-700 rounded-md bg-green-50 text-[#2E7D32] ring-1 ring-[#2E7D32]" href="#smart_advisory">
+      <i class="fas fa-clipboard-list text-[#2E7D32]">
+      </i>
+      <span>
+       Smart Advisory Form
+      </span>
+     </a>
+     <a class="group flex items-center gap-3 px-3 py-2 text-gray-700 rounded-md hover:bg-green-50 hover:text-[#2E7D32]" href="#advisory_report">
+      <i class="fas fa-file-alt text-[#2E7D32]">
+      </i>
+      <span>
+       Advisory Report
+      </span>
+     </a>
+     <details class="px-3 py-2 rounded-md">
+      <summary class="flex items-center gap-3 cursor-pointer text-gray-700 hover:text-[#2E7D32]">
+       <i class="fas fa-folder-open text-[#2E7D32]">
+       </i>
+       <span>
+        Reports
+       </span>
+      </summary>
+      <div class="mt-2 ml-6 space-y-1">
+       <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" href="#farmer_profile?tab=reports">
+        <i class="fas fa-list mr-2">
+        </i>
+        Saved Reports
+       </a>
+       <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" href="#advisory_report?action=export">
+        <i class="fas fa-file-pdf mr-2">
+        </i>
+        Export to PDF
+       </a>
+      </div>
+     </details>
+     <a class="group flex items-center gap-3 px-3 py-2 text-gray-700 rounded-md hover:bg-green-50 hover:text-[#2E7D32]" href="#home_dashboard">
+      <i class="fas fa-home text-[#2E7D32]">
+      </i>
+      <span>
+       Back to Home
+      </span>
+     </a>
+    </nav>
+   </aside>
+   <!-- Main content -->
+   <main class="flex-1">
+    <section class="main-container">
+     <div class="max-w-7xl mx-auto px-4 py-6">
+      <!-- Page Header / Hero -->
+      <div class="advisory-hero rounded-xl p-6 sm:p-8 mb-6">
+       <div class="flex items-start sm:items-center gap-4">
+        <img alt="YieldWise" class="h-10 w-10" onerror="this.src='https://ibb.co/JW4DnZwH'" src="https://i.ibb.co/p68Y2qBd/Logo-02.png"/>
+        <div>
+         <h1 class="header-title text-2xl sm:text-3xl font-semibold">
+          Smart Advisory
+         </h1>
+         <p class="text-gray-600 text-sm sm:text-base">
+          Enter your location and farm details to generate a personalized crop advisory.
+         </p>
+        </div>
+       </div>
+       <div class="mt-4 flex items-center gap-3">
+        <a class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#2E7D32] bg-green-50 border border-[#2E7D32] rounded-md hover:bg-green-100" href="./home_dashboard.html">
+         <i class="fas fa-home">
+         </i>
+         Home
+        </a>
+        <a class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[#2E7D32] rounded-md hover:opacity-90" href="./advisory_report.html">
+         <i class="fas fa-file-alt">
+         </i>
+         View Report
+        </a>
+       </div>
+      </div>
+      <!-- Get Advisory Form -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+       <div class="lg:col-span-2">
+        <div class="card form-card bg-white rounded-xl p-6">
+         <div class="flex items-center justify-between mb-4">
+          <h2 class="section-title text-xl font-semibold">
+           Get Advisory Form
+          </h2>
+          <div class="flex items-center gap-2">
+           <label class="text-sm text-gray-600" for="languageSelect">
+            Language
+           </label>
+           <select class="form-select border-gray-300 rounded-md text-sm py-1 px-2" id="languageSelect">
+            <option value="en">
+             English
+            </option>
+            <option value="hi">
+             हिंदी
+            </option>
+            <option value="mr">
+             मराठी
+            </option>
+           </select>
+          </div>
+         </div>
+         <form class="space-y-4" id="advisoryForm">
+          <!-- State -->
+          <div>
+           <label class="block text-sm font-medium text-gray-700" data-i18n="label_state" for="stateSelect">
+            State
+           </label>
+           <select class="form-select mt-1 w-full border-gray-300 rounded-md p-2" id="stateSelect" required="">
+            <option data-i18n="placeholder_state" value="">
+             Select your State
+            </option>
+           </select>
+           <p class="form-error text-sm mt-1 hidden" id="stateError">
+            State is required.
+           </p>
+          </div>
+          <!-- District -->
+          <div>
+           <label class="block text-sm font-medium text-gray-700" data-i18n="label_district" for="districtSelect">
+            District
+           </label>
+           <select class="form-select mt-1 w-full border-gray-300 rounded-md p-2" disabled="" id="districtSelect" required="">
+            <option data-i18n="placeholder_district" value="">
+             Select your District
+            </option>
+           </select>
+           <p class="form-error text-sm mt-1 hidden" id="districtError">
+            District is required.
+           </p>
+          </div>
+          <!-- Soil Type -->
+          <div>
+           <label class="block text-sm font-medium text-gray-700" data-i18n="label_soil" for="soilSelect">
+            Soil Type
+           </label>
+           <select class="form-select mt-1 w-full border-gray-300 rounded-md p-2" id="soilSelect" required="">
+            <option data-i18n="placeholder_soil" value="">
+             Select soil type
+            </option>
+           </select>
+           <p class="form-error text-sm mt-1 hidden" id="soilError">
+            Soil type is required.
+           </p>
+          </div>
+          <!-- Season -->
+          <div>
+           <label class="block text-sm font-medium text-gray-700" data-i18n="label_season" for="seasonSelect">
+            Season
+           </label>
+           <select class="form-select mt-1 w-full border-gray-300 rounded-md p-2" id="seasonSelect" required="">
+            <option data-i18n="placeholder_season" value="">
+             Select current season
+            </option>
+           </select>
+           <p class="form-error text-sm mt-1 hidden" id="seasonError">
+            Season is required.
+           </p>
+          </div>
+          <!-- System Feedback -->
+          <div class="alert-info border border-[#0ea5e9] bg-[#e0f2fe] text-[#0369a1] rounded-md px-4 py-3 text-sm hidden" id="systemFeedback">
+          </div>
+          <!-- Submit -->
+          <div class="pt-2">
+           <button class="btn-primary w-full px-4 py-2 rounded-md text-white disabled:opacity-50 disabled:cursor-not-allowed" disabled="" id="generateBtn" type="submit">
+            <i class="fas fa-magic mr-2">
+            </i>
+            <span data-i18n="btn_generate">
+             Generate Report
+            </span>
+           </button>
+           <p class="text-xs text-gray-500 mt-2">
+            By proceeding, you agree to share anonymized inputs to improve advisory accuracy.
+           </p>
+          </div>
+         </form>
+        </div>
+        <!-- Sample Advisory Preview & Insights -->
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+         <!-- Apex Chart -->
+         <div class="card bg-white rounded-xl p-4">
+          <div class="card-header border-b pb-3">
+           <h3 class="section-title text-lg font-semibold">
+            Soil Types Distribution (Sample)
+           </h3>
+          </div>
+          <div class="mt-4" id="soilChart">
+          </div>
+         </div>
+         <!-- Data Table -->
+         <div class="card bg-white rounded-xl p-4">
+          <div class="card-header border-b pb-3 flex items-center justify-between">
+           <h3 class="section-title text-lg font-semibold">
+            Recent Market Prices (Mock)
+           </h3>
+           <div class="flex items-center gap-2">
+            <input class="form-input border-gray-300 rounded-md px-2 py-1 text-sm" id="priceFilter" placeholder="Filter crop..." type="text"/>
+            <button class="btn-outline px-3 py-1 rounded-md text-sm" id="resetFilter">
+             Reset
+            </button>
+           </div>
+          </div>
+          <div class="overflow-x-auto mt-3">
+           <table class="min-w-full text-sm">
+            <thead class="table-header">
+             <tr>
+              <th class="px-3 py-2 text-left">
+               Crop
+               <button class="table-action-btn ml-1 text-gray-500" data-sort="crop">
+                <i class="fas fa-sort">
+                </i>
+               </button>
+              </th>
+              <th class="px-3 py-2 text-left">
+               Market
+               <button class="table-action-btn ml-1 text-gray-500" data-sort="market">
+                <i class="fas fa-sort">
+                </i>
+               </button>
+              </th>
+              <th class="px-3 py-2 text-left">
+               Date
+               <button class="table-action-btn ml-1 text-gray-500" data-sort="date">
+                <i class="fas fa-sort">
+                </i>
+               </button>
+              </th>
+              <th class="px-3 py-2 text-right">
+               Price (₹/quintal)
+               <button class="table-action-btn ml-1 text-gray-500" data-sort="price">
+                <i class="fas fa-sort">
+                </i>
+               </button>
+              </th>
+              <th class="px-3 py-2 text-right">
+               Action
+              </th>
+             </tr>
+            </thead>
+            <tbody class="table-striped" id="priceTbody">
+            </tbody>
+           </table>
+           <div class="card-footer border-t mt-3 pt-2 text-xs text-gray-600" id="paginationInfo">
+            Showing 1-6 of 6 • Page 1
+           </div>
+          </div>
+         </div>
+        </div>
+        <!-- Subsidies & Schemes (Mock) -->
+        <div class="mt-6 card bg-white rounded-xl p-4">
+         <div class="card-header border-b pb-3 flex items-center justify-between">
+          <h3 class="section-title text-lg font-semibold">
+           Government Schemes (Sample)
+          </h3>
+          <div class="text-sm text-gray-600">
+           Filtered by selected State
+          </div>
+         </div>
+         <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4" id="schemesGrid">
+         </div>
+        </div>
+       </div>
+       <!-- Right Column: Advertisement / Tips -->
+       <div>
+        <div class="ad-banner bg-white rounded-xl p-4">
+         <div class="flex items-center justify-between">
+          <div>
+           <h3 class="text-base font-semibold text-[#2E7D32]">
+            Partner Promotion
+           </h3>
+           <p class="text-sm text-gray-600">
+            Smart fertilizers for better yield. Limited-time discounts.
+           </p>
+          </div>
+          <img alt="Ad" class="rounded-md" onerror="this.src='https://imgbb.com/'" src="https://i.ibb.co/h11Fqbxd/Nirman-team-LOGO-2-1.png" alt="Nirman-team-LOGO-2-1"length="100" width="100" border="0"></a>
+         </div>
+         <a class="inline-flex items-center gap-2 mt-3 px-3 py-2 text-sm font-medium text-white bg-[#2E7D32] rounded-md hover:opacity-90" href="./market_price.html">
+          <i class="fas fa-store">
+          </i>
+          Check Market Prices
+         </a>
+        </div>
+        <div class="mt-6 card bg-white rounded-xl p-4">
+         <h4 class="section-title text-base font-semibold mb-2">
+          How It Works
+         </h4>
+         <ol class="list-decimal ml-5 text-sm text-gray-700 space-y-1">
+          <li>
+           Provide location and farm details
+          </li>
+          <li>
+           We generate a rule-based advisory
+          </li>
+          <li>
+           Download report and follow action plan
+          </li>
+         </ol>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+   </main>
+  </div>
+  <!-- Footer (use provided component unchanged) -->
+  <footer class="w-full bg-white border-t border-gray-200">
+   <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+     <img alt="Logo" class="h-5 w-5" onerror="this.src='https://ibb.co/JW4DnZwH'" src="https://i.ibb.co/p68Y2qBd/Logo-02.png"/>
+     <span class="text-sm text-gray-600">
+      Advisory Suite
+     </span>
+    </div>
+    <div class="flex items-center gap-4">
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="#smart_advisory">
+      <i class="fas fa-clipboard-list mr-1">
+      </i>
+      Form
+     </a>
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="#advisory_report">
+      <i class="fas fa-file-alt mr-1">
+      </i>
+      Report
+     </a>
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="#advisory_report?action=export">
+      <i class="fas fa-file-pdf mr-1">
+      </i>
+      Export
+     </a>
+     <span class="mx-2 text-gray-300">
+      |
+     </span>
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="#terms">
+      Terms
+     </a>
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="#privacy">
+      Privacy
+     </a>
+    </div>
+   </div>
+  </footer>
+  <!-- Scripts: Data, Interactions, Charts, Table -->
+  <script>
+   // Mock data sources (local JS/JSON substitute)
+const STATES = [{
+    name: 'Maharashtra',
+    districts: ['Pune', 'Nashik', 'Nagpur', 'Kolhapur', 'Aurangabad']
+}, {
+    name: 'Karnataka',
+    districts: ['Bengaluru', 'Mysuru', 'Belagavi', 'Hubballi', 'Mangaluru']
+}, {
+    name: 'Uttar Pradesh',
+    districts: ['Lucknow', 'Kanpur', 'Varanasi', 'Agra', 'Meerut']
+}, {
+    name: 'Bihar',
+    districts: ['Patna', 'Gaya', 'Bhagalpur', 'Muzaffarpur', 'Darbhanga']
+}, {
+    name: 'Gujarat',
+    districts: ['Ahmedabad', 'Surat', 'Rajkot', 'Vadodara', 'Bhavnagar']
+}];
+const SOIL_TYPES = ['Alluvial', 'Black (Regur)', 'Red', 'Laterite', 'Sandy', 'Loamy', 'Clayey'];
+const SEASONS = ['Kharif', 'Rabi', 'Zaid'];
+
+// Translations (simple demo)
+const I18N = {
+    en: {
+        label_state: 'State',
+        label_district: 'District',
+        label_soil: 'Soil Type',
+        label_season: 'Season',
+        placeholder_state: 'Select your State',
+        placeholder_district: 'Select your District',
+        placeholder_soil: 'Select soil type',
+        placeholder_season: 'Select current season',
+        btn_generate: 'Generate Report',
+        tts_summary: (s, d, so, se) => `You selected State ${s}, District ${d}, Soil ${so}, Season ${se}. Press Generate Report to proceed.`
+    },
+    hi: {
+        label_state: 'राज्य',
+        label_district: 'जिला',
+        label_soil: 'मिट्टी का प्रकार',
+        label_season: 'ऋतु',
+        placeholder_state: 'अपना राज्य चुनें',
+        placeholder_district: 'अपना जिला चुनें',
+        placeholder_soil: 'मिट्टी का प्रकार चुनें',
+        placeholder_season: 'वर्तमान ऋतु चुनें',
+        btn_generate: 'रिपोर्ट बनाएँ',
+        tts_summary: (s, d, so, se) => `आपने राज्य ${s}, जिला ${d}, मिट्टी ${so}, और ऋतु ${se} चुना है। आगे बढ़ने के लिए रिपोर्ट बनाएँ दबाएँ।`
+    },
+    mr: {
+        label_state: 'राज्य',
+        label_district: 'जिल्हा',
+        label_soil: 'मातीचा प्रकार',
+        label_season: 'हंगाम',
+        placeholder_state: 'तुमचे राज्य निवडा',
+        placeholder_district: 'तुमचा जिल्हा निवडा',
+        placeholder_soil: 'मातीचा प्रकार निवडा',
+        placeholder_season: 'सध्याचा हंगाम निवडा',
+        btn_generate: 'अहवाल तयार करा',
+        tts_summary: (s, d, so, se) => `तुम्ही राज्य ${s}, जिल्हा ${d}, माती ${so}, आणि हंगाम ${se} निवडला आहे. पुढे जाण्यासाठी अहवाल तयार करा बटण दाबा.`
+    }
+};
+
+// Populate selects
+function populateSelect(id, items) {
+    const sel = document.getElementById(id);
+    items.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        sel.appendChild(opt);
+    });
+}
+
+function populateStateSelect() {
+    const stateSel = document.getElementById('stateSelect');
+    STATES.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.name;
+        opt.textContent = s.name;
+        stateSel.appendChild(opt);
+    });
+}
+
+function updateDistrictsForState(stateName) {
+    const districtSel = document.getElementById('districtSelect');
+    districtSel.innerHTML = '';
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = getI18nText('placeholder_district');
+    districtSel.appendChild(placeholder);
+
+    const st = STATES.find(s => s.name === stateName);
+    if (st) {
+        st.districts.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d;
+            opt.textContent = d;
+            districtSel.appendChild(opt);
+        });
+    }
+}
+
+// Validation helpers
+function setError(id, hasError) {
+    const errEl = document.getElementById(id + 'Error');
+    const select = document.getElementById(id + 'Select');
+    if (!errEl || !select) return;
+    if (hasError) {
+        errEl.classList.remove('hidden');
+        select.classList.add('select-invalid');
+        select.classList.remove('select-valid');
+    } else {
+        errEl.classList.add('hidden');
+        select.classList.remove('select-invalid');
+        select.classList.add('select-valid');
+    }
+}
+
+function validateForm() {
+    const s = document.getElementById('stateSelect').value;
+    const d = document.getElementById('districtSelect').value;
+    const so = document.getElementById('soilSelect').value;
+    const se = document.getElementById('seasonSelect').value;
+
+    setError('state', !s);
+    setError('district', !d);
+    setError('soil', !so);
+    setError('season', !se);
+
+    const valid = !!(s && d && so && se);
+    document.getElementById('generateBtn').disabled = !valid;
+    return {
+        valid,
+        s,
+        d,
+        so,
+        se
+    };
+}
+
+// Simple i18n updater
+function getI18nText(key) {
+    const lang = document.getElementById('languageSelect').value || 'en';
+    return I18N[lang][key];
+}
+
+function updateI18nTexts() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const isPlaceholder = el.tagName === 'OPTION';
+        const txt = getI18nText(key);
+        if (isPlaceholder) {
+            el.textContent = txt;
+        } else {
+            el.textContent = txt;
+        }
+    });
+    document.getElementById('generateBtn').querySelector('span').textContent = getI18nText('btn_generate');
+}
+
+// Schemes mock data
+const SCHEMES = [{
+    title: 'PM-Kisan Support',
+    states: ['Maharashtra', 'Uttar Pradesh', 'Bihar'],
+    benefit: '₹6,000/year',
+    eligibility: 'Small & marginal farmers',
+    link: './government_schemes.html'
+}, {
+    title: 'Soil Health Card',
+    states: ['Maharashtra', 'Gujarat', 'Karnataka'],
+    benefit: 'Free soil testing',
+    eligibility: 'All farmers',
+    link: './government_schemes.html'
+}, {
+    title: 'Irrigation Subsidy',
+    states: ['Gujarat', 'Karnataka', 'Bihar'],
+    benefit: 'Up to 40% subsidy',
+    eligibility: 'Eligible holdings',
+    link: './government_schemes.html'
+}, {
+    title: 'Organic Farming Mission',
+    states: ['Uttar Pradesh', 'Maharashtra'],
+    benefit: 'Input cost support',
+    eligibility: 'Certified farmers',
+    link: './government_schemes.html'
+}, {
+    title: 'Crop Insurance',
+    states: ['Bihar', 'Gujarat', 'Uttar Pradesh', 'Karnataka'],
+    benefit: 'Risk coverage',
+    eligibility: 'Registered farmers',
+    link: './government_schemes.html'
+}];
+
+function renderSchemes(stateName) {
+    const grid = document.getElementById('schemesGrid');
+    grid.innerHTML = '';
+    const filtered = stateName ? SCHEMES.filter(s => s.states.includes(stateName)) : SCHEMES;
+    filtered.slice(0, 6).forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'bg-white border rounded-lg p-4';
+        card.innerHTML = `
+          <h4 class="text-sm font-semibold text-[#2E7D32]">${s.title}</h4>
+          <p class="text-xs text-gray-600 mt-1">Benefit: <span class="font-medium">${s.benefit}</span></p>
+          <p class="text-xs text-gray-600">Eligibility: ${s.eligibility}</p>
+          <a href="${s.link}" class="inline-flex items-center gap-2 mt-2 text-xs px-2 py-1 bg-green-50 border border-[#2E7D32] text-[#2E7D32] rounded hover:bg-green-100"><i class="fas fa-info-circle"></i> Learn more</a>
+        `;
+        grid.appendChild(card);
+    });
+    if (filtered.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'text-sm text-gray-600';
+        empty.textContent = 'No schemes found for selected state.';
+        grid.appendChild(empty);
+    }
+}
+
+// Market Prices table
+let PRICE_DATA = [{
+    crop: 'Wheat',
+    market: 'Pune',
+    date: '2025-11-15',
+    price: 2150
+}, {
+    crop: 'Rice',
+    market: 'Nashik',
+    date: '2025-11-12',
+    price: 2400
+}, {
+    crop: 'Maize',
+    market: 'Nagpur',
+    date: '2025-11-18',
+    price: 1850
+}, {
+    crop: 'Cotton',
+    market: 'Ahmedabad',
+    date: '2025-11-17',
+    price: 5400
+}, {
+    crop: 'Soybean',
+    market: 'Indore',
+    date: '2025-11-19',
+    price: 4200
+}, {
+    crop: 'Bajra',
+    market: 'Jaipur',
+    date: '2025-11-16',
+    price: 2000
+}];
+let sortState = {
+    key: null,
+    asc: true
+};
+
+function renderPrices(data) {
+    const tbody = document.getElementById('priceTbody');
+    tbody.innerHTML = '';
+    data.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.className = 'table-row';
+        tr.innerHTML = `
+          <td class="px-3 py-2">${row.crop}</td>
+          <td class="px-3 py-2">${row.market}</td>
+          <td class="px-3 py-2">${new Date(row.date).toLocaleDateString()}</td>
+          <td class="px-3 py-2 text-right">₹${row.price.toLocaleString('en-IN')}</td>
+          <td class="px-3 py-2 text-right">
+            <a href="./market_price.html" class="btn-outline text-xs px-2 py-1 rounded">View</a>
+          </td>
+        `;
+        tbody.appendChild(tr);
+    });
+    document.getElementById('paginationInfo').textContent = `Showing 1-${data.length} of ${data.length} • Page 1`;
+}
+
+function sortPrices(key) {
+    if (sortState.key === key) sortState.asc = !sortState.asc;
+    else {
+        sortState.key = key;
+        sortState.asc = true;
+    }
+    PRICE_DATA.sort((a, b) => {
+        if (key === 'date') return sortState.asc ? new Date(a.date) - new Date(b.date) : new Date(b.date) - new Date(a.date);
+        if (key === 'price') return sortState.asc ? a.price - b.price : b.price - a.price;
+        const va = (a[key] + '').toLowerCase();
+        const vb = (b[key] + '').toLowerCase();
+        return sortState.asc ? va.localeCompare(vb) : vb.localeCompare(va);
+    });
+    renderPrices(PRICE_DATA);
+}
+
+// ApexCharts: Soil Types Distribution
+function initSoilChart() {
+    const options = {
+        chart: {
+            type: 'donut',
+            height: 280
+        },
+        series: [35, 25, 15, 10, 8, 7],
+        labels: ['Loamy', 'Alluvial', 'Black', 'Red', 'Sandy', 'Clayey'],
+        colors: ['#2E7D32', '#16a34a', '#475569', '#f59e0b', '#0ea5e9', '#334155'],
+        legend: {
+            position: 'bottom'
+        },
+        responsive: [{
+            breakpoint: 640,
+            options: {
+                chart: {
+                    height: 240
+                }
+            }
+        }]
+    };
+    const chart = new ApexCharts(document.querySelector('#soilChart'), options);
+    chart.render();
+}
+
+// Read Aloud (Web Speech)
+function readAloudSummary() {
+    if (!('speechSynthesis' in window)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Unsupported',
+            text: 'Your browser does not support text-to-speech.'
+        });
+        return;
+    }
+    const {
+        s,
+        d,
+        so,
+        se
+    } = {
+        s: document.getElementById('stateSelect').value || '-',
+        d: document.getElementById('districtSelect').value || '-',
+        so: document.getElementById('soilSelect').value || '-',
+        se: document.getElementById('seasonSelect').value || '-'
+    };
+    const msgText = I18N[document.getElementById('languageSelect').value].tts_summary(s, d, so, se);
+    const utter = new SpeechSynthesisUtterance(msgText);
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+}
+
+// Form submission
+function handleFormSubmit(e) {
+    e.preventDefault();
+    const res = validateForm();
+    if (!res.valid) {
+        document.getElementById('systemFeedback').textContent = 'Please fill all required fields.';
+        document.getElementById('systemFeedback').classList.remove('hidden');
+        Swal.fire({
+            icon: 'warning',
+            title: 'Incomplete',
+            text: 'Please complete all fields to generate advisory.'
+        });
+        return;
+    }
+
+    // Mock rule-based engine call
+    const payload = {
+        state: res.s,
+        district: res.d,
+        soil: res.so,
+        season: res.se,
+        generatedAt: new Date().toISOString(),
+        recommendations: [{
+            step: 1,
+            text: 'Use certified seeds and ensure proper soil moisture.'
+        }, {
+            step: 2,
+            text: 'Apply NPK based on soil test results during sowing.'
+        }, {
+            step: 3,
+            text: 'Schedule irrigation based on crop stage and weather.'
+        }]
+    };
+    localStorage.setItem('advisoryFormData', JSON.stringify(payload));
+
+    Swal.fire({
+        title: 'Generating Advisory...',
+        text: 'Please wait while we prepare your personalized report.',
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+            setTimeout(() => {
+                Swal.close();
+                // Navigate to report page
+                window.location.href = './advisory_report.html';
+            }, 1200);
+        }
+    });
+}
+
+// Event bindings
+document.addEventListener('DOMContentLoaded', () => {
+    populateStateSelect();
+    populateSelect('soilSelect', SOIL_TYPES);
+    populateSelect('seasonSelect', SEASONS);
+    updateI18nTexts();
+
+    // Chart & table
+    initSoilChart();
+    renderPrices(PRICE_DATA);
+
+    // Schemes
+    renderSchemes('');
+
+    // Listeners
+    document.getElementById('stateSelect').addEventListener('change', (e) => {
+        const val = e.target.value;
+        const districtSel = document.getElementById('districtSelect');
+        if (val) {
+            districtSel.disabled = false;
+            updateDistrictsForState(val);
+        } else {
+            districtSel.disabled = true;
+            updateDistrictsForState('');
+        }
+        validateForm();
+        renderSchemes(val);
+    });
+    document.getElementById('districtSelect').addEventListener('change', validateForm);
+    document.getElementById('soilSelect').addEventListener('change', validateForm);
+    document.getElementById('seasonSelect').addEventListener('change', validateForm);
+
+    document.getElementById('advisoryForm').addEventListener('submit', handleFormSubmit);
+    document.getElementById('languageSelect').addEventListener('change', () => {
+        updateI18nTexts();
+    });
+
+    document.getElementById('readAloudBtn').addEventListener('click', readAloudSummary);
+
+    // Sorting
+    document.querySelectorAll('button[data-sort]').forEach(btn => btn.addEventListener('click', () => sortPrices(btn.dataset.sort)));
+
+    // Filtering
+    const filterInput = document.getElementById('priceFilter');
+    filterInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = PRICE_DATA.filter(r => r.crop.toLowerCase().includes(term));
+        renderPrices(filtered);
+    });
+    document.getElementById('resetFilter').addEventListener('click', () => {
+        document.getElementById('priceFilter').value = '';
+        renderPrices(PRICE_DATA);
+    });
+});
+  </script>
+ </body>
+</html>
