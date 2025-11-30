@@ -1,49 +1,12 @@
 from functools import wraps
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
+import models 
 import os
 import json
 
 app = Flask(__name__)
 CORS(app)
-
-# ---------- BASE DIRECTORY + DATABASE PATH ----------
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database/','medicines.db')
-# os._exit()
-print(basedir)
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-
-
-# ----------------------------------------------------------
-#               MEDICINE TABLE MODEL
-# ----------------------------------------------------------
-class Medicine(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-
-    disease_name = db.Column(db.String(200))
-    disease_url = db.Column(db.String(300))
-
-    med_name = db.Column(db.String(200))
-    med_url = db.Column(db.String(300))
-
-    final_price = db.Column(db.String(50))
-    price = db.Column(db.String(100))
-
-    prescription_required = db.Column(db.String(50))
-
-    drug_variant = db.Column(db.String(100))
-    drug_manufacturer = db.Column(db.String(200))
-    drug_manufacturer_origin = db.Column(db.String(100))
-
-    drug_content = db.Column(db.Text)
-    generic_name = db.Column(db.String(200))
-
-    img_urls = db.Column(db.Text)  # JSON stored as TEXT
 
 
 # ----------------------------------------------------------
@@ -142,6 +105,7 @@ def get_medicine(id):
 
 
 
+
 # ----------------------------------------------------------
 #                   SEARCH ENDPOINT
 # ----------------------------------------------------------
@@ -152,35 +116,21 @@ def search_medicines():
     if not query:
         return jsonify({"error": "Query parameter ?q= required"}), 400
 
-    results = Medicine.query.filter(
-        (Medicine.disease_name.ilike(f"%{query}%")) |
-        (Medicine.med_name.ilike(f"%{query}%")) |
-        (Medicine.generic_name.ilike(f"%{query}%")) |
-        (Medicine.drug_manufacturer.ilike(f"%{query}%")) |
-        (Medicine.drug_content.ilike(f"%{query}%"))
-    ).all()
+    results = models.search(query)
 
     if not results:
         return jsonify({"message": "No results found"}), 404
 
-    output = []
-    for m in results:
-        output.append({
-            "id": m.id,
-            "disease_name": m.disease_name,
-            "med_name": m.med_name,
-            "generic_name": m.generic_name,
-            "final_price": m.final_price,
-            "img_urls": json.loads(m.img_urls)
-        })
-
-    return jsonify({"count": len(output), "results": output}), 200
+    return jsonify(results), 200
 
 
 # ----------------------------------------------------------
 #                 RUN SERVER
 # ----------------------------------------------------------
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
+
+
+# ----------------------------------------------------------
+#                 RUN SERVER
+# ----------------------------------------------------------

@@ -1,22 +1,40 @@
-from flask_sqlalchemy import SQLAlchemy
+import json
+from sqlmodel import SQLModel, Field, create_engine, Session, select
 
-db = SQLAlchemy()
+class Medicine(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    disease_name: str = Field(default=None, nullable=False)
+    disease_url: str | None = Field(default=None, nullable=True)
+    med_name: str = Field(default=None, nullable=False)
+    med_url: str | None = Field(default=None, nullable=True)
+    final_price: str = Field(default=None, nullable=False)
+    price: str = Field(default=None, nullable=False)
+    prescription_required: str | None = Field(default=None, nullable=True)
+    drug_variant: str | None = Field(default=None, nullable=True)
+    drug_manufacturer: str | None = Field(default=None, nullable=True)
+    drug_manufacturer_origin: str | None = Field(default=None, nullable=True)
+    drug_content: str | None = Field(default=None, nullable=True)
+    generic_name: str = Field(default=None, nullable=False)
+    img_urls: str | None = Field(default=None, nullable=True)
 
-class Medicine(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    disease_name = db.Column(db.String(100), nullable=False)
-    disease_url = db.Column(db.String(255))
-    med_name = db.Column(db.String(100), nullable=False)
-    med_url = db.Column(db.String(255))
-    final_price = db.Column(db.String(100))
-    price = db.Column(db.String(100))
-    prescription_required = db.Column(db.String(100))
-    drug_variant = db.Column(db.String(100))
-    drug_manufacturer = db.Column(db.String(100))
-    drug_manufacturer_origin = db.Column(db.String(100))
-    drug_content = db.Column(db.String(255))
-    generic_name = db.Column(db.String(100))
-    img_urls = db.Column(db.String(1000))
+engine = create_engine("sqlite:///database/medicines.db")
+SQLModel.metadata.create_all(engine)
 
-    def __repr__(self):
-        return f'<Medicine {self.med_name}>'
+def search(search):
+    res_container = []
+    text = search.strip()
+    with Session(engine) as session:
+        results = session.exec(select(Medicine).where(
+            (Medicine.disease_name.contains(text)) |
+            (Medicine.med_name.contains(text)) |
+            (Medicine.generic_name.contains(text)) |
+            (Medicine.drug_variant.contains(text))
+        )).all()
+        
+        for med in results:
+            med_dict = med.model_dump()
+            
+            res_container.append(med_dict)
+            
+    print(f"Found {len(res_container)} results for '{search}'")
+    return res_container
