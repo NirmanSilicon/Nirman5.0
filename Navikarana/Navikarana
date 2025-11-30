@@ -118,3 +118,350 @@ class PatientDashboard(PatientDashboardTemplate):
   def btn_logout_click(self, **event_args):
     anvil.server.call('logout_patient')
     open_form('Login')
+
+#DOCTORSIGIN
+from ._anvil_designer import DoctorLoginTemplate
+from anvil import *
+import anvil.server
+
+
+class DoctorLogin(DoctorLoginTemplate):
+
+  def __init__(self, **properties):
+    self.init_components(**properties)
+    self.content_panel.visible = True
+
+
+  # -------------------------
+  # GO TO SIGNUP FORM
+  # -------------------------
+  def btn_go_signup_click(self, **event_args):
+    # Open the signup form inside the same Login package
+    open_form('Login.DoctorSignup')
+
+
+  # -------------------------
+  # LOGIN BUTTON CLICK
+  # -------------------------
+  def btn_login_click(self, **event_args):
+    email = self.txt_login_email.text
+    password = self.txt_login_password.text
+
+    if not email or not password:
+      alert("Please enter both email and password.")
+      return
+
+    doctor = anvil.server.call('doctor_login', email, password)
+
+    if doctor == "NO_USER":
+      alert("No doctor found with this email.")
+    elif doctor == "WRONG_PASS":
+      alert("Incorrect password.")
+    elif doctor == "NOT_APPROVED":
+      alert("Your account is not approved yet.")
+    else:
+      alert("Login Successful!")
+      open_form('DoctorDashboard')
+
+#DOCTORSIGNUP
+from ._anvil_designer import DoctorSignupTemplate
+from anvil import *
+import anvil.server
+
+class DoctorSignup(DoctorSignupTemplate):
+
+  def __init__(self, **properties):
+    self.init_components(**properties)
+
+
+  def btn_signup_click(self, **event_args):
+    name = self.txt_signup_name.text
+    email = self.txt_signup_email.text
+    password = self.txt_signup_password.text
+    confirm = self.txt_signup_confirm.text
+    specialization = self.txt_signup_specialization.text
+    experience = self.txt_signup_experience.text
+    phone = self.txt_signup_phone.text
+    registration= self.txt_signup_reg.text
+    meet_link = self.txt_meet_link.text
+
+    if not (name and email and password and specialization and phone and experience and registration):
+      alert("Please fill all required fields.")
+      return
+
+    if password != confirm:
+      alert("Passwords do not match!")
+      return
+
+    result = anvil.server.call(
+      "doctor_signup",
+      name, email, password, specialization, experience, phone, registration, meet_link
+    )
+
+    if result == "EXISTS":
+      alert("An account with this email already exists.")
+    else:
+      alert("Signup successful! Your account is under approval.")
+      open_form('Login.DoctorLogin')
+
+
+  def btn_back_login_click(self, **event_args):
+    open_form('Login.DoctorLogin')
+
+ #DOCTORDASHBOARD
+from ._anvil_designer import DoctorDashboardTemplate
+from anvil import *
+import anvil.server
+from anvil.tables import app_tables
+
+class DoctorDashboard(DoctorDashboardTemplate):
+
+  def __init__(self, doctor=None, **properties):
+    self.init_components(**properties)
+    self.doctor = doctor
+
+    # Show doctor information
+    if self.doctor:
+      self.label_welcome.text = f"Welcome, Dr. {self.doctor['name']}"
+    else:
+      self.label_welcome.text = "Doctor Dashboard"
+      return
+
+      # Load doctor appointments (fetch appointments from server)
+    appointments = anvil.server.call('get_doctor_appointments', self.doctor)
+    self.repeating_panel_appointments.items = appointments
+
+    # LOGOUT
+  def btn_logout_click(self, **event_args):
+    open_form("Login.DoctorLogin")
+#DOCTORCARD
+from ._anvil_designer import DoctorCardTemplate
+from anvil import *
+
+class DoctorCard(DoctorCardTemplate):
+  def __init__(self, **properties):
+    self.init_components(**properties)
+
+  def form_show(self, **event_args):
+    if not self.item:
+      print("No item passed to DoctorCard")
+      return
+
+    doctor = self.item.get("doctor")
+    self.patient = self.item.get("patient")
+
+    if not doctor:
+      print("Doctor missing in item:", self.item)
+      return
+
+    self.doctor = doctor  # store doctor row
+
+    # Fill labels
+    self.label_name.text = doctor['name']
+    self.label_specialization.text = doctor['specialization']
+    self.label_experience.text = f"{doctor['experience']} years"
+    self.label_phone.text = doctor['phone']
+    self.label_meet.text = doctor['meet_link']
+
+  def btn_book_click(self, **event_args):
+    open_form('BookAppointment', patient=self.patient, doctor=self.doctor)
+#PATIENT SERVER
+from anvil.tables import app_tables
+import anvil.server
+
+
+# ---------------------------------------------------
+#  PATIENT REGISTRATION
+# ---------------------------------------------------
+@anvil.server.callable
+def register_patient(name, email, password):
+  existing = app_tables.patients.get(email=email)
+  if existing:
+    return "EXISTS"
+
+  app_tables.patients.add_row(
+    name=name,
+    email=email,
+    password=password
+  )
+  return "OK"
+
+
+# ---------------------------------------------------
+#  PATIENT LOGIN
+# ---------------------------------------------------
+@anvil.server.callable
+def login_patient(email, password):
+  user = app_tables.patients.get(email=email)
+
+  if not user:
+    return "NO_USER"
+
+  if user['password'] != password:
+    return "WRONG_PASS"
+
+  return user
+
+
+# ---------------------------------------------------
+#  FETCH APPROVED DOCTORS
+# ---------------------------------------------------
+@anvil.server.callable
+def get_doctors():
+  # Return ONLY approved doctors
+  return app_tables.doctors.search(approved=True)
+
+
+# ---------------------------------------------------
+#  SAVE APPOINTMENT
+# ---------------------------------------------------
+@anvil.server.callable
+def save_appointment(patient, doctor, date, reason):
+  exists = app_tables.appointments.get(
+    patient=patient,
+    doctor=doctor,
+    date=date
+  )
+  if exists:
+    return "EXISTS"
+
+  app_tables.appointments.add_row(
+    patient=patient,
+    doctor=doctor,
+    date=date,
+    reason=reason
+  )
+  return "OK"
+
+
+# ---------------------------------------------------
+#  UPDATE PATIENT PROFILE
+# ---------------------------------------------------
+@anvil.server.callable
+def update_patient_profile(patient, new_name, new_password=None):
+  patient['name'] = new_name
+  if new_password:
+    patient['password'] = new_password
+  return "OK"
+
+
+# ---------------------------------------------------
+#  DOCTOR LOGIN
+# ---------------------------------------------------
+@anvil.server.callable
+def doctor_login(email, password):
+  doctor = app_tables.doctors.get(email=email)
+
+  if not doctor:
+    return "NO_USER"
+
+  if doctor['password'] != password:
+    return "WRONG_PASS"
+
+  if not doctor['approved']:
+    return "NOT_APPROVED"
+
+  return doctor
+
+
+# ---------------------------------------------------
+#  DOCTOR SIGNUP
+# ---------------------------------------------------
+@anvil.server.callable
+def doctor_signup(name, email, password, specialization, registration, experience, phone, meet_link):
+
+  existing = app_tables.doctors.get(email=email)
+  if existing:
+    return "EXISTS"
+
+  app_tables.doctors.add_row(
+    name=name,
+    email=email,
+    password=password,
+    specialization=specialization,
+    registration=registration,
+    experience=experience,
+    phone=phone,
+    meet_link=meet_link,
+    approved=False
+  )
+
+  return "OK"
+
+
+# ---------------------------------------------------
+#  ADMIN: APPROVE DOCTOR
+# ---------------------------------------------------
+@anvil.server.callable
+def approve_doctor(doctor_id):
+  doctor = app_tables.doctors.get_by_id(doctor_id)
+  if not doctor:
+    return "NO_DOCTOR"
+
+  doctor['approved'] = True
+  return "APPROVED"
+
+  
+@anvil.server.callable
+def get_doctor_details(email):
+  doctor = app_tables.doctors.get(email=email)
+  if not doctor:
+    return None
+
+  return {
+    "name": doctor['name'],
+    "specialization": doctor['specialization'],
+    "experience": doctor['experience'],
+    "phone": doctor['phone'],
+    "meet_link": doctor['meet_link']
+  }
+
+
+# ---------------------------------------------------
+#  LOGOUT
+# ---------------------------------------------------
+@anvil.server.callable
+def logout_patient():
+  return "OK"
+
+
+@anvil.server.callable
+def add_prescription(doctor, patient, medicines, notes):
+  app_tables.prescriptions.add_row(
+    doctor=doctor,
+    patient=patient,
+    medicines=medicines,
+    notes=notes,
+    date=datetime.now()
+  )
+  return "saved"
+
+
+@anvil.server.callable
+def get_prescriptions_for_patient(patient):
+  return app_tables.prescriptions.search(patient=patient)
+
+
+@anvil.server.callable
+def get_prescriptions_for_doctor(doctor):
+  return app_tables.prescriptions.search(doctor=doctor)
+#SERVER AUTHORISATION
+import anvil.server
+from anvil.tables import app_tables
+
+@anvil.server.callable
+def signup_patient(name, email, password):
+  existing = app_tables.patients.get(email=email)
+  if existing:
+    return {"success": False, "msg": "Email already registered!"}
+  app_tables.patients.add_row(name=name, email=email, password=password)
+  return {"success": True, "msg": "Signup successful!"}
+
+@anvil.server.callable
+def login_patient(email, password):
+  user = app_tables.patients.get(email=email)
+  if not user:
+    return {"success": False, "msg": "No account with this email."}
+  if user['password'] != password:
+    return {"success": False, "msg": "Incorrect password!"}
+  return {"success": True, "user": user}
