@@ -1,0 +1,81 @@
+<!-- HTML FILE  -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Speech Test</title>
+</head>
+<body>
+  <h2>Speech Demo</h2>
+  <button id="askBtn">Ask my name</button>
+
+  <p><strong>Heard:</strong> <span id="output"></span></p>
+
+  <script>
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert("Your browser does not support Speech Recognition. Use Chrome.");
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    function speak(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      window.speechSynthesis.speak(utterance);
+    }
+
+    let waitingForAnswer = false;
+    let noResponseTimer = null;
+
+    function askQuestion(questionText, onAnswerCallback) {
+      speak(questionText);
+
+      waitingForAnswer = true;
+      recognition.start();
+
+      if (noResponseTimer) clearTimeout(noResponseTimer);
+
+      noResponseTimer = setTimeout(() => {
+        if (waitingForAnswer) {
+          speak("Sorry, can you please tell your name?");
+          recognition.start();
+        }
+      }, 7000);
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        waitingForAnswer = false;
+        clearTimeout(noResponseTimer);
+
+        document.getElementById("output").textContent = transcript;
+
+        if (onAnswerCallback) {
+          onAnswerCallback(transcript);
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Recognition error:", event.error);
+      };
+
+      recognition.onend = () => {
+        if (waitingForAnswer) {
+          recognition.start();
+        }
+      };
+    }
+
+    document.getElementById("askBtn").addEventListener("click", () => {
+      askQuestion("What is your name?", (name) => {
+        console.log("User's name:", name);
+      });
+    });
+  </script>
+</body>
+</html>
