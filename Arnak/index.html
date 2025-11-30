@@ -122,7 +122,7 @@
               </div>
             </div>
             <div>
-              <img src="assets/CUSTOMER_MARKET.png" alt="Customer Market" style="width:100%;border-radius:16px;box-shadow:var(--shadow)"/>
+              <img src="assets/customer_market_.jpg" alt="Customer Market" style="width:100%;border-radius:16px;box-shadow:var(--shadow)"/>
             </div>
           </div>
         </div>
@@ -238,41 +238,120 @@
         </div>
       </section>
 
-    <!-- Prices & quick stats -->
-    <section class="section">
-      <div class="container grid grid-2" style="align-items:start">
-        <div class="card">
-          <h3 style="margin:0 0 12px;font-size:22px;color:var(--text)">Mandi Prices Today</h3>
-          <p style="color:var(--muted);margin:0 0 16px;font-size:14px">Daily average prices from local markets</p>
-          <div id="price-chart" class="price-chart" style="margin-bottom:12px">Price chart</div>
-          <div id="price-container" class="price-list"></div>
+    <!-- Prices & Market Insights -->
+    <section class="section" style="padding:48px 0">
+      <div class="container">
+        <div style="text-align:center;margin-bottom:32px">
+          <h2 style="font-size:32px;margin:0 0 12px;color:var(--text);font-weight:700">Market Price Insights</h2>
+          <p style="color:var(--muted);font-size:16px;max-width:700px;margin:0 auto">Real-time price variance analysis across major agricultural commodities. Track market trends and make informed selling decisions.</p>
         </div>
+        <div class="grid grid-2" style="align-items:start;gap:24px">
+          <div class="card">
+            <h3 style="margin:0 0 8px;font-size:20px;color:var(--text)">Price Variance Distribution</h3>
+            <p style="color:var(--muted);margin:0 0 20px;font-size:14px">Market share by price variance percentage across commodities</p>
+            <div id="price-chart" class="pie-chart-container" style="height:380px;margin-bottom:20px;display:flex;align-items:center;justify-content:center;position:relative;min-height:380px">
+              <!-- Enhanced pie chart with labels will be rendered here -->
+            </div>
+            <div id="pie-legend" style="display:flex;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto;padding:8px">
+              <!-- Enhanced legend with mini bar charts will be generated here -->
+            </div>
+          </div>
 
-        <div class="card" style="display:flex;flex-direction:column;justify-content:center">
-          <h3 style="margin:0 0 16px;font-size:22px;color:var(--text)">Why AGRIVOLUTION?</h3>
-          <ul style="color:var(--muted);margin:0">
-            <li style="margin-bottom:12px"><strong style="color:var(--text)">Secure Payments</strong> — Direct bank transfers with escrow protection.</li>
-            <li style="margin-bottom:12px"><strong style="color:var(--text)">Best Market Rates</strong> — Real-time mandi data to help you sell better.</li>
-            <li><strong style="color:var(--text)">AI Advisory</strong> — Instant crop diagnosis and farming tips.</li>
-          </ul>
+          <div class="card">
+            <h3 style="margin:0 0 8px;font-size:20px;color:var(--text)">Today's Market Prices</h3>
+            <p style="color:var(--muted);margin:0 0 20px;font-size:14px">Current prices with daily change indicators</p>
+            <div id="price-container" class="price-list"></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Features -->
-    <section class="section" style="background:linear-gradient(180deg,transparent, rgba(47,142,68,0.02))">
-      <div class="container grid grid-2" style="align-items:center">
+    <!-- Platform Features -->
+    <section class="section" style="padding:48px 0;background:linear-gradient(180deg,transparent, rgba(47,142,68,0.02))">
+      <div class="container">
+        <div style="text-align:center;margin-bottom:40px">
+          <h2 style="font-size:32px;margin:0 0 12px;color:var(--text);font-weight:700">Your Complete Farming Solution</h2>
+          <p style="color:var(--muted);font-size:16px;max-width:700px;margin:0 auto">Everything you need to grow, sell, and succeed in modern agriculture. From marketplace to community support, we've got you covered.</p>
+        </div>
+        <div class="grid grid-3" style="gap:24px;margin-bottom:40px">
+          <div class="card" style="padding:24px;text-align:center">
+            <div style="font-size:48px;margin-bottom:16px">🌾</div>
+            <h3 style="margin:0 0 12px;color:var(--text);font-size:20px">Marketplace</h3>
+            <p style="color:var(--muted);margin:0;line-height:1.6;font-size:14px">Sell your produce directly to buyers. Access seeds, pesticides, agritech tools, and equipment rentals. No middlemen, better prices.</p>
+            <div style="margin-top:16px">
+              <button class="btn btn-primary" onclick="location.href='marketplace.html'" style="padding:10px 20px;font-size:14px">Explore →</button>
+            </div>
+          </div>
+          <div class="card" style="padding:24px;text-align:center">
+            <div style="font-size:48px;margin-bottom:16px">👥</div>
+            <h3 style="margin:0 0 12px;color:var(--text);font-size:20px">Community</h3>
+            <p style="color:var(--muted);margin:0;line-height:1.6;font-size:14px">Connect with thousands of farmers. Share experiences, ask questions, get advice, and celebrate successes together in our vibrant community.</p>
+            <div style="margin-top:16px">
+              <button class="btn btn-primary" onclick="location.href='community.html'" style="padding:10px 20px;font-size:14px">Join →</button>
+            </div>
+          </div>
+          <div class="card" style="padding:24px;text-align:center">
+            <div style="font-size:48px;margin-bottom:16px">📚</div>
+            <h3 style="margin:0 0 12px;color:var(--text);font-size:20px">Learning Hub</h3>
+            <p style="color:var(--muted);margin:0;line-height:1.6;font-size:14px">Comprehensive farming guides, modern techniques, government schemes, and expert advice to improve your yield and income.</p>
+            <div style="margin-top:16px">
+              <button class="btn btn-primary" onclick="location.href='learning.html'" style="padding:10px 20px;font-size:14px">Learn →</button>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-2" style="gap:24px">
+          <div class="card" style="padding:24px;text-align:center">
+            <div style="font-size:48px;margin-bottom:16px">🤝</div>
+            <h3 style="margin:0 0 12px;color:var(--text);font-size:20px">Collab</h3>
+            <p style="color:var(--muted);margin:0;line-height:1.6;font-size:14px">Form partnerships, share resources like tractors and equipment, and collaborate on farming projects with fellow farmers in your area.</p>
+            <div style="margin-top:16px">
+              <button class="btn btn-primary" onclick="location.href='collab.html'" style="padding:10px 20px;font-size:14px">Explore →</button>
+            </div>
+          </div>
+          <div class="card" style="padding:24px;text-align:center">
+            <div style="font-size:48px;margin-bottom:16px">📍</div>
+            <h3 style="margin:0 0 12px;color:var(--text);font-size:20px">Mandi Locator</h3>
+            <p style="color:var(--muted);margin:0;line-height:1.6;font-size:14px">Find the nearest agricultural markets, get real-time price information, and plan your selling strategy based on location and demand.</p>
+            <div style="margin-top:16px">
+              <button class="btn btn-primary" onclick="location.href='mandi.html'" style="padding:10px 20px;font-size:14px">Find →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Success Story -->
+    <section class="section" style="padding:48px 0">
+      <div class="container grid grid-2" style="align-items:center;gap:32px">
         <div>
-          <img class="feature-img" src="https://images.unsplash.com/photo-1506806732259-39c2d0268443?auto=format&fit=crop&w=1200&q=80" alt="fresh veg" />
-          <div class="feature-quote" style="margin-top:14px">
-            <div style="font-weight:800">"My income increased by 40% after using AGRIVOLUTION marketplace."</div>
-            <div style="font-size:13px;color:var(--muted);margin-top:6px">— Ram Lal, Madhya Pradesh</div>
+          <img class="feature-img" src="https://images.unsplash.com/photo-1506806732259-39c2d0268443?auto=format&fit=crop&w=1200&q=80" alt="success story" style="border-radius:16px"/>
+          <div class="feature-quote" style="margin-top:16px">
+            <div style="font-weight:800;font-size:16px">"My income increased by 40% after using AGRIVOLUTION marketplace. The direct connection with buyers eliminated middlemen completely."</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:8px">— Ram Lal, Madhya Pradesh</div>
           </div>
         </div>
         <div>
-          <h2 style="font-family:Georgia,serif;font-size:36px;margin:0 0 12px">Direct from Farm<br/>to Table</h2>
-          <p style="color:var(--muted);max-width:520px">Eliminate middlemen and get the best price for your hard work. Our marketplace connects you directly with bulk buyers, retailers, and consumers. List your produce in seconds.</p>
-          <div style="margin-top:16px">
+          <h2 style="font-family:Georgia,serif;font-size:36px;margin:0 0 16px;color:var(--text)">Direct from Farm to Table</h2>
+          <p style="color:var(--muted);max-width:520px;line-height:1.7;margin:0 0 20px;font-size:15px">Eliminate middlemen and get the best price for your hard work. Our marketplace connects you directly with bulk buyers, retailers, and consumers. List your produce in seconds, access farming supplies, rent equipment when needed, and grow your business with our comprehensive platform.</p>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:24px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:20px">✓</span>
+              <span style="color:var(--text)">Zero commission on direct sales</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:20px">✓</span>
+              <span style="color:var(--text)">Secure payment with escrow protection</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:20px">✓</span>
+              <span style="color:var(--text)">Access to seeds, pesticides, and agritech</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:20px">✓</span>
+              <span style="color:var(--text)">Wide range of agricultural products available</span>
+            </div>
+          </div>
+          <div style="margin-top:24px">
             <button class="btn btn-primary" onclick="location.href='marketplace.html'">Start Selling →</button>
           </div>
         </div>
@@ -280,12 +359,28 @@
     </section>
 
     <!-- Community teaser -->
-    <section class="section">
-      <div class="container grid grid-2" style="align-items:center">
+    <section class="section" style="padding:48px 0;background:linear-gradient(180deg,transparent, rgba(47,142,68,0.02))">
+      <div class="container grid grid-2" style="align-items:center;gap:32px">
         <div>
-          <h2 style="font-family:Georgia,serif;font-size:32px;margin:0 0 12px">A Community That Grows Together</h2>
-          <p style="color:var(--muted);max-width:520px">Farming doesn't have to be lonely. Join thousands of farmers sharing their stories, tips, and daily wins. Ask questions, get advice, and celebrate harvests together.</p>
-          <div style="margin-top:16px"><button class="btn btn-outline" onclick="location.href='community.html'">Join the Conversation →</button></div>
+          <h2 style="font-family:Georgia,serif;font-size:32px;margin:0 0 16px;color:var(--text)">A Community That Grows Together</h2>
+          <p style="color:var(--muted);max-width:520px;line-height:1.7;margin:0 0 20px;font-size:15px">Farming doesn't have to be lonely. Join thousands of farmers sharing their stories, tips, and daily wins. Ask questions, get advice, and celebrate harvests together. Our community is a place where knowledge flows freely and support is always available.</p>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:24px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:20px">💬</span>
+              <span style="color:var(--text)">Share your farming journey and experiences</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:20px">❓</span>
+              <span style="color:var(--text)">Get instant answers to your farming questions</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:20px">🎉</span>
+              <span style="color:var(--text)">Celebrate successes and learn from challenges</span>
+            </div>
+          </div>
+          <div style="margin-top:24px">
+            <button class="btn btn-outline" onclick="location.href='community.html'">Join the Conversation →</button>
+          </div>
         </div>
         <div id="community-teasers"></div>
       </div>
@@ -296,7 +391,7 @@
     <div id="customer-content" style="display:none">
       <!-- Hero Banner -->
       <section class="hero" style="height:500px">
-        <img class="hero-bg" src="assets/CUSTOMER_MARKET.png" alt="hero"/>
+        <img class="hero-bg" src="assets/customer_market_.jpg" alt="hero"/>
         <div class="overlay"></div>
         <div class="container hero-content">
           <h2 class="hero-title">Fresh from <span class="accent">Farm</span> to Your Door</h2>
@@ -492,9 +587,9 @@
         // Load featured products
         const products = [
           {name:'Fresh Tomatoes',price:45,image:'https://images.unsplash.com/photo-1546097488-9e0c4ce4f87e?w=400'},
-          {name:'Sweet Mangoes',price:80,image:'https://images.unsplash.com/photo-1605027990121-c0a3eccf7443?w=400'},
+          {name:'Sweet Mangoes',price:80,image:'assets/fruits/sweet_mangoes.webp'},
           {name:'Basmati Rice',price:120,image:'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400'},
-          {name:'Organic Ghee',price:600,image:'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=400'}
+          {name:'Organic Ghee',price:600,image:'assets/dairy/organic_ghee.jpg'}
         ];
         const productsGrid = document.getElementById('featured-products');
         if(productsGrid){

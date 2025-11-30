@@ -1,6 +1,4 @@
-/* script.js
-   Shared scripts for navigation, pages and chatbot.
-*/
+// This is the 
 
 (function(){
   // helper to set active nav link
@@ -228,34 +226,264 @@
     window.AGRI.VEGETABLE_PRICES.forEach(item=>{
       const diff = item.today - item.yesterday;
       const up = diff > 0;
-      const itemEl = document.createElement('div'); itemEl.className = 'price-item card';
+      const percentChange = ((diff / item.yesterday) * 100).toFixed(1);
+      const itemEl = document.createElement('div'); 
+      itemEl.className = 'price-item';
+      itemEl.style.marginBottom = '12px';
       itemEl.innerHTML = `
         <div class="meta">
           <div class="letter">${item.name[0]}</div>
           <div>
-            <div style="font-weight:700">${item.name}</div>
+            <div style="font-weight:700;color:var(--text)">${item.name}</div>
             <div style="font-size:13px;color:var(--muted)">per ${item.unit}</div>
           </div>
         </div>
         <div class="right">
-          <div style="font-weight:800;color:var(--primary)">₹${item.today}</div>
-          <div style="font-size:13px;color:${up?'#dc2626':'#059669'}">${up?'+':''}${diff} from yest.</div>
+          <div style="font-weight:800;color:var(--primary);font-size:18px">₹${item.today}</div>
+          <div style="font-size:12px;color:${up?'#dc2626':'#059669'};font-weight:600">${up?'↑':'↓'} ${Math.abs(percentChange)}% (${up?'+':''}₹${Math.abs(diff)})</div>
         </div>
       `;
       container.appendChild(itemEl);
     });
 
-    // simple chart placeholder (bar heights)
+    // Enhanced Pie Chart with Labels and Bar Chart
     const chart = document.getElementById('price-chart');
-    if(chart){
+    const legend = document.getElementById('pie-legend');
+    if(chart && legend){
       chart.innerHTML = '';
-      const max = Math.max(...window.AGRI.VEGETABLE_PRICES.map(p=>p.today));
-      window.AGRI.VEGETABLE_PRICES.forEach(p=>{
-        const bar = document.createElement('div'); 
-        bar.style.width='18%'; bar.style.margin='0 1%'; bar.style.display='inline-block'; bar.style.verticalAlign='bottom';
-        const inner = document.createElement('div'); inner.style.height = (p.today/max*220)+'px'; inner.style.background = 'linear-gradient(180deg, var(--primary), #2ba14a)'; inner.style.borderRadius='6px';
-        bar.appendChild(inner); chart.appendChild(bar);
+      legend.innerHTML = '';
+      
+      const prices = window.AGRI.VEGETABLE_PRICES;
+      
+      // Calculate variance percentages and prepare data
+      const varianceData = prices.map((p, i) => {
+        const diff = p.today - p.yesterday;
+        const variance = Math.abs(diff);
+        const variancePercent = (variance / p.yesterday) * 100;
+        const isUp = diff > 0;
+        return {
+          name: p.name,
+          today: p.today,
+          yesterday: p.yesterday,
+          diff: diff,
+          variance: variancePercent,
+          isUp: isUp,
+          percentage: 0, // Will calculate based on market share
+          color: ['#2f8e44', '#2ba14a', '#34d399', '#10b981', '#059669', '#047857'][i % 6]
+        };
       });
+      
+      // Calculate total market value for pie chart
+      const totalValue = varianceData.reduce((sum, d) => sum + d.today, 0);
+      varianceData.forEach(d => {
+        d.percentage = (d.today / totalValue) * 100;
+      });
+      
+      // Sort by variance for better visualization
+      varianceData.sort((a, b) => b.variance - a.variance);
+      
+      // Create enhanced pie chart using SVG with labels
+      const size = 320;
+      const radius = size / 2 - 20;
+      const centerX = size / 2;
+      const centerY = size / 2;
+      
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', size);
+      svg.setAttribute('height', size);
+      svg.style.maxWidth = '100%';
+      svg.style.height = 'auto';
+      svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
+      
+      let currentAngle = -Math.PI / 2; // Start from top
+      const totalMarketValue = varianceData.reduce((sum, d) => sum + d.today, 0);
+      
+      varianceData.forEach((data, index) => {
+        const sliceAngle = (data.today / totalMarketValue) * 2 * Math.PI;
+        const endAngle = currentAngle + sliceAngle;
+        const midAngle = currentAngle + sliceAngle / 2;
+        
+        // Create path for pie slice
+        const x1 = centerX + radius * Math.cos(currentAngle);
+        const y1 = centerY + radius * Math.sin(currentAngle);
+        const x2 = centerX + radius * Math.cos(endAngle);
+        const y2 = centerY + radius * Math.sin(endAngle);
+        
+        const largeArc = sliceAngle > Math.PI ? 1 : 0;
+        
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const pathData = [
+          `M ${centerX} ${centerY}`,
+          `L ${x1} ${y1}`,
+          `A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2}`,
+          'Z'
+        ].join(' ');
+        
+        path.setAttribute('d', pathData);
+        path.setAttribute('fill', data.color);
+        path.setAttribute('stroke', 'var(--card)');
+        path.setAttribute('stroke-width', '3');
+        path.style.cursor = 'pointer';
+        path.style.transition = 'opacity 0.2s ease';
+        path.setAttribute('opacity', '0.9');
+        
+        path.addEventListener('mouseenter', function(){
+          this.setAttribute('opacity', '1');
+          this.setAttribute('stroke-width', '4');
+        });
+        path.addEventListener('mouseleave', function(){
+          this.setAttribute('opacity', '0.9');
+          this.setAttribute('stroke-width', '3');
+        });
+        
+        svg.appendChild(path);
+        
+        // Add text labels on pie slices (only if slice is large enough)
+        if (sliceAngle > 0.3) {
+          const labelRadius = radius * 0.7;
+          const labelX = centerX + labelRadius * Math.cos(midAngle);
+          const labelY = centerY + labelRadius * Math.sin(midAngle);
+          
+          // Commodity name
+          const nameText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          nameText.setAttribute('x', labelX);
+          nameText.setAttribute('y', labelY - 6);
+          nameText.setAttribute('text-anchor', 'middle');
+          nameText.setAttribute('fill', 'white');
+          nameText.setAttribute('font-size', '12');
+          nameText.setAttribute('font-weight', '700');
+          nameText.setAttribute('style', 'text-shadow: 0 1px 2px rgba(0,0,0,0.5);');
+          nameText.textContent = data.name;
+          svg.appendChild(nameText);
+          
+          // Percentage
+          const percentText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          percentText.setAttribute('x', labelX);
+          percentText.setAttribute('y', labelY + 8);
+          percentText.setAttribute('text-anchor', 'middle');
+          percentText.setAttribute('fill', 'white');
+          percentText.setAttribute('font-size', '11');
+          percentText.setAttribute('font-weight', '600');
+          percentText.setAttribute('style', 'text-shadow: 0 1px 2px rgba(0,0,0,0.5);');
+          percentText.textContent = `${data.percentage.toFixed(1)}%`;
+          svg.appendChild(percentText);
+        } else {
+          // For small slices, add label outside
+          const labelRadius = radius + 15;
+          const labelX = centerX + labelRadius * Math.cos(midAngle);
+          const labelY = centerY + labelRadius * Math.sin(midAngle);
+          
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', centerX + radius * Math.cos(midAngle));
+          line.setAttribute('y1', centerY + radius * Math.sin(midAngle));
+          line.setAttribute('x2', labelX);
+          line.setAttribute('y2', labelY);
+          line.setAttribute('stroke', data.color);
+          line.setAttribute('stroke-width', '2');
+          svg.appendChild(line);
+          
+          const nameText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          nameText.setAttribute('x', labelX);
+          nameText.setAttribute('y', labelY - 4);
+          nameText.setAttribute('text-anchor', Math.cos(midAngle) > 0 ? 'start' : 'end');
+          nameText.setAttribute('fill', 'var(--text)');
+          nameText.setAttribute('font-size', '11');
+          nameText.setAttribute('font-weight', '600');
+          nameText.textContent = `${data.name} (${data.percentage.toFixed(1)}%)`;
+          svg.appendChild(nameText);
+        }
+        
+        // Create detailed legend item with bar chart
+        const legendItem = document.createElement('div');
+        legendItem.style.display = 'flex';
+        legendItem.style.alignItems = 'center';
+        legendItem.style.gap = '12px';
+        legendItem.style.padding = '10px 14px';
+        legendItem.style.borderRadius = '10px';
+        legendItem.style.background = 'var(--card)';
+        legendItem.style.border = `2px solid ${data.color}40`;
+        legendItem.style.cursor = 'pointer';
+        legendItem.style.transition = 'all 0.2s ease';
+        legendItem.style.marginBottom = '8px';
+        
+        // Mini bar chart in legend
+        const barWidth = 60;
+        const barHeight = 30;
+        const maxPrice = Math.max(...varianceData.map(d => Math.max(d.today, d.yesterday)));
+        const todayBarHeight = (data.today / maxPrice) * barHeight;
+        const yesterdayBarHeight = (data.yesterday / maxPrice) * barHeight;
+        
+        const miniChart = document.createElement('div');
+        miniChart.style.width = `${barWidth}px`;
+        miniChart.style.height = `${barHeight}px`;
+        miniChart.style.position = 'relative';
+        miniChart.style.display = 'flex';
+        miniChart.style.alignItems = 'flex-end';
+        miniChart.style.gap = '4px';
+        miniChart.innerHTML = `
+          <div style="width:28px;height:${yesterdayBarHeight}px;background:${data.color}60;border-radius:4px 4px 0 0;position:relative" title="Yesterday: ₹${data.yesterday}">
+            <div style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--muted);white-space:nowrap">Yest</div>
+          </div>
+          <div style="width:28px;height:${todayBarHeight}px;background:${data.color};border-radius:4px 4px 0 0;position:relative" title="Today: ₹${data.today}">
+            <div style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--text);font-weight:600;white-space:nowrap">Today</div>
+          </div>
+        `;
+        
+        legendItem.innerHTML = `
+          <div style="display:flex;flex-direction:column;gap:4px;min-width:80px">
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="width:14px;height:14px;border-radius:3px;background:${data.color}"></div>
+              <div style="font-size:14px;font-weight:700;color:var(--text)">${data.name}</div>
+            </div>
+            <div style="font-size:12px;color:var(--muted)">₹${data.today}/${prices.find(p => p.name === data.name).unit}</div>
+            <div style="font-size:11px;color:${data.isUp ? '#dc2626' : '#059669'};font-weight:600">
+              ${data.isUp ? '↑' : '↓'} ${data.variance.toFixed(1)}% (${data.isUp ? '+' : ''}₹${Math.abs(data.diff)})
+            </div>
+          </div>
+        `;
+        legendItem.appendChild(miniChart);
+        
+        legendItem.addEventListener('mouseenter', function(){
+          this.style.background = `${data.color}15`;
+          this.style.borderColor = data.color;
+          this.style.transform = 'translateX(4px)';
+        });
+        legendItem.addEventListener('mouseleave', function(){
+          this.style.background = 'var(--card)';
+          this.style.borderColor = `${data.color}40`;
+          this.style.transform = 'translateX(0)';
+        });
+        
+        legend.appendChild(legendItem);
+        
+        currentAngle = endAngle;
+      });
+      
+      chart.appendChild(svg);
+      
+      // Enhanced center text with statistics
+      const centerText = document.createElement('div');
+      centerText.style.position = 'absolute';
+      centerText.style.top = '50%';
+      centerText.style.left = '50%';
+      centerText.style.transform = 'translate(-50%, -50%)';
+      centerText.style.textAlign = 'center';
+      centerText.style.pointerEvents = 'none';
+      centerText.style.background = 'var(--card)';
+      centerText.style.borderRadius = '50%';
+      centerText.style.width = '120px';
+      centerText.style.height = '120px';
+      centerText.style.display = 'flex';
+      centerText.style.flexDirection = 'column';
+      centerText.style.alignItems = 'center';
+      centerText.style.justifyContent = 'center';
+      centerText.style.border = '3px solid var(--border)';
+      centerText.innerHTML = `
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px">Market</div>
+        <div style="font-size:20px;font-weight:800;color:var(--primary)">₹${totalMarketValue}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Total Value</div>
+      `;
+      chart.appendChild(centerText);
     }
   }
 
@@ -302,15 +530,11 @@
     
     items.forEach(item=>{
       const card = document.createElement('div'); card.className='card';
-      const isService = item.category === 'services';
-      const isRent = item.isRent === true;
-      const actionText = isRent ? 'Rent Now' : (isService ? 'Book Service' : 'Buy Now');
       
       card.innerHTML = `
         <div style="position:relative;overflow:hidden;border-radius:10px;height:160px">
           <img src="${item.image}" style="width:100%;height:100%;object-fit:cover" />
           <div style="position:absolute;right:10px;top:10px;background:rgba(255,255,255,0.9);padding:6px 8px;border-radius:8px;font-weight:700;font-size:12px">${item.grade}</div>
-          ${isRent ? '<div style="position:absolute;left:10px;top:10px;background:rgba(47,142,68,0.9);color:white;padding:4px 8px;border-radius:6px;font-weight:700;font-size:11px">🔧 RENT</div>' : ''}
         </div>
         <div style="padding-top:12px">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
@@ -323,13 +547,13 @@
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
             <div>
               <div style="font-weight:900;color:var(--primary);font-size:20px">₹${item.price}</div>
-              <div style="font-size:12px;color:var(--muted)">${isRent ? 'per day' : (isService ? 'per service' : 'per ' + item.unit)}</div>
+              <div style="font-size:12px;color:var(--muted)">per ${item.unit}</div>
             </div>
-            ${!isRent && !isService ? `<div style="font-size:12px;color:var(--muted)">Available: ${item.quantity} ${item.unit}</div>` : ''}
+            <div style="font-size:12px;color:var(--muted)">Available: ${item.quantity} ${item.unit}</div>
           </div>
           <div style="margin-top:10px;display:flex;gap:8px">
             <button class="btn" onclick="viewDetails(${item.id})" style="flex:1;background:var(--bg);border-radius:8px;border:1px solid var(--border);color:var(--text);padding:10px">View</button>
-            <button class="btn" onclick="purchaseItem(${item.id}, ${isRent})" style="flex:1;background:var(--primary);color:white;border-radius:8px;padding:10px;font-weight:600">${actionText}</button>
+            <button class="btn" onclick="purchaseItem(${item.id})" style="flex:1;background:var(--primary);color:white;border-radius:8px;padding:10px;font-weight:600">Buy Now</button>
           </div>
         </div>
       `;
@@ -344,14 +568,10 @@
     }
   }
   
-  function purchaseItem(id, isRent){
+  function purchaseItem(id){
     const item = window.AGRI.MARKETPLACE_LISTINGS.find(i=>i.id===id);
     if(item){
-      if(isRent){
-        alert(`Rental booking for ${item.crop}\nPrice: ₹${item.price}/day\nContact the service provider to confirm dates.`);
-      } else {
-        alert(`Purchase ${item.crop}\nPrice: ₹${item.price}\nProceeding to checkout...`);
-      }
+      alert(`Purchase ${item.crop}\nPrice: ₹${item.price}\nProceeding to checkout...`);
     }
   }
 
@@ -402,44 +622,40 @@
   }
   
   function renderMarketplaceWithItems(items){
-    const grid = document.getElementById('market-grid');
+      const grid = document.getElementById('market-grid');
     if(!grid) return;
-    grid.innerHTML = '';
+      grid.innerHTML = '';
     
     items.forEach(item=>{
-      const card = document.createElement('div'); card.className='card';
-      const isService = item.category === 'services';
-      const isRent = item.isRent === true;
-      const actionText = isRent ? 'Rent Now' : (isService ? 'Book Service' : 'Buy Now');
+        const card = document.createElement('div'); card.className='card';
       
-      card.innerHTML = `
-        <div style="position:relative;overflow:hidden;border-radius:10px;height:160px">
-          <img src="${item.image}" style="width:100%;height:100%;object-fit:cover" />
+        card.innerHTML = `
+          <div style="position:relative;overflow:hidden;border-radius:10px;height:160px">
+            <img src="${item.image}" style="width:100%;height:100%;object-fit:cover" />
           <div style="position:absolute;right:10px;top:10px;background:rgba(255,255,255,0.9);padding:6px 8px;border-radius:8px;font-weight:700;font-size:12px">${item.grade}</div>
-          ${isRent ? '<div style="position:absolute;left:10px;top:10px;background:rgba(47,142,68,0.9);color:white;padding:4px 8px;border-radius:6px;font-weight:700;font-size:11px">🔧 RENT</div>' : ''}
-        </div>
-        <div style="padding-top:12px">
+          </div>
+          <div style="padding-top:12px">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
             <div style="flex:1">
               <div style="font-weight:800;font-size:16px;color:var(--text)">${item.crop}</div>
               <div style="font-size:13px;color:var(--muted);margin-top:4px">📍 ${item.location}</div>
               ${item.farmer ? `<div style="font-size:12px;color:var(--muted);margin-top:2px">👤 ${item.farmer}</div>` : ''}
+              </div>
             </div>
-          </div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
             <div>
               <div style="font-weight:900;color:var(--primary);font-size:20px">₹${item.price}</div>
-              <div style="font-size:12px;color:var(--muted)">${isRent ? 'per day' : (isService ? 'per service' : 'per ' + item.unit)}</div>
+              <div style="font-size:12px;color:var(--muted)">per ${item.unit}</div>
             </div>
-            ${!isRent && !isService ? `<div style="font-size:12px;color:var(--muted)">Available: ${item.quantity} ${item.unit}</div>` : ''}
-          </div>
-          <div style="margin-top:10px;display:flex;gap:8px">
+            <div style="font-size:12px;color:var(--muted)">Available: ${item.quantity} ${item.unit}</div>
+            </div>
+            <div style="margin-top:10px;display:flex;gap:8px">
             <button class="btn" onclick="viewDetails(${item.id})" style="flex:1;background:var(--bg);border-radius:8px;border:1px solid var(--border);color:var(--text);padding:10px">View</button>
-            <button class="btn" onclick="purchaseItem(${item.id}, ${isRent})" style="flex:1;background:var(--primary);color:white;border-radius:8px;padding:10px;font-weight:600">${actionText}</button>
+            <button class="btn" onclick="purchaseItem(${item.id})" style="flex:1;background:var(--primary);color:white;border-radius:8px;padding:10px;font-weight:600">Buy Now</button>
+            </div>
           </div>
-        </div>
-      `;
-      grid.appendChild(card);
+        `;
+        grid.appendChild(card);
     });
   }
 
@@ -529,30 +745,47 @@
     const f = document.getElementById('auth-form');
     if(!f) return;
     
-    // Attach role toggle functionality
-    attachRoleToggle();
-    
     f.addEventListener('submit', e=>{
       e.preventDefault();
       const email = (document.getElementById('auth-email')||{}).value;
       const password = (document.getElementById('auth-password')||{}).value;
-      const role = document.getElementById('auth-card')?.getAttribute('data-role') || 'farmer';
       
       if(!email) return alert('Enter email');
       if(!password) return alert('Enter password');
       
-      // Save user role and login status
-      localStorage.setItem('userRole', role);
+      // Check database for user's role based on email
+      // In a real app, this would be an API call to your backend
+      // For demo: check localStorage for existing user data
+      const userData = localStorage.getItem('user_' + email);
+      let userRole = 'farmer'; // default
+      let userType = 'farmer'; // for database management
+      
+      if(userData){
+        try{
+          const parsed = JSON.parse(userData);
+          userRole = parsed.role || parsed.userRole || 'farmer';
+          userType = parsed.userType || parsed.role || 'farmer';
+        } catch(e){
+          // Fallback: check if userType exists in localStorage
+          userType = localStorage.getItem('userType_' + email) || 'farmer';
+          userRole = userType;
+        }
+      } else {
+        // If user doesn't exist, check if there's a default role stored
+        // In production, this would query your database
+        userType = localStorage.getItem('userType_' + email) || 'farmer';
+        userRole = userType;
+      }
+      
+      // Save login status and role
+      localStorage.setItem('userRole', userRole);
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userEmail', email);
+      localStorage.setItem('userType', userType); // For database management: 'farmer' or 'customer'
       
       // Demo login flow - redirect to role-specific page
-      alert(`Login successful as ${role}! Redirecting...`);
-      if(role === 'farmer'){
-        setTimeout(()=> location.href = 'index.html', 1000);
-      } else {
+      alert(`Login successful! Welcome back, ${userRole}! Redirecting...`);
       setTimeout(()=> location.href = 'index.html', 1000);
-      }
     });
     
     // Handle create account button
@@ -570,8 +803,7 @@
     const googleBtn = document.querySelector('.google-btn');
     if(googleBtn){
       googleBtn.addEventListener('click', ()=>{
-        const role = document.getElementById('auth-card')?.getAttribute('data-role') || 'farmer';
-        alert(`Sign in with Google as ${role} (demo). This would initiate Google OAuth.`);
+        alert('Sign in with Google (demo). This would initiate Google OAuth and check your database for user role.');
       });
     }
   }
@@ -602,19 +834,17 @@
   function openCreateAccountModal(){
     const modal = document.getElementById('create-account-modal');
     const createCard = document.getElementById('create-account-card');
-    const authCard = document.getElementById('auth-card');
     
     if(!modal || !createCard) return;
     
-    // Set initial role from login page
-    const currentRole = authCard?.getAttribute('data-role') || 'farmer';
-    createCard.setAttribute('data-role', currentRole);
+    // Default to farmer role
+    createCard.setAttribute('data-role', 'farmer');
     
-    // Set radio button based on current role
+    // Set radio button to farmer by default
     const joinFarmer = document.getElementById('join-farmer');
     const joinCustomer = document.getElementById('join-customer');
-    if(currentRole === 'farmer' && joinFarmer) joinFarmer.checked = true;
-    if(currentRole === 'customer' && joinCustomer) joinCustomer.checked = true;
+    if(joinFarmer) joinFarmer.checked = true;
+    if(joinCustomer) joinCustomer.checked = false;
     
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
@@ -771,13 +1001,33 @@
         if(password !== reenter) return alert('Passwords do not match');
         if(password.length < 6) return alert('Password must be at least 6 characters');
         
+        // Get selected role from radio buttons
+        const selectedRole = document.querySelector('input[name="join-as"]:checked')?.value || role;
+        const userType = selectedRole; // For database management: 'farmer' or 'customer'
+        
+        // Save user data to database (localStorage for demo)
+        // In production, this would be an API call to your backend
+        const userData = {
+          name: name,
+          email: emailPhone,
+          dob: `${dobDay}/${dobMonth}/${dobYear}`,
+          role: selectedRole,
+          userType: userType, // For database management - distinguishes farmer IDs from customer IDs
+          createdAt: new Date().toISOString()
+        };
+        
+        // Store user data with email as key for easy lookup
+        localStorage.setItem('user_' + emailPhone, JSON.stringify(userData));
+        localStorage.setItem('userType_' + emailPhone, userType); // For quick database lookup
+        
         // Save user role and login status
-        localStorage.setItem('userRole', role);
+        localStorage.setItem('userRole', selectedRole);
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userEmail', emailPhone);
+        localStorage.setItem('userType', userType); // For database management
         
         // Success - redirect to role-specific page
-        alert(`Account created successfully as ${role}! Redirecting...`);
+        alert(`Account created successfully as ${selectedRole}! Your account type (${userType}) has been saved to the database. Redirecting...`);
         setTimeout(()=>{
           closeCreateAccountModal();
           location.href = 'index.html';

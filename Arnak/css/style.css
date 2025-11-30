@@ -221,7 +221,7 @@ body{
 
 /* sections */
 .section{
-  padding:80px 0;
+  padding:48px 0;
   position:relative;
 }
 
@@ -1095,6 +1095,46 @@ a{color:inherit;transition: color 0.2s ease}
 /* Additional dark mode adjustments */
 [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3, [data-theme="dark"] h4{color:var(--text)}
 [data-theme="dark"] .price-chart{background:linear-gradient(180deg, rgba(59,168,90,0.1), rgba(0,0,0,0.1))}
+
+.pie-chart-container{
+  position:relative;
+  background:var(--bg);
+  border-radius:12px;
+  border:1px solid var(--border);
+  padding:20px;
+  min-height:300px;
+}
+
+.pie-chart-container svg{
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+[data-theme="dark"] .pie-chart-container svg{
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+#pie-legend{
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+#pie-legend::-webkit-scrollbar{
+  width:6px;
+}
+
+#pie-legend::-webkit-scrollbar-track{
+  background:transparent;
+  border-radius:10px;
+}
+
+#pie-legend::-webkit-scrollbar-thumb{
+  background:var(--border);
+  border-radius:10px;
+}
+
+#pie-legend::-webkit-scrollbar-thumb:hover{
+  background:var(--muted);
+}
 
 /* Additional UI improvements */
 h2, h3, h4{
