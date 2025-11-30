@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="fonts.css">
+	<title>Attendify</title>
+	<style>
+		*{
+			margin: 0;
+			outline: none;
+			user-select: none;
+			-webkit-tap-highlight-color: transparent;
+		}
+		@keyframes tilt{
+			0%{
+				transform: rotate(0deg);
+			}
+			33%{
+				transform: rotate(30deg);
+			}
+			66%{
+				transform: rotate(-30deg);
+			}
+			100%{
+				transform: rotate(0deg);
+			}
+		}
+		@keyframes rotate{
+			0%{
+				transform: rotate(0deg);
+			}
+			30%{
+				transform: rotate(0deg);
+			}
+			100%{
+				transform: rotate(720deg);
+			}
+		}
+		body{
+			background: rgb(2, 2, 2);
+		}
+		::placeholder{
+			color:#cccccc;
+		}
+		.banner{
+			width:100%;
+			display: flex;
+			align-items: center;
+			column-gap: 15px;
+			justify-content: space-between;
+		}
+		.image{
+			width:60px;
+			height: 60px;
+			border-radius: 100%;
+			background-image: url("man.png");
+			background-position: center;
+			background-size: cover;
+			background-color: transparent;
+			background-repeat: no-repeat;
+		}
+		.banner strong{
+			font-family: rubik;
+			letter-spacing: 1px;
+			font-weight: bolder;
+		}
+		.banner span{
+			color:#666666;
+			font-family: google sans;
+			font-size: 14px;
+		}
+		big{
+			font-family: poppins;
+			font-size: 40px;
+			color:white;
+			font-weight: bolder;
+			word-spacing: 5px;
+		}
+		.container .card{
+			width: 100%;
+			margin: 30px 0;
+			padding: 15px;
+			box-sizing: border-box;
+			background: linear-gradient(135deg, #121212 0%, #121212 50%, #ff1a8c 100%);
+			border:0;
+			box-shadow: 0 0 transparent;
+			border-radius: 20px;
+			position: relative;
+			overflow: hidden;
+		}
+		.container .card::before{
+			content: "";
+			position: absolute;
+			inset: 0; /* cover whole screen */
+			background-position: center;
+			background-size: cover;
+			/* background-image: url("background.png"); red with 40% opacity */
+			z-index: 0;
+			filter: invert(1);
+			opacity: .15;
+			pointer-events: none;
+		}
+		.card .banner{
+			justify-content: space-between;
+		}
+		#licon{
+			width:45px;
+			height: 45px;
+			background-image: url("cog.png");
+			background-color: transparent;
+			border-radius: 100%;
+			background-size: 50% 50%;
+			z-index: 3;
+			/*animation: tilt 2s ease infinite;*/
+		}
+		.ricon{
+			background: transparent;
+			height: 30px;
+			display: flex;
+			align-items: center;
+			border-radius: 10px;
+			padding: 0px 10px;
+			column-gap: 10px;
+			z-index: 3;
+		}
+		.ricon img{
+			max-width: 20px;
+		}
+		.ricon b{
+			font-family: google sans;
+		}
+		.card p{
+			font-family: rubik;
+			color: #cccccc;
+		}
+		.card span{
+			font-family: google sans;
+			letter-spacing: 1px;
+			font-size: 17px;
+			font-weight: bold;
+			color:white;
+		}
+		.photo{
+			height: 50px;
+			margin-top: 20px;
+		}
+		.photo img{
+			width:40px;
+			height: 40px;
+			border-radius: 100%;
+			position: absolute;
+			border:2px solid white;
+		}
+		#arrow{
+			animation: none;
+			background-image: url("arrow.png");
+			background-size: 50% 50%;
+			background-color: #202020;
+			width: 50px;
+			height:50px;
+			border-radius: 100%;
+		}
+		.profile{
+			width: 100vw;
+			height: 100vh;
+			right:100vw;
+			position: fixed;
+			z-index: 5;
+			background: #121212;
+			text-align: center;
+			padding: 20px;
+			box-sizing: border-box;
+			opacity: 1;
+			transition: .5s ease;
+		}
+		.container{
+			width: 100vw;
+			height: 100vh;
+			padding: 20px;
+			background: #121212;
+			pointer-events: auto;
+			box-sizing: border-box;
+		}
+		.profile strong{
+			font-size: 20px;
+			color:white;
+			font-family: poppins;
+		}
+		.profile .banner{
+			column-gap: 0;
+			justify-content: space-between;
+		}
+		.icon{
+			width: 40vw;
+			height: 40vw;
+			background-color: white;
+			background-image: url("man.png");
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			border-radius: 100%;
+			margin: 20px calc(30vw - 20px) 20px;
+			border:5px solid white;
+		}
+		
+		.range{
+			width: 80%;
+			border-radius: 20px;
+			height: 30px;
+			background: #333333;
+			margin: 20px 10%;
+			display: flex;
+			flex-flow: row nowrap;
+			align-items: center;
+			justify-content: space-between;
+			position: relative;
+		}
+		.range *{
+			width:30px;
+			height: 30px;
+			background: #202020;
+			border-radius: 20px;
+		}
+		.dot{
+			position: absolute;
+			background: #ff1a8c;
+			left:calc(50% - 15px);
+			transition: .5s ease;
+		}
+		.desc{
+			width: 80%;
+			margin: 10px 10%;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+		.desc p{
+			font-family: manrope;
+			letter-spacing: 1px;
+			transition: .5s ease;
+			font-size: 14px;
+			color:#cccccc;
+			font-weight: bolder;
+			opacity: .5;
+		}
+		.alert{
+			width: 80%;
+			padding: 25px;
+			position: fixed;
+			box-sizing: border-box;
+			pointer-events: none;
+			background: #1a1a1a;
+			transition: .2s;
+			top:20vh;
+			left:10vw;
+			border-radius: 20px;
+			z-index: 13;
+			opacity: 0;
+			transform: translateY(30px);
+		}
+		.screen{
+			width: 100vw;
+			height: 100vh;
+			background: rgba(120,120,120,.3);
+			backdrop-filter: blur(5px);
+			position: fixed;
+			z-index: 12;
+			opacity: 0;
+			pointer-events: none;
+			transition: .5s;
+		}
+		.alert b, .work b, .edit b{
+			font-family: poppins;
+			font-size: 16px;
+			letter-spacing: 1px;
+			color:#e2e2e2;
+		}
+		.alert #input, .edit #input{
+			width:100%;
+			padding: 15px;
+			box-sizing: border-box;
+			border-radius: 10px;
+			background: #333333;
+			border:0;
+			transition: .5s;	
+			display: flex;
+			align-items: center;
+			column-gap: 10px;
+		}
+		.alert input, .edit input{
+			letter-spacing: 1px;
+			font-family: google sans;
+			font-weight: bolder;
+			font-size: 14px;
+			color:white;
+			background: transparent;
+			border:0;
+		}
+		.alert img, .edit img{
+			width:20px;
+			height: 20px;
+		}
+		.alert #icon, .edit #icon{
+			background-image: url(visora.png);
+			background-color: transparent;
+			background-size: 80% 80%;
+			opacity: 1;
+			width: 50px;
+			height: 50px;
+			margin: 0 calc(50% - 25px);
+		}
+		.alert .banner, .edit .banner{
+			justify-content: flex-end;
+			margin-top: 20px;
+		}
+		.alert .banner button, .edit .banner button{
+			padding: 10px 14px;
+			font-family: poppins;
+			font-weight: bolder;
+			border-radius: 6px;
+			letter-spacing: 1px;
+			border:0;
+			color:white;
+			background: #ff1a8c;
+		}
+		.work, .result, .history{
+			overflow-y: scroll;
+			width: 100vw;
+			height: 100vh;
+			position: fixed;
+			z-index: 10;
+			background: #121212;
+			padding: 20px;
+			opacity: 0;
+			box-sizing: border-box;
+			left:100vw;
+			transition: .5s;
+		}
+		.inpbox{
+			width:100%;
+			border-radius: 15px;
+			padding: 0 20px;
+			box-sizing: border-box;
+		}
+		.inpbox input{
+			text-align: center;
+			width:100%;
+			padding: 10px;
+			color:#cccccc;
+			box-sizing: border-box;
+			border:3px solid #202020;
+			background: transparent;
+			font-family: manrope;
+			letter-spacing: 1px;
+			font-weight: bolder;
+		}
+		.work img, .result .banner img, .history img{
+			width:30px;
+			height: 30px;
+		}
+		.work .card{
+			width:100%;
+			padding: 20px;
+			box-sizing: border-box;
+			background: #202020;
+			margin-top: 10px;
+			display: flex;
+			flex-flow: row nowrap;
+			justify-content: space-between;
+			align-items: center;
+			color:#cccccc;
+			border-radius: 10px;
+		}
+		.work .card img{
+			filter: invert(0);
+		}
+		#cmp{
+			height:250px;
+			padding: 0;
+			margin: 10px 0 50px;
+			background-image: url(rabbit.png);
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: 25% auto;
+		}
+		#cmp > div{
+			height: 100%;
+			width:calc(50% - 1.5px);
+			padding: 5px;
+			box-sizing: border-box;
+			overflow: scroll;
+		}
+		#cmp > div > div{
+			width:50px;
+			height: 50px;
+			border-radius: 10px;
+			background-color: #ff1a8c;
+			flex: 0 0 auto;
+			background-size: cover;
+			filter: none;
+			margin: 10px 5px;
+			display: inline-block;
+		}
+		.ok > div{
+			position: relative;
+		}
+		.ok > div::before{
+			pointer-events: none;
+			content: "";
+			position: absolute;
+			width:20px;
+			height: 20px;
+			background-image: url(badge.png);
+			background-position: center;
+			background-size: 100% 100%;
+			right:0;
+		}
+		hr{
+			background: #c0a8d7;
+			width: 5px;
+			height: 90%;
+			display: none;
+			border:0;
+		}
+		.work button, .result button{
+			width: 100%;
+			margin-top: 10px;
+			padding: 15px;
+			font-size: 18px;
+			box-sizing: border-box;
+			border: 0;
+			background: #ff1a8c;
+			border-radius: 10px;
+			color:black;
+			letter-spacing: 1px;
+			font-family: poppins;
+			font-weight: bolder;
+		}
+		.work button, .result button{
+			width: calc(100vw - 40px);
+		}
+		.result{
+			z-index: 11;
+		}
+		.result .card, .history .card{
+			width:100%;
+			padding: 20px;
+			box-sizing: border-box;
+			border-radius: 5px;
+			background: #202020;
+			box-shadow: 0 0 transparent;
+		}
+		.result .card strong, .history .card strong{
+			font-family: google sans;
+			letter-spacing: 1px;
+			font-size: 16px;
+			color: #cccccc;
+		}
+		.result .card p, .history .card p{
+			font-family: poppins;
+			letter-spacing: 1px;
+			display: block;
+			font-size: 14px;
+			color:white;
+			margin-top: 10px;
+		}
+		.grid{
+			display: flex;
+			flex-flow: row nowrap;
+			justify-content: space-between;
+			align-items: center;
+			max-height: 15vh;
+			overflow: scroll;
+		}
+		.std{
+			height: 20vh;
+			padding: 0 3px;
+			box-sizing: border-box;
+			overflow-y: scroll;
+		}
+		.graph{
+			width:auto;
+			height: 100px;
+			max-width: 100%;
+			max-height: 200px;
+		}
+		.splash{
+		    width:100vw;
+		    height:100vh;
+		    transition:.5s;
+		    position:fixed;
+		    background:#121212;
+		    display: none;
+		    z-index:15;
+		}
+		.splash-img{
+			width:40vw;
+			height: 40vw;
+			margin: 20vh 30vw;
+			transform-origin: center;
+			transform: scale(0) rotate(180deg);
+		}
+		.splash p, .splash strong{
+			width: 100%;
+			text-align: center;
+			color:#cccccc;
+			font-size:18px;
+			font-family:rubik;
+			margin-top: 10vh;
+		}
+		.splash strong{
+			color:#ff1a8c;
+			font-size: 50px;
+			display: block;
+			margin-top: 10px;
+			font-family: google sans;
+			font-weight: lighter;
+		}
+		#name{
+			color: #ff1a8c;
+		}
+		.container strong{
+			color:#cccccc;
+		}
+		.grph{
+			background-image: url(monkey.png);
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: 25% auto;
+		}
+		.history .card{
+			margin-top: 20px;
+		}
+		.history{
+			box-sizing: border-box;
+			z-index: 11;
+		}
+		.history .std{
+			height: auto;
+			max-height: 20vh;
+		}
+		.history button{
+			border:0;
+			border-radius: 5px;
+			background: #202020;
+			color: white;
+			letter-spacing: 1px;
+			font-family: poppins;
+			font-weight: bolder;
+			padding: 10px 15px;
+		}
+		.history span{
+			color:#ff1a8c;
+		}
+		.hst{
+			height: 80vh;
+			overflow: scroll;
+		}
+		.hst img{
+			width: 30vw;
+			height: 30vw;
+			margin: 150px calc(35vw - 20px);
+		}
+		.edit{
+			opacity: 0;
+			pointer-events: none;
+			transition: .5s;
+			width: 80vw;
+			padding: 20px;
+			box-sizing: border-box;
+			background: #202020;
+			position: fixed;
+			top:20vh;
+			left:10vw;
+			border-radius: 10px;
+			transform: translateY(30px);
+			z-index: 13;
+		}
+	</style>
+</head>
+<body onload="check()">
+	<input type="date"id="date"style="display: none;">
+	<div class="splash">
+		<img src="anvpy.png"class="splash-img"draggable=false>
+		<p>Made With</p>
+		<strong>anvpy</strong>
+	</div>
+	<div class="edit">
+		<div class="image"id="icon"style="animation: none;"></div>
+		<div class="banner"style="justify-content: center;">
+			<b style="letter-spacing: 1px;">Add Student</b>
+		</div>
+		<br><br>
+		<div id="input"><img src="school.png"><input placeholder="Roll"type="number"></div><br>
+		<div id="input"><img src="account.png"><input placeholder="Name"></div><br>
+		<div class="banner">
+			<button onclick="sedit()"style="background: transparent;">CANCEL</button>
+			<button style="background: #ff1a8c;color: white;"onclick="doEdit()">ADD</button>
+		</div>
+	</div>
+	<div class="history">
+		<div class="banner"style="justify-content: space-between;margin-top: 30px;">
+			<img draggable=false src="back.png"onclick="$('.history').style='left:100vw;opacity:0';screen = 'work';">
+			<button onclick="$('#date').showPicker();"id="dt">01-02-25</button>
+			<div class="image"id="arrow"style="background-image: url('delete.png');animation: none;border-radius: 100%;"onclick="callPython('dHis', [inst, sec])"></div>
+		</div>
+		<div class="card"style="margin-top: 20px;display: none;">
+			<div class="banner"style="justify-content: space-between"><span> 17:10</span><div class="banner"style="width: auto;"><p><span>P:</span> 34</p><p><span>A:</span> 56</p></div></div>
+			<div class="grid"style="font-weight: bolder;color:#3f48cc">
+				<p>Roll</p>
+				<p>Student</p>
+			</div>
+			<div class="std">
+				
+			</div>
+		</div><br>
+		<div class="hst">
+
+		</div>
+	</div>
+	<div class="result">
+		<div class="banner"style="margin-top: 25px;">
+			<img draggable=false src="back.png"onclick="$('.result').style='left:100vw;opacity:0';screen = 'work';">
+			<div class="banner"style="justify-content: flex-end;width:auto">
+				<div class="image"id="arrow"style="background-image: url('save.png');animation: none;border-radius: 100%;"onclick="save()"></div>
+				<div class="image"id="arrow"style="background-image: url('reload.png');animation: none;border-radius: 100%;"onclick="callPython('resetJSON',[inst, sec]);$('.grph').style.backgroundImage = 'url(monkey.png)';$('.graph').style.height = '100px';$('.graph').style.opacity = 0;"></div>
+			</div>
+		</div>
+		<div class="card"style="margin-top: 20px;">
+			<div class="banner">
+				<strong>Absent <span style="color: #ff1a8c">Students</span></strong>
+				<img draggable=false src="plus.png"onclick="up = 1;$('.edit').children[4].children[1].value = '';$('.edit').children[6].children[1].value = '';edit();">
+			</div>
+			<div class="grid"style="font-weight: bolder;color:#3f48cc">
+				<p>Roll</p>
+				<p>Student</p>
+			</div>
+			<div class="std"id="std">
+				
+			</div>
+		</div><br>
+		<div class="card">
+			<strong>Trends <span style="color: #ff1a8c">Graph</span></strong>
+			<div style="display: flex;justify-items: center;margin-top: 20px;"class="grph">
+				<img class="graph"draggable=false>
+			</div>
+		</div>
+		<div style="position: fixed;bottom: 60px;">
+			<button onclick="callPython('graph',[])"style="background: #202020;color:#ff1a8c">Generate Graph</button>
+			<button onclick="callPython('pdf',[])">Generate PDF</button>
+		</div>
+	</div>
+	<div class="screen"></div>
+	<div class="alert"><br>
+		<div class="image"id="icon"style="animation: none;"></div>
+		<div class="banner"style="justify-content: center;">
+			<b style="letter-spacing: 1px;">Add Credentials</b>
+		</div>
+		<br><br>
+		<div id="input"><img src="school.png"><input placeholder="Institution"type="number"id="inst"></div><br>
+		<div id="input"><img src="account.png"><input placeholder="Section"id="sec"></div><br>
+		<div class="banner">
+			<button onclick="cancel()"style="background: transparent;">CANCEL</button>
+			<button style="background: #ff1a8c;color: white;"onclick="addData()">ADD</button>
+		</div>
+	</div>
+	<div class="work">
+		<div class="banner"style="margin-top: 25px;">
+			<img draggable=false src="back.png"onclick="$('.work').style='left:100vw;opacity:0';screen = 'home';">
+			<div class="banner"style="justify-content: flex-end;width:auto">
+				<div class="image"id="arrow"style="background-image: url('history.png');animation: none;border-radius: 100%;"onclick="callPython('his',[inst, sec])"></div>
+				<div class="image"id="arrow"style="background-image: url('reload.png');animation: none;border-radius: 100%;"onclick="sv = false;callPython('reset',[]);$('.grph').style.backgroundImage = 'url(monkey.png)';$('.graph').style.height = '100px';$('.graph').style.opacity = 0;"></div>
+			</div>
+		</div><br>
+		<div class="card"onclick="callPython('raw',[])">
+			<div class="banner"style="width: auto;">
+				<img src="camera.png"draggable=false>
+				<strong>Take a photo</strong>
+			</div>
+			<img src="signal.png"style="filter: invert(0);"draggable=false>
+		</div>
+		<div class="card"onclick="callPython('base',[])">
+			<div class="banner"style="width: auto;">
+				<img src="photo.png"draggable=false>
+				<strong>Choose from gallery</strong>
+			</div>
+			<img src="signal.png"style="filter: invert(0);"draggable=false>
+		</div>
+		<div class="card"id="cmp">
+			<div>
+				
+			</div>
+			<hr>
+			<div class="ok">
+				
+			</div>
+		</div>
+		<div style="position: fixed;bottom: 60px;">
+			<button onclick="sv = false;callPython('detect',[inst, sec]);$('.grph').style.backgroundImage = 'url(monkey.png)';$('.graph').style.height = '100px';$('.graph').style.opacity = 0;"style="background: #202020;color:#ff1a8c">Start Detecting</button>
+			<button onclick="showResult()">Show Result</button>
+		</div>
+	</div>
+	<div class="profile"><br><br>
+		<div class="banner">
+			<div class="image"id="licon"style="opacity: 0;"></div>
+			<strong style="letter-spacing: 2px;">Settings</strong>
+			<div class="image"id="licon"style="background-image: url(close.png);animation: none;background-color: transparent;width:35px;height:35px;background-size: 70% 70%;"onclick="backward()"></div>
+		</div>
+		<div class="icon"onclick="callPython('pImage',[])"></div><br>
+		<strong style="font-size: 16px;margin: 0px calc(35vw - 10px) 30px;letter-spacing: 1px;">Profile</strong><br><br>
+		<div class="inpbox">
+			<input value="User"style="border-bottom: 0;border-radius: 15px 15px 0 0;">
+			<input value="LOCK: OFF"style="border-bottom: 0;border-radius: 0;display: none;"onclick="callPython('lock',[])" readonly>
+			<input value="Contact Us" style="border-bottom: 0;border-radius: 15px 15px 0 0;" readonly>
+			<input style="border-bottom: 0;border-radius: 15px 15px 0 0;" value="Liscence" readonly>
+		</div><br><br>
+		<strong style="font-size: 16px;text-align: left;margin: 60px calc(25vw - 10px) 30px;letter-spacing: 1px;">Scale Factor</strong>
+		<div class="range">
+			<div onclick="setScale(0)"></div>
+			<div onclick="setScale(1)"></div>
+			<div onclick="setScale(2)"></div>
+			<div class="dot"></div>
+		</div>
+		<div class="desc">
+			<p>Low</p>
+			<p style="opacity: 1;">&nbsp;Normal</p>
+			<p>High</p>
+		</div>
+	</div>
+	<div class="container">
+		<div class="banner"style="margin-top: 35px;">
+			<div style="display: flex;column-gap: 15px;align-items: center;">
+				<div class="image"onclick="add()"id="image"></div>
+				<div>
+					<strong> Hello <span id="name">User</span><br><span id="now"style="color:#999999">Very good morning</span></strong>
+				</div>
+			</div>
+			<div onclick="show()"class="image"id="arrow"style="background-image: url(plus.png);border-radius: 20px;background-color: transparent;border:2px solid #ff1a8c;animation: none;"></div>
+		</div><br><br>
+		<div class="banner"style="justify-content: space-between;">
+			<big style="letter-spacing: 1px;">Sessions</big>
+		</div>
+		<div class="list">
+			<img id="tmp-icon"src="package.png"style="width: 40%;height: 40%;margin: 100px 30%;"draggable=false>
+			
+		</div>
+		<div class="card"id="card"style="display: none;">
+			<div class="banner">
+				<div class="image"id="licon"></div>
+				<div class="ricon">
+					<img src="people.png"style="display: none;"draggable=false><b style="color: white">60</b>
+				</div>
+			</div><br>
+			<p>Tech & Software<br><br><span>Designing Seamless User Experienced</span></p>
+			<div class="banner">
+				<div class="photo">
+					<img src="man.png"draggable=false>
+					<img src="man1.png"style="transform:translateX(25px);z-index: 2;"draggable=false>
+					<img src="man2.png"style="transform:translateX(50px);z-index: 3;"draggable=false>
+				</div>
+				<div class="image"id="arrow"style="background-color: white;"></div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	var ver = 0, inst = "", sec = "", res = 0, up = 0, screen = "home", names = {}, sv = false;
+	var his = {"01112025":{"17:10:45":{"1":"Amar Kumar", "12":"Amar Kumar", "89":"Hello","$p":50, "$a":30},"17:45:50":{"1":"Amar Kumar", "89":"Hello","$p":50, "$a":30}},"22-11-20":{"17:10":{"01":"Amar Kumar Sahu", "89":"Hello"}}};
+	let hour = new Date().getHours();
+	if(hour >= 5 && hour < 12){
+		$("#now").innerHTML = "Very good morning";
+	}
+	else if(hour >= 12 && hour < 17){
+		$("#now").innerHTML = "Pleasant Afternoon";
+	}
+	else{
+		$("#now").innerHTML = "Blissful Evening";
+	}
+	function $(val){
+		return document.querySelector(val);
+	}
+	$(".splash-img").animate([{
+		opacity:0,
+		transform: "translateY(150px) rotate(150deg)"
+	},{
+		opacity:1,
+		transform: "translateY(0px) rotate(0deg)"
+	}],{
+		duration:2000,
+		easing:"ease-out",
+		fill:"both"
+	});
+	$("#date").addEventListener("change", () => {
+		[y, m, d] = $("#date").value.split("-");
+		y = y.slice(2);
+		$("#dt").innerHTML = `${d}-${m}-${y}`;
+		setDate(`${d}${m}${y}`);
+	});
+	function edit(){
+		screen = "edit";
+		$(".screen").style = "opacity:1;pointer-events:auto";
+		$(".edit").style = "opacity:1; pointer-events:auto;transform:translateY(0)";
+	}
+	function doEdit(){
+		let n = $("#std").childElementCount, b = true;
+		for(i = 0;i < n;i++){
+			if($(".edit").children[4].children[1].value == $("#std").children[i].children[0].innerHTML){
+				$("#std").children[i].children[0].innerHTML = $(".edit").children[4].children[1].value;
+				$("#std").children[i].children[1].innerHTML = $(".edit").children[6].children[1].value;
+				b = false
+				break;
+			}
+		}
+		if(b){
+			let div = document.createElement("div");
+			div.n = $("#std").childElementCount;
+			div.r = $(".edit").children[4].children[1].value;
+			div.name = $(".edit").children[6].children[1].value;
+			div.addEventListener("touchstart",() => {
+				div.timeout = setTimeout(() => {
+					up = 0;
+					callPython("editData", [div.n, div.r, div.name]);
+					$(".edit").children[4].children[1].value = div.r;
+					$(".edit").children[6].children[1].value = div.name;
+				},600);
+			});
+			div.addEventListener("touchmove",() => {
+				clearTimeout(div.timeout);
+			});
+			div.addEventListener("touchend",() => {
+				clearTimeout(div.timeout);
+			});
+			div.setAttribute("class", "grid");
+			div.innerHTML = `<p>${$(".edit").children[4].children[1].value}</p><p>${$(".edit").children[6].children[1].value}</p>`;
+
+			$("#std").appendChild(div);
+		}
+		sedit();
+	}
+	function setDate(val){
+		$(".hst").innerHTML = "";
+		if(val in his){
+			Object.keys(his[val]).forEach((value) => {
+				let obj = his[val][value];
+				let div = document.createElement("div");
+				div.setAttribute("class", "card");
+				div.innerHTML = $(".history").children[1].innerHTML;
+				div.children[0].children[0].innerHTML = value;
+				div.children[0].children[1].children[0].innerHTML = `<span>P:</span> ${obj.slice(-2, -1)}`;
+				div.children[0].children[1].children[1].innerHTML = `<span>A:</span> ${obj.slice(-1)}`;
+				let tmp = structuredClone(obj).slice(0, -2);
+				/*obj = {};
+				Object.keys(tmp).forEach((key) => {
+					obj["" + parseInt(key)] = tmp[key];
+				});*/
+				tmp.forEach((lst) => {
+					let d = document.createElement("div");
+					d.setAttribute("class","grid");
+					if(lst in names){
+						d.innerHTML = `<p>${lst}</p><p>${names[lst]}</p>`;
+					}
+					else{
+						d.style.color = "red";
+						d.innerHTML = `<p>${lst}</p><p>N/A</p>`;
+					}
+					div.children[2].appendChild(d);
+				});
+				$(".hst").appendChild(div);
+			});
+		}
+		else{
+			$(".hst").innerHTML = "<img src='package.png'>";
+		}
+	}
+	function goBack(){
+		if(screen == "home"){
+			callPython("exit", []);
+		}
+		else if(screen == "profile"){
+			backward();
+		}
+		else if(screen == "work"){
+			$(".work").style = "opacity:0;left:100vw";
+			screen = "home";
+		}
+		else if(screen == "history"){
+			$(".history").style = "opacity:0;left:100vw";
+			screen = "work";
+		}
+		else if(screen == "result"){
+			$(".result").style = "opacity:0;left:100vw";
+			screen = "work";
+		}
+		else if(screen == "edit"){
+			sedit();
+		}
+		else if(screen == "alert"){
+			cancel();
+		}
+	}
+	function setScale(val){
+		$(".dot").style.animation = "none";$(".dot").offsetHeight;
+		$(".dot").style.animation = "large .5s ease";
+		$(".dot").style.left = "calc(" + (50 * val) + "% - " + (15 * val) + "px)";
+		for(i = 0;i < 3;i++){
+			$(".desc").children[i].style.opacity = ".5";
+		}
+		$(".desc").children[val].style.opacity = "1";
+		if(val == 0) val = .5;
+		callPython("setScale",[val]);
+	}
+	function show(){
+		screen = "alert";
+		$(".alert").style = "opacity:1; pointer-events:auto;transform:translateY(0)";
+		$(".container").style.pointerEvents = "none";
+		$(".screen").style = "opacity:1;pointer-events:auto";
+	}
+	function cancel(){
+		$(".alert").style = "opacity:0; pointer-events:none";
+		$(".container").style.pointerEvents = "auto";
+		$(".screen").style = "opacity:0;pointer-events:none";
+		screen = "home";
+	}
+	function sedit(){
+		$(".edit").style = "opacity:0; pointer-events:none";
+		$(".screen").style = "opacity:0;pointer-events:none";
+		screen = "result";
+	}
+	function add(){
+		screen = "profile";
+		$(".profile").style = "opacity:1;right:0;";
+	}
+	function backward(){
+		callPython("saveData",[$(".inpbox").children[0].value]);
+		$(".profile").style = "opacity:0;right:100vw;";
+		screen = "home";
+	}
+	function save(){
+		if(false){
+			callPython("mes",["t", "Already Saved."]);
+			return;
+		}
+		sv = true;
+		let obj = {};
+		$("#std").childNodes.forEach((elm) => {
+			if(elm.style.display != "none"){
+				obj[elm.children[0].innerHTML] = elm.children[1].innerHTML;
+			}
+		});
+		callPython("save", [JSON.stringify(obj)]);
+	}
+	function goHis(){
+		[y, m, d] = $("#date").value.split("-");
+		y = y.slice(2);
+		let dt = new Date();
+		tm = `${dt.getDate().toString().padStart(2, "0")}-${dt.getMonth() + 1}-${dt.getFullYear().toString().slice(2)}`;
+		$("#dt").innerHTML = tm;
+		setDate(tm.replaceAll("-",""));
+		$(".history").style = "opacity:1;left:0;";
+		screen = "history";
+	}
+	function dt(){
+		screen = "work";
+		$(".work").style = "opacity:1;left:0;";
+		$("#cmp").style.backgroundImage = "url(rabbit.png)";
+		$(".grph").style.backgroundImage = "url(monkey.png)";
+		$('.graph').style.height = '100px'; 
+		$(".graph").style.opacity = 0;
+		res = 0;
+		sv = false;
+	}
+	function cl(){
+		$(".work").style = "opacity:0;left:100vw;";
+		screen = "home";
+	}
+	function def(name, scale){
+		$(".inpbox").children[0].value = name;
+		$("#name").innerHTML = name.split(" ")[0];
+		if(scale == .5){
+			setScale(0);
+		}
+		else{
+			setScale(scale);
+		}
+	}
+	$(".dot").style.left = "0";
+	var clr = ["#D1E4E2", "#D9CAE6", "#FFE6AE", "#C9CEE5"];
+	var tc = [];
+	function addElem(ins, sc, str, code, rep){
+		if($("#tmp-icon")){
+			$(".list").removeChild($("#tmp-icon"));
+		}
+		let div = document.createElement("div");
+		div.setAttribute("class","card");
+		div.setAttribute("num", $(".list").childElementCount);
+		div.innerHTML = $("#card").innerHTML;
+		div.children[0].children[1].children[1].innerHTML = str;
+		div.children[2].innerHTML = "Section: <b>" + sc + "</b><br><br><span>" + ins + "</span>";
+		div.children[3].children[1].addEventListener("click", () => {
+			document.querySelector('#cmp').children[0].innerHTML = '';
+			document.querySelector('#cmp').children[2].innerHTML = '';
+			inst = code; sec = sc; dt();
+			callPython("clearBase",[]);
+		}); 
+		div.children[0].children[1].addEventListener("click",() => {
+			callPython("students", [code, sc]);
+		});
+		div.children[0].children[0].addEventListener("click", () => {
+			callPython("update", [code, sc]);
+			up = div.getAttribute("num");
+		});
+		if(rep){
+			$(".list").children[up].replaceWith(div);
+			return;
+		}
+		let tmp = "";
+		for(i = 0; i < 3;){
+			let tp;
+			tp = (Math.floor(Math.random() * 10) + 1);
+			if(tp != tmp){
+				div.children[3].children[0].children[i].src = "man/man" + tp + ".png"; 
+				tmp = tp; i++;
+			}
+		}
+		/*let len = tc.length;
+		while(tc.length == len){
+			if(!tc.length){
+				tc.push(clr[(Math.floor(Math.random() * 4))]);
+			}
+			else{
+				let tmp = clr[(Math.floor(Math.random() * 4))];
+				if(tc[tc.length - 1] != tmp){
+					tc.push(tmp);
+					break;
+				}
+			}
+		}*/
+		//div.style.background = "#202020";
+		$(".list").appendChild(div);
+	}
+	function check(){
+		setTimeout(() => {
+			callPython("checkData",[]);
+		},100);
+		setTimeout(() => {
+			$(".splash").style.opacity = "0"; 
+	    	$(".splash").style.pointerEvents = "none"; 
+		},3000);
+	}
+	function addData(){
+		let inst = $("#inst").value;
+		let sec = $("#sec").value;
+		if(inst == "" | sec == ""){
+			callPython("mes",["a", "One of the fields is empty."]);
+			return;
+		}
+		callPython("load",[inst, sec, 0]);
+	}
+	function addImage(val){
+		let div = document.createElement("div");
+		$("#cmp").style.backgroundImage = "none";
+		div.style.backgroundImage = "url(bases/" + val + ".jpg?ver=" + ver++ + ")";
+		document.querySelector("#cmp").children[0].appendChild(div);
+	}
+	function absent(data){
+		$("#std").innerHTML = "";res = 1;
+		obj = {};
+		Object.keys(data).forEach((key) => {
+			obj["" + parseInt(key)] = data[key];
+		});
+		Object.keys(obj).forEach((val) => {
+			let div = document.createElement("div");
+			div.n = $("#std").childElementCount;
+			div.addEventListener("touchstart",() => {
+				div.timeout = setTimeout(() => {
+					up = 0;
+					callPython("editData", [div.n, val, obj[val]]);
+					$(".edit").children[4].children[1].value = val;
+					$(".edit").children[6].children[1].value = obj[val];
+				},600);
+			});
+			div.addEventListener("touchmove",() => {
+				clearTimeout(div.timeout);
+			});
+			div.addEventListener("touchend",() => {
+				clearTimeout(div.timeout);
+			});
+			div.setAttribute("class","grid");
+			div.innerHTML = "<p>23</p><p>Amar Kumar Sahu</p>";
+			div.children[0].innerHTML = val;
+			div.children[1].innerHTML = obj[val];
+			$("#std").appendChild(div);
+		});
+	}
+	function showResult(){
+		if(res){
+			screen = "result";
+			$(".result").style = "opacity:1;left:0;";
+		}
+		else{
+			callPython("mes",["t","No operation started."]);
+		}
+	}
+	function closeResult(){
+		$(".result").style = "opacity:0;left:100vw;";
+	}
+	function addImageResult(val){
+		let div = document.createElement("div");
+		div.style.backgroundImage = "url(tmp/" + val + ".jpg?ver=" + ver++ + ")";
+		div.addEventListener("click",() => {
+			callPython("showRes",[val]);
+		}); 
+		document.querySelector("#cmp").children[2].appendChild(div);
+	}
+	colors = [];
+</script>
+</html>
