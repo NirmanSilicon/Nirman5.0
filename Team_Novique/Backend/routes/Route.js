@@ -1,6 +1,6 @@
 const express = require("express")
 const multer = require("multer");
-const { Syllabusextracted } = require("../controller/controller");
+const { Syllabusextracted, chat } = require("../controller/controller");
 const { getTopic, allSubjects, allTopics, allSubjectanalytic, getTopicanalytics, getprogress, allSubjectProgress } = require("../controller/getController");
 const { topicCompleted } = require("../controller/postController");
 const storage = multer.memoryStorage();
@@ -19,7 +19,9 @@ router.get("/allSubjectAnalytics",allSubjectanalytic)
 router.get("/topicAnalytics/:subjectId",getTopicanalytics)
 router.get("/progress/:subjectId",getprogress)
 
+
 //Post APIS
 router.post("/topicCompleted/:subjectId/:topicId",topicCompleted)
+router.post("/chatBot",chat)
 
 module.exports = router
