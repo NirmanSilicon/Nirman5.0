@@ -1,0 +1,10 @@
+user_id,session_id,cost_in_rs,frequency,decision_time_sec,user_decision,ground_truth_type,prediction,correct,expense_name,category
+demo_user,621afd65-3d90-436f-b4c2-c34cb0f3eabd,4502.0,one-time,1.0,want,want,need,0,Groceries,Food
+demo_user,4fbcdb65-802a-45d8-9056-9ec11eaa1e44,3347.0,one-time,1.0,want,want,want,1,Emergency meds,Health
+demo_user,48caaa8e-17d3-4252-a82a-bdcd41d1420a,3047.0,one-time,1.0,want,want,want,1,Movie night,Entertainment
+demo_user,306a8123-32f3-464c-b8cd-3d7c6e9759e3,4678.0,one-time,1.0,want,want,want,1,Phone plan,Telecom
+demo_user,9f99a139-6949-42cb-9716-252cbe4fea74,4520.0,0,1.0,0,want,prediction_error,0,0,0
+demo_user,3ff96fee-ffef-4899-9c9f-5fcc2982abb1,1466.0,0,1.0,0,want,prediction_error,0,0,0
+demo_user,5a34c181-de89-4479-aa7c-ba2cbfaf9a32,4225.0,0,1.0,0,need,prediction_error,0,0,0
+demo_user,20316705-e760-4dbd-a160-07b4bd547826,1586.0,0,1.0,0,need,prediction_error,0,0,0
+demo_user,b4d9f0be-c68e-42ef-bef0-34ceaef35d6e,4102.0,0,1.0,0,need,prediction_error,0,0,0

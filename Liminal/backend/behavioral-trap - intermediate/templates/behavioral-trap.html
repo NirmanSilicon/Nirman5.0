@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Market Forge — Behavioral Trap (Game)</title>
+    <style>
+        :root {
+            --bg: #070709;
+            --panel: #0f1113;
+            --muted: #9fb0b8;
+            --accent: #00eaff;
+            --accent2: #ff3cff;
+            --good: #00ff85;
+            --bad: #ff6b6b;
+            --glass: rgba(255, 255, 255, 0.04);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, "Trebuchet MS", sans-serif;
+            background: linear-gradient(180deg, #040405, #0a0b0d);
+            color: #e6f0f2;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 28px auto;
+            padding: 18px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px
+        }
+
+        .title {
+            display: flex;
+            flex-direction: column
+        }
+
+        h1 {
+            margin: 0;
+            color: var(--accent);
+            text-shadow: 0 0 12px rgba(0, 234, 255, 0.06)
+        }
+
+        .sub {
+            margin: 4px 0 0;
+            color: var(--accent2)
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        .btn {
+            background: var(--accent);
+            color: #001;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            box-shadow: 0 8px 24px rgba(0, 234, 255, 0.06);
+        }
+
+        .btn.secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--muted);
+            font-weight: 600
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:1fr 380px;
+            gap: 18px;
+            margin-top: 18px
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03)
+        }
+
+        .card h3 {
+            margin: 0 0 8px;
+            color: var(--accent2)
+        }
+
+        .modules {
+            display: grid;
+            grid-template-columns:repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px
+        }
+
+        .module {
+            background: var(--glass);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .module .m-title {
+            font-weight: 700;
+            color: #dff
+        }
+
+        .module p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .module .controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 6px
+        }
+
+        .small {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .panel-right {
+            position: sticky;
+            top: 18px
+        }
+
+        .status {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.02)
+        }
+
+        .score {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--good);
+            margin: 8px 0
+        }
+
+        .log {
+            margin-top: 12px;
+            height: 260px;
+            overflow: auto;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.25);
+            font-family: monospace;
+            font-size: 13px;
+            color: #dff
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--good), #8ef1c7);
+            color: #002;
+            font-weight: 800;
+            margin-right: 6px
+        }
+
+        .danger {
+            background: linear-gradient(90deg, var(--bad), #ff9b9b);
+            color: #200
+        }
+
+        .hint {
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .xpbar {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 8px
+        }
+
+        .xpfill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--good));
+            width: 0%
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px
+        }
+
+        td, th {
+            padding: 6px;
+            text-align: left;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
+            font-size: 13px
+        }
+
+        .center {
+            text-align: center
+        }
+
+        @media (max-width: 960px) {
+            .grid {
+                grid-template-columns:1fr
+            }
+
+            .panel-right {
+                position: relative;
+                top: 0
+            }
+
+            .modules {
+                grid-template-columns:1fr
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <div class="title">
+            <h1>⚔ Market Forge</h1>
+            <div class="sub">Behavioral Trap — Intermediate • Face FOMO, panic selling, herd bias</div>
+        </div>
+        <div class="top-actions">
+            <button id="startBtn" class="btn">▶ Start Mission</button>
+            <button id="resetBtn" class="btn secondary">↺ Reset</button>
+            <button id="unlockBtn" class="btn secondary">🔓 Unlock Advanced</button>
+        </div>
+    </header>
+
+    <div class="grid">
+        <!-- left: modules -->
+        <div class="card">
+            <h3>Mission Modules</h3>
+            <div class="small">Press a module button to run a short behavioral simulation.</div>
+
+            <div class="modules">
+                <!-- FOMO -->
+                <div class="module" id="fomoModule">
+                    <div class="m-title">1. FOMO Simulation Chamber</div>
+                    <p>Resist buying overpriced assets during market euphoria. Decide to Buy / Wait / Hedge.</p>
+                    <div class="controls">
+                        <button class="btn" data-action="fomo_buy">Buy</button>
+                        <button class="btn secondary" data-action="fomo_wait">Wait</button>
+                        <button class="btn secondary" data-action="fomo_hedge">Hedge</button>
+                    </div>
+                    <div class="hint">Buying on euphoria increases chance of regret; hedging reduces risk.</div>
+                </div>
+
+                <!-- Panic -->
+                <div class="module" id="panicModule">
+                    <div class="m-title">2. Panic Selling Challenge</div>
+                    <p>Market drops fast. Choose Hold, Sell, or Dollar-Cost Average (DCA).</p>
+                    <div class="controls">
+                        <button class="btn" data-action="panic_hold">Hold</button>
+                        <button class="btn secondary" data-action="panic_sell">Sell</button>
+                        <button class="btn secondary" data-action="panic_dca">DCA</button>
+                    </div>
+                    <div class="hint">Holding often rewards discipline; panic sells lock losses.</div>
+                </div>
+
+                <!-- Herd -->
+                <div class="module" id="herdModule">
+                    <div class="m-title">3. Herd Mentality Resistance</div>
+                    <p>Everyone is buying/selling. Choose Follow, Contrarian, or Research.</p>
+                    <div class="controls">
+                        <button class="btn" data-action="herd_follow">Follow</button>
+                        <button class="btn secondary" data-action="herd_contra">Contrarian</button>
+                        <button class="btn secondary" data-action="herd_research">Research</button>
+                    </div>
+                    <div class="hint">Independent analysis reduces biases over time.</div>
+                </div>
+
+                <!-- Confirmation -->
+                <div class="module" id="confirmModule">
+                    <div class="m-title">4. Confirmation Bias Workshop</div>
+                    <p>Test your thesis: Seek confirming or disconfirming evidence.</p>
+                    <div class="controls">
+                        <button class="btn" data-action="confirm_confirm">Seek Confirming</button>
+                        <button class="btn secondary" data-action="confirm_disconfirm">Seek Disconfirming</button>
+                        <button class="btn secondary" data-action="confirm_mix">Balanced Review</button>
+                    </div>
+                    <div class="hint">Disconfirming evidence improves decision quality.</div>
+                </div>
+
+                <!-- Loss Aversion -->
+                <div class="module" id="lossModule">
+                    <div class="m-title">5. Loss Aversion Training</div>
+                    <p>Face a loss vs gain choice. Choose risk-averse or risk-seeking options.</p>
+                    <div class="controls">
+                        <button class="btn" data-action="loss_avoid">Avoid Loss</button>
+                        <button class="btn secondary" data-action="loss_seek">Seek Gain</button>
+                        <button class="btn secondary" data-action="loss_mixed">Mixed</button>
+                    </div>
+                    <div class="hint">Losses feel stronger — practice framing gains properly.</div>
+                </div>
+
+                <!-- Rebalancing -->
+                <div class="module" id="rebalModule">
+                    <div class="m-title">6. Disciplined Rebalancing</div>
+                    <p>Rebalance a sample portfolio when allocation drifts. Choose Auto, Manual, or Ignore.</p>
+                    <div class="controls">
+                        <button class="btn" data-action="rebalance_auto">Auto-Rebalance</button>
+                        <button class="btn secondary" data-action="rebalance_manual">Manual</button>
+                        <button class="btn secondary" data-action="rebalance_ignore">Ignore</button>
+                    </div>
+                    <div class="hint">Discipline + rules reduce emotional bias over time.</div>
+                </div>
+            </div>
+
+            <div style="margin-top:14px" class="small">
+                Duration: 30–35 minutes. Complete modules to earn XP and the Behavioral Master Badge.
+            </div>
+        </div>
+
+        <!-- right: status / log -->
+        <div class="card panel-right">
+            <h3>Status & Progress</h3>
+            <div class="status">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div>
+                        <div class="small">XP</div>
+                        <div class="score" id="xpScore">0 XP</div>
+                        <div class="xpbar">
+                            <div id="xpFill" class="xpfill" style="width:0%"></div>
+                        </div>
+                        <div class="small" style="margin-top:6px">Badges:</div>
+                        <div style="margin-top:8px">
+                            <span id="behaviorBadge" class="badge danger">Locked</span>
+                        </div>
+                    </div>
+                    <div style="text-align:right">
+                        <div class="small">Mission Timer</div>
+                        <div id="timer" style="font-weight:800;font-size:20px">00:00</div>
+                        <div class="small" style="margin-top:6px">Modules Completed: <strong id="modulesDone">0</strong>/6
+                        </div>
+                    </div>
+                </div>
+
+                <div class="log" id="gameLog" aria-live="polite">
+                    <!-- logs appear here -->
+                    Welcome to Market Forge — press Start Mission to begin.
+                </div>
+
+                <div style="margin-top:10px">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Emotional Control</td>
+                            <td id="metricControl">Neutral</td>
+                        </tr>
+                        <tr>
+                            <td>Bias Awareness</td>
+                            <td id="metricBias">Low</td>
+                        </tr>
+                        <tr>
+                            <td>Discipline</td>
+                            <td id="metricDiscipline">Low</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="hint">Tip: try "Seek Disconfirming" and "Hold" during panic for best learning outcomes.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simple game engine variables
+    let xp = 0;
+    let modulesCompleted = 0;
+    let started = false;
+    let timerInterval = null;
+    let seconds = 0;
+    const logEl = document.getElementById('gameLog');
+    const xpEl = document.getElementById('xpScore');
+    const xpFill = document.getElementById('xpFill');
+    const badgeEl = document.getElementById('behaviorBadge');
+    const modulesDoneEl = document.getElementById('modulesDone');
+    const metricControl = document.getElementById('metricControl');
+    const metricBias = document.getElementById('metricBias');
+    const metricDiscipline = document.getElementById('metricDiscipline');
+    const timerEl = document.getElementById('timer');
+
+    // Utilities
+    function log(msg) {
+        const time = new Date().toLocaleTimeString();
+        logEl.innerHTML = `<div>[${time}] ${msg}</div>` + logEl.innerHTML;
+    }
+
+    function addXP(n) {
+        xp = Math.max(0, xp + n);
+        xpEl.textContent = `${xp} XP`;
+        const pct = Math.min(100, Math.round((xp / 125) * 100));
+        xpFill.style.width = pct + '%';
+        if (xp >= 125) {
+            badgeEl.textContent = 'Behavioral Master';
+            badgeEl.classList.remove('danger');
+            badgeEl.classList.add('badge');
+            badgeEl.style.background = 'linear-gradient(90deg,var(--accent),var(--good))';
+            badgeEl.style.color = '#001';
+            log('🎉 Badge unlocked: Behavioral Master!');
+        }
+    }
+
+    function setMetric(control, bias, discipline) {
+        metricControl.textContent = control;
+        metricBias.textContent = bias;
+        metricDiscipline.textContent = discipline;
+    }
+
+    function completeModule() {
+        modulesCompleted++;
+        modulesDoneEl.textContent = modulesCompleted;
+        if (modulesCompleted > 6) modulesCompleted = 6;
+    }
+
+    // Timer
+    function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        seconds = 0;
+        timerEl.textContent = '00:00';
+        timerInterval = setInterval(() => {
+            seconds++;
+            const mm = String(Math.floor(seconds / 60)).padStart(2, '0');
+            const ss = String(seconds % 60).padStart(2, '0');
+            timerEl.textContent = `${mm}:${ss}`;
+        }, 1000);
+    }
+
+    function stopTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    // Start/Reset/Unlock handlers
+    document.getElementById('startBtn').addEventListener('click', () => {
+        if (!started) {
+            started = true;
+            log('Mission started — you have 30–35 minutes to complete modules.');
+            addXP(5); // small starting XP
+            setMetric('Neutral', 'Low', 'Low');
+            startTimer();
+            document.getElementById('startBtn').textContent = '⏸ Pause Mission';
+        } else {
+            // pause
+            started = false;
+            stopTimer();
+            document.getElementById('startBtn').textContent = '▶ Resume Mission';
+            log('Mission paused.');
+        }
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+        // reset everything
+        xp = 0;
+        modulesCompleted = 0;
+        started = false;
+        stopTimer();
+        seconds = 0;
+        timerEl.textContent = '00:00';
+        xpEl.textContent = '0 XP';
+        xpFill.style.width = '0%';
+        badgeEl.textContent = 'Locked';
+        badgeEl.className = 'badge danger';
+        badgeEl.style.background = '';
+        logEl.innerHTML = 'Welcome to Market Forge — press Start Mission to begin.';
+        modulesDoneEl.textContent = '0';
+        setMetric('Neutral', 'Low', 'Low');
+        document.getElementById('startBtn').textContent = '▶ Start Mission';
+        log('Game reset.');
+    });
+
+    document.getElementById('unlockBtn').addEventListener('click', () => {
+        if (xp >= 60) {
+            log('Advanced module unlocked: Portfolio Architect ready.');
+            addXP(10);
+            alert('Advanced: Portfolio Architect unlocked!');
+        } else {
+            log('You need at least 60 XP to unlock Advanced. Earn more XP by completing modules.');
+            alert('Need 60 XP to unlock Advanced. Keep playing!');
+        }
+    });
+
+    // Module simulation logic
+    function chance(percent) {
+        return Math.random() * 100 < percent;
+    }
+
+    // Generic result helper
+    function finalizeModule(name, outcomeText, xpGain, controlDelta, biasDelta, disciplineDelta) {
+        log(`Module: ${name} — ${outcomeText} (+${xpGain} XP)`);
+        addXP(xpGain);
+        completeModule();
+        // simple metric update logic
+        const controlMap = {'Neutral': 'Neutral', 'Improved': 'Improved', 'Low': 'Low', 'High': 'High'};
+        // compute new metric strings (simple mapping)
+        setMetric(
+            controlDelta > 0 ? 'Improved' : (controlDelta < 0 ? 'Worsened' : metricControl.textContent),
+            biasDelta > 0 ? 'Improved' : (biasDelta < 0 ? 'Worsened' : metricBias.textContent),
+            disciplineDelta > 0 ? 'Improved' : (disciplineDelta < 0 ? 'Worsened' : metricDiscipline.textContent)
+        );
+    }
+
+    // Add event delegation for all module buttons
+    document.body.addEventListener('click', (e) => {
+        const action = e.target.getAttribute('data-action');
+        if (!action) return;
+
+        if (!started) {
+            log('Start the mission first to run modules.');
+            alert('Please press Start Mission before running modules.');
+            return;
+        }
+
+        switch (action) {
+            // FOMO
+            case 'fomo_buy': {
+                // buying in euphoria: high chance of regret
+                if (chance(30)) {
+                    finalizeModule('FOMO - Buy', 'You timed a breakout and gained confidence.', '+12 XP', +1, +1, 0);
+                } else {
+                    finalizeModule('FOMO - Buy', 'Euphoria led to overpaying; you learned the hard way.', '+4 XP', -1, -1, -1);
+                }
+                break;
+            }
+            case 'fomo_wait': {
+                if (chance(60)) {
+                    finalizeModule('FOMO - Wait', 'Waiting avoided regret — good patience.', '+10 XP', +1, +1, +1);
+                } else {
+                    finalizeModule('FOMO - Wait', 'Price kept rising; mild regret but learned restraint.', '+6 XP', 0, +1, 0);
+                }
+                break;
+            }
+            case 'fomo_hedge': {
+                finalizeModule('FOMO - Hedge', 'You hedged exposure and limited downside.', '+11 XP', +1, +1, +1);
+                break;
+            }
+
+            // Panic
+            case 'panic_hold': {
+                if (chance(55)) {
+                    finalizeModule('Panic - Hold', 'Market recovered; discipline paid off.', '+14 XP', +2, +2, +2);
+                } else {
+                    finalizeModule('Panic - Hold', 'Recovery delayed; stressful but instructive.', '+8 XP', 0, +1, +1);
+                }
+                break;
+            }
+            case 'panic_sell': {
+                finalizeModule('Panic - Sell', 'You locked in losses and learned to control emotions.', '+5 XP', -1, -1, -1);
+                break;
+            }
+            case 'panic_dca': {
+                finalizeModule('Panic - DCA', 'You averaged down and improved long-term outcome.', '+12 XP', +1, +1, +2);
+                break;
+            }
+
+            // Herd
+            case 'herd_follow': {
+                finalizeModule('Herd - Follow', 'Following the crowd had mixed results; partial learning.', '+6 XP', 0, -1, 0);
+                break;
+            }
+            case 'herd_contra': {
+                if (chance(45)) {
+                    finalizeModule('Herd - Contrarian', 'Contrarian move rewarded — strong independent thinking.', '+15 XP', +2, +2, +2);
+                } else {
+                    finalizeModule('Herd - Contrarian', 'Contrarian move failed but taught risk management.', '+7 XP', 0, +1, 0);
+                }
+                break;
+            }
+            case 'herd_research': {
+                finalizeModule('Herd - Research', 'You did the work; decision quality improved.', '+13 XP', +1, +2, +2);
+                break;
+            }
+
+            // Confirmation
+            case 'confirm_confirm': {
+                finalizeModule('Confirmation - Confirm', 'You found confirming data — risk of blind spots.', '+5 XP', 0, -1, 0);
+                break;
+            }
+            case 'confirm_disconfirm': {
+                finalizeModule('Confirmation - Disconfirm', 'You sought disconfirming evidence and improved thesis.', '+14 XP', +1, +2, +1);
+                break;
+            }
+            case 'confirm_mix': {
+                finalizeModule('Confirmation - Mix', 'Balanced review improved robustness.', '+11 XP', +1, +1, +1);
+                break;
+            }
+
+            // Loss Aversion
+            case 'loss_avoid': {
+                finalizeModule('Loss Aversion - Avoid', 'You avoided loss but missed moderate gains.', '+7 XP', 0, 0, +1);
+                break;
+            }
+            case 'loss_seek': {
+                if (chance(40)) {
+                    finalizeModule('Loss Aversion - Seek', 'Risk-seeking yielded gains — learned calculus of risk.', '+13 XP', +1, +1, 0);
+                } else {
+                    finalizeModule('Loss Aversion - Seek', 'Risk-seeking led to loss but valuable lesson.', '+6 XP', -1, 0, -1);
+                }
+                break;
+            }
+            case 'loss_mixed': {
+                finalizeModule('Loss Aversion - Mixed', 'Balanced framing reduced emotional weight of losses.', '+12 XP', +1, +1, +1);
+                break;
+            }
+
+            // Rebalancing
+            case 'rebalance_auto': {
+                finalizeModule('Rebalancing - Auto', 'Auto-rebalance kept allocations steady — discipline wins.', '+12 XP', +1, +1, +2);
+                break;
+            }
+            case 'rebalance_manual': {
+                if (chance(65)) {
+                    finalizeModule('Rebalancing - Manual', 'Manual rebalance done well — improved discipline.', '+11 XP', +1, +1, +1);
+                } else {
+                    finalizeModule('Rebalancing - Manual', 'Manual mistakes taught better rules for next time.', '+6 XP', 0, 0, 0);
+                }
+                break;
+            }
+            case 'rebalance_ignore': {
+                finalizeModule('Rebalancing - Ignore', 'Ignoring rebalance drifted your portfolio — costly.', '+4 XP', -1, -1, -1);
+                break;
+            }
+
+            default:
+                break;
+        }
+    });
+
+    // Accessibility: keyboard shortcuts for quick testing (optional)
+    document.addEventListener('keydown', (e) => {
+        if (e.key === '1') document.querySelector('[data-action="fomo_buy"]').click();
+        if (e.key === '2') document.querySelector('[data-action="panic_hold"]').click();
+        if (e.key === '3') document.querySelector('[data-action="herd_contra"]').click();
+    });
+
+    // Friendly startup message
+    log('Market Forge ready. Press "Start Mission" then try module buttons to practice behavioral traps.');
+</script>
+</body>
+</html>

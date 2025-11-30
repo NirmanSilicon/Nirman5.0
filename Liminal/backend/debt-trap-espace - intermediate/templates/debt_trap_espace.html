@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Budgeting Forge - Start Mission</title>
+    <style>
+        :root {
+            --bg: #0b0b0b;
+            --panel: rgba(255, 255, 255, 0.06);
+            --accent1: #00eaff;
+            --accent2: #00ff85;
+            --hot: #ff3cff;
+            --glass: rgba(255, 255, 255, 0.04);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, "Trebuchet MS", sans-serif;
+            background: linear-gradient(180deg, #050505 0%, #0f0f12 100%);
+            color: #e9eef1;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .wrap {
+            max-width: 1000px;
+            margin: 28px auto;
+            padding: 18px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 18px
+        }
+
+        h1 {
+            color: var(--accent1);
+            text-shadow: 0 0 10px rgba(0, 234, 255, 0.12);
+            margin: 0
+        }
+
+        p.sub {
+            color: var(--hot);
+            margin: 6px 0 0
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:1fr 420px;
+            gap: 18px;
+            margin-top: 18px
+        }
+
+        .card {
+            background: var(--panel);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04)
+        }
+
+        .card h3 {
+            color: var(--accent2);
+            margin-top: 0
+        }
+
+        ul {
+            padding-left: 18px
+        }
+
+        button.primary {
+            background: var(--accent1);
+            color: #001;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: 0 8px 24px rgba(0, 234, 255, 0.06);
+        }
+
+        button.primary:active {
+            transform: translateY(1px)
+        }
+
+        .center {
+            text-align: center
+        }
+
+        /* simulator */
+        .hidden {
+            display: none
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: #cfe8ea;
+            margin: 12px 0 6px
+        }
+
+        input[type=number], select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            background: transparent;
+            color: inherit;
+            font-size: 15px;
+        }
+
+        .result {
+            background: linear-gradient(90deg, rgba(0, 255, 133, 0.06), rgba(0, 234, 255, 0.03));
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            border-left: 4px solid var(--accent2)
+        }
+
+        .small {
+            font-size: 13px;
+            color: #bcd
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #889;
+        }
+
+        .back {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 8px 10px;
+            border-radius: 8px;
+            color: inherit;
+            cursor: pointer
+        }
+
+        /* responsive */
+        @media (max-width: 940px) {
+            .grid {
+                grid-template-columns:1fr
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <h1>⚔ Budgeting Forge</h1>
+        <p class="sub">Debt Trap Escape — Intermediate • Interactive Mission</p>
+    </header>
+
+    <div class="grid">
+        <!-- Left: Overview / Start -->
+        <div class="card">
+            <h3>Mission Briefing</h3>
+            <p>Learn how minimum payments and compound interest can trap borrowers. Enter the mission to run a quick simulator and compare payoff
+                strategies.</p>
+
+            <h3 style="margin-top:18px">Learning Objectives</h3>
+            <ul>
+                <li>Understand compound interest</li>
+                <li>See how minimum payments inflate debt</li>
+                <li>Explore avalanche vs. snowball</li>
+                <li>Start a real payoff plan</li>
+            </ul>
+
+            <div class="center" style="margin-top:14px">
+                <!-- This ID must match the JS below -->
+                <button id="startMissionBtn" class="primary">▶ Start Mission</button>
+            </div>
+
+            <p class="small" style="margin-top:12px">If clicking does nothing: open your browser console (Right-click → Inspect → Console) and look
+                for errors.</p>
+        </div>
+
+        <!-- Right: Simulator / Mission panel -->
+        <div id="missionPanel" class="card hidden">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+                <strong style="font-size:16px">Mission: Minimum Payment Simulator</strong>
+                <div>
+                    <button id="backBtn" class="back" title="Return to briefing">← Back</button>
+                </div>
+            </div>
+
+            <p class="small" style="margin-top:8px">Enter values and run to see how long debt lasts when you only pay the minimum (or a fixed
+                amount).</p>
+
+            <form id="simForm" onsubmit="return false;">
+                <label for="principal">Starting debt (₹)</label>
+                <input id="principal" type="number" min="1" step="1" value="5000" required>
+
+                <label for="apr">APR (annual %) — e.g., 24</label>
+                <input id="apr" type="number" min="0" step="0.01" value="24">
+
+                <label for="minType">Minimum payment</label>
+                <select id="minType">
+                    <option value="percent">Percent of balance (e.g., 3% + ₹300 min)</option>
+                    <option value="fixed">Fixed amount per month</option>
+                </select>
+
+                <div id="percentInputs">
+                    <label for="minPercent">Minimum percent (%)</label>
+                    <input id="minPercent" type="number" min="0" step="0.01" value="3">
+                    <label for="minFloor" class="small">Minimum floor (₹)</label>
+                    <input id="minFloor" type="number" min="0" step="1" value="300">
+                </div>
+
+                <div id="fixedInputs" class="hidden">
+                    <label for="fixedAmount">Fixed monthly payment (₹)</label>
+                    <input id="fixedAmount" type="number" min="1" step="1" value="200">
+                </div>
+
+                <label for="maxMonths" class="small">Simulate up to months (cap)</label>
+                <input id="maxMonths" type="number" min="1" step="1" value="600">
+
+                <div style="margin-top:12px" class="center">
+                    <button id="runSimBtn" class="primary">▶ Run Simulator</button>
+                </div>
+            </form>
+
+            <div id="simOutput" class="result hidden" aria-live="polite"></div>
+
+            <div style="margin-top:10px" class="small">
+                <strong>Note:</strong> This is a simplified simulator (monthly interest, no fees). Use it to get an intuition.
+            </div>
+        </div>
+    </div>
+
+    <footer>Made with ⚡ for Budgeting Forge • Save the file and open it in your browser</footer>
+</div>
+
+<script>
+    // Defensive: ensure elements exist
+    const startBtn = document.getElementById('startMissionBtn');
+    const missionPanel = document.getElementById('missionPanel');
+    const backBtn = document.getElementById('backBtn');
+    const minType = document.getElementById('minType');
+    const percentInputs = document.getElementById('percentInputs');
+    const fixedInputs = document.getElementById('fixedInputs');
+    const runSimBtn = document.getElementById('runSimBtn');
+    const simOutput = document.getElementById('simOutput');
+
+    if (!startBtn || !missionPanel || !runSimBtn) {
+        console.error("Essential elements missing. If you see this, the HTML didn't load fully.");
+    }
+
+    // Start mission -> show simulator
+    startBtn.addEventListener('click', () => {
+        missionPanel.classList.remove('hidden');
+        // scroll into view smoothly
+        missionPanel.scrollIntoView({behavior: 'smooth', block: 'center'});
+    });
+
+    backBtn.addEventListener('click', () => {
+        missionPanel.classList.add('hidden');
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    });
+
+    // toggle min payment UI
+    minType.addEventListener('change', () => {
+        if (minType.value === 'percent') {
+            percentInputs.classList.remove('hidden');
+            fixedInputs.classList.add('hidden');
+        } else {
+            percentInputs.classList.add('hidden');
+            fixedInputs.classList.remove('hidden');
+        }
+    });
+
+    // simulator function
+    function runSimulation() {
+        // read inputs with safe parsing
+        const principal = Math.max(0, Number(document.getElementById('principal').value) || 0);
+        const apr = Math.max(0, Number(document.getElementById('apr').value) || 0);
+        const monthlyRate = apr / 100 / 12;
+        const maxMonths = Math.max(1, parseInt(document.getElementById('maxMonths').value) || 600);
+
+        let month = 0;
+        let balance = principal;
+        let totalPaid = 0;
+        let totalInterest = 0;
+        const history = [];
+
+        // Determine payment function
+        let computePayment;
+        if (document.getElementById('minType').value === 'percent') {
+            const pct = Math.max(0, Number(document.getElementById('minPercent').value) || 0) / 100;
+            const floor = Math.max(0, Number(document.getElementById('minFloor').value) || 0);
+            computePayment = (bal) => Math.max(floor, Math.ceil(bal * pct)); // ceil to whole rupee
+        } else {
+            const fixed = Math.max(1, Number(document.getElementById('fixedAmount').value) || 1);
+            computePayment = () => fixed;
+        }
+
+        // safety: if principal is 0
+        if (principal <= 0) {
+            simOutput.classList.remove('hidden');
+            simOutput.innerHTML = "<strong>Nothing to simulate:</strong> starting debt must be > ₹0.";
+            return;
+        }
+
+        // simulate month-by-month
+        while (balance > 0.005 && month < maxMonths) {
+            month++;
+            // interest accrues on current balance
+            const interest = balance * monthlyRate;
+            balance += interest;
+            // determine payment
+            const payment = Math.min(balance, computePayment(balance));
+            balance -= payment;
+            totalPaid += payment;
+            totalInterest += interest;
+            history.push({month, payment: Number(payment.toFixed(2)), interest: Number(interest.toFixed(2)), balance: Number(balance.toFixed(2))});
+
+            // safety: if payment doesn't cover interest and tiny reduction, detect trapped scenario
+            if (month > 1 && history[history.length - 1].balance > history[history.length - 2].balance && month > 120) {
+                // balance increased for more than 120 months -> trapped
+                break;
+            }
+        }
+
+        // prepare output message
+        let html = "";
+        if (balance <= 0.005) {
+            html += `<strong>Mission Result:</strong> Debt cleared in <strong>${month}</strong> months (${(month / 12).toFixed(1)} years).<br>`;
+            html += `Total paid: ₹${totalPaid.toFixed(2)} (interest ₹${totalInterest.toFixed(2)})`;
+        } else {
+            html += `<strong>Warning:</strong> After <strong>${month}</strong> months the balance is still ₹${balance.toFixed(2)}.<br>`;
+            html += `This indicates the chosen minimum payment is too low — the debt may never be repaid (interest > payment).<br>`;
+            html += `Total paid so far: ₹${totalPaid.toFixed(2)} (interest ₹${totalInterest.toFixed(2)})`;
+        }
+
+        // show a short table of last few months
+        const last = history.slice(-6).map(h => `<tr><td>${h.month}</td><td>₹${h.payment}</td><td>₹${h.interest}</td><td>₹${h.balance}</td></tr>`).join('');
+        if (last) {
+            html += `<div style="margin-top:10px"><em>Last ${Math.min(6, history.length)} months</em><table style="width:100%;margin-top:8px;border-collapse:collapse;color:#dff"><thead><tr style="text-align:left"><th>Month</th><th>Payment</th><th>Interest</th><th>Balance</th></tr></thead><tbody>${last}</tbody></table></div>`;
+        }
+
+        simOutput.classList.remove('hidden');
+        simOutput.innerHTML = html;
+        simOutput.scrollIntoView({behavior: 'smooth', block: 'center'});
+        // also log to console for debugging
+        console.log('Simulation complete', {months: month, balance: balance, totalPaid: totalPaid, totalInterest: totalInterest});
+    }
+
+    // wire up run button
+    runSimBtn.addEventListener('click', (e) => {
+        runSimulation();
+    });
+
+    // helpful: run a quick self-test if the page loaded
+    window.addEventListener('load', () => {
+        console.log('Budgeting Forge page loaded — ready.');
+    });
+</script>
+</body>
+</html>

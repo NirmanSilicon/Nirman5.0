@@ -1,2 +1,0 @@
-user_id,session_id,market_volatility,news_sentiment,reaction_time_ms,high_risk_moves,safe_moves,social_follow_score,impulse_buy_score,loss_aversion_score,debt_ratio,reward_points,risk_profile_label
-demo_player_01,e988eca2-7903-4a77-a8e9-2183fb75d361,0.6,0.7,2094,6,0,0.2,0.3,0.4,0.1,120,moderate
