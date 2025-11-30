@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CrowdResolve Unified Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Leaflet CSS (for map) -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg-gradient"></div>
+
+    <header class="site-header">
+      <div class="logo" data-view-target="landingView">
+        <span class="logo-mark"></span>
+        CrowdResolve
+      </div>
+      <nav class="nav">
+        <button class="nav-link" data-view-target="landingView">Home</button>
+        <button class="nav-link" data-view-target="citizenLoginView">
+          Citizen Login
+        </button>
+        <button class="nav-link" data-view-target="govLoginView">
+          Government Login
+        </button>
+      </nav>
+    </header>
+
+    <main class="main">
+      <!-- LANDING VIEW -->
+      <section id="landingView" class="view active">
+        <div class="hero">
+          <div class="hero-text">
+            <h1>
+              Unified civic issue
+              <span class="accent">reporting & resolution</span>
+              platform
+            </h1>
+            <p>
+              CrowdResolve connects citizens and municipal officials in a single
+              workspace for transparent, location-aware civic issue management.
+            </p>
+            <div class="hero-actions">
+              <button
+                class="btn btn-primary"
+                data-view-target="citizenLoginView"
+              >
+                Citizen Login
+              </button>
+              <button class="btn btn-ghost" data-view-target="govLoginView">
+                Government Login
+              </button>
+            </div>
+            <div class="hero-tags">
+              <span>📍 Live location</span>
+              <span>🗺️ Interactive map</span>
+              <span>📊 Unified dashboard</span>
+            </div>
+          </div>
+
+          <div class="hero-card">
+            <h3>Platform Snapshot</h3>
+            <div class="hero-stats">
+              <div class="stat">
+                <span class="stat-label">Active issues</span>
+                <span class="stat-value" id="statActiveIssues">0</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Resolved</span>
+                <span class="stat-value" id="statResolvedIssues">0</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Avg. progress</span>
+                <span class="stat-value" id="statAvgProgress">0%</span>
+              </div>
+            </div>
+            <p class="hero-note">
+              Log in as a citizen to report an issue or as a government officer
+              to track and resolve.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CITIZEN LOGIN -->
+      <section id="citizenLoginView" class="view">
+        <div class="auth-layout">
+          <div class="auth-card">
+            <h2>Citizen Login</h2>
+            <p class="auth-subtitle">
+              Sign in to report issues and track their status.
+            </p>
+            <form id="citizenLoginForm" class="form">
+              <label class="field">
+                <span>Email</span>
+                <input type="email" required placeholder="you@example.com" />
+              </label>
+              <label class="field">
+                <span>Password</span>
+                <input type="password" required placeholder="••••••••" />
+              </label>
+              <button type="submit" class="btn btn-primary full-width">
+                Login
+              </button>
+              <p class="auth-alt">
+                New here?
+                <span class="linkish">Sign up</span> (simulated in this demo)
+              </p>
+            </form>
+          </div>
+          <div class="auth-side">
+            <h3>Citizen portal</h3>
+            <ul>
+              <li>Report issues with live GPS & map</li>
+              <li>Attach photos & videos</li>
+              <li>Track progress with a status bar</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- GOVERNMENT LOGIN -->
+      <section id="govLoginView" class="view">
+        <div class="auth-layout">
+          <div class="auth-card">
+            <h2>Government Login</h2>
+            <p class="auth-subtitle">
+              Municipal officials access the admin dashboard here.
+            </p>
+            <form id="govLoginForm" class="form">
+              <label class="field">
+                <span>Official Email</span>
+                <input type="email" required placeholder="officer@city.gov" />
+              </label>
+              <label class="field">
+                <span>Password</span>
+                <input type="password" required placeholder="••••••••" />
+              </label>
+              <button type="submit" class="btn btn-primary full-width">
+                Login
+              </button>
+            </form>
+          </div>
+          <div class="auth-side">
+            <h3>Government interface</h3>
+            <ul>
+              <li>Unified dashboard of all citizen issues</li>
+              <li>Filter by status, category & date</li>
+              <li>Update status and add resolution notes</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- CITIZEN DASHBOARD -->
+      <section id="citizenDashboardView" class="view">
+        <div class="dash-header">
+          <div>
+            <h2>Citizen Dashboard</h2>
+            <p>Report and track your civic issues in one place.</p>
+          </div>
+          <div class="dash-actions">
+            <span id="citizenNameBadge" class="badge">Citizen</span>
+            <button class="btn btn-ghost" id="citizenLogoutBtn">Logout</button>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <!-- New Issue Form -->
+          <div class="card">
+            <div class="card-header">
+              <h3>Report a new issue</h3>
+            </div>
+            <div class="card-body">
+              <form id="issueForm" class="form">
+                <div class="field-row">
+                  <label class="field">
+                    <span>Title</span>
+                    <input
+                      type="text"
+                      name="title"
+                      required
+                      placeholder="Ex: Pothole near main junction"
+                    />
+                  </label>
+                  <label class="field">
+                    <span>Category</span>
+                    <select name="category" required>
+                      <option value="">Select category</option>
+                      <option value="Roads">Roads & Potholes</option>
+                      <option value="Garbage">Garbage & Sanitation</option>
+                      <option value="Streetlights">
+                        Streetlights & Electricity
+                      </option>
+                      <option value="Water">Water & Drainage</option>
+                      <option value="Safety">Public Safety</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </label>
+                </div>
+
+                <label class="field">
+                  <span>Description</span>
+                  <textarea
+                    name="description"
+                    rows="3"
+                    required
+                    placeholder="Describe the issue, its impact, and how long it has existed."
+                  ></textarea>
+                </label>
+
+                <div class="field-row">
+                  <label class="field">
+                    <span>Location</span>
+                    <div class="location-row">
+                      <input
+                        type="text"
+                        id="locationText"
+                        placeholder="Click 'Use live location' or type manually"
+                      />
+                      <button
+                        type="button"
+                        class="btn btn-chip"
+                        id="useLocationBtn"
+                      >
+                        📍 Use live location
+                      </button>
+                    </div>
+                    <small id="coordsLabel" class="help">
+                      Coordinates: not set
+                    </small>
+                  </label>
+                </div>
+
+                <div class="field">
+                  <span>Map</span>
+                  <div id="map" class="map"></div>
+                  <small class="help">
+                    We’ll center on your live location. Drag the pin to adjust.
+                  </small>
+                </div>
+
+                <div class="field">
+                  <span>Attachments (optional)</span>
+                  <input
+                    type="file"
+                    id="attachmentInput"
+                    multiple
+                    accept="image/*,video/*"
+                  />
+                  <div id="attachmentPreview" class="attachment-preview"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary full-width">
+                  Submit issue
+                </button>
+              </form>
+              <div id="issueFormStatus" class="form-status"></div>
+            </div>
+          </div>
+
+          <!-- Issues List -->
+          <div class="card">
+            <div class="card-header">
+              <h3>My issues</h3>
+            </div>
+            <div class="card-body">
+              <div id="citizenIssuesEmpty" class="empty-state">
+                No issues yet. Submit your first report using the form on the
+                left.
+              </div>
+              <div id="citizenIssuesList" class="issues-list"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GOVERNMENT DASHBOARD -->
+      <section id="govDashboardView" class="view">
+        <div class="dash-header">
+          <div>
+            <h2>Government Dashboard</h2>
+            <p>
+              Monitor, filter, and update all incoming civic issues from
+              citizens.
+            </p>
+          </div>
+          <div class="dash-actions">
+            <span class="badge badge-gov">Municipal Officer</span>
+            <button class="btn btn-ghost" id="govLogoutBtn">Logout</button>
+          </div>
+        </div>
+
+        <div class="dash-grid gov-grid">
+          <div class="card">
+            <div class="card-header">
+              <h3>Overview</h3>
+            </div>
+            <div class="card-body gov-overview">
+              <div class="kpi">
+                <span class="kpi-label">Total issues</span>
+                <span class="kpi-value" id="kpiTotalIssues">0</span>
+              </div>
+              <div class="kpi">
+                <span class="kpi-label">Open</span>
+                <span class="kpi-value" id="kpiOpenIssues">0</span>
+              </div>
+              <div class="kpi">
+                <span class="kpi-label">In Progress</span>
+                <span class="kpi-value" id="kpiInProgressIssues">0</span>
+              </div>
+              <div class="kpi">
+                <span class="kpi-label">Resolved</span>
+                <span class="kpi-value" id="kpiResolvedIssues">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card gov-table-card">
+            <div class="card-header">
+              <h3>All reported issues</h3>
+              <div class="table-filters">
+                <select id="filterStatus">
+                  <option value="All">All statuses</option>
+                  <option value="Submitted">Submitted</option>
+                  <option value="Under Review">Under Review</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Resolved">Resolved</option>
+                </select>
+              </div>
+            </div>
+            <div class="card-body">
+              <table class="issues-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Citizen</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Update</th>
+                  </tr>
+                </thead>
+                <tbody id="govIssuesTableBody"></tbody>
+              </table>
+              <div id="govIssuesEmpty" class="empty-state">
+                No issues have been reported yet.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- AI CHATBOT WIDGET -->
+    <div id="chatWidget" class="chat-widget">
+      <button id="chatToggleBtn" class="chat-toggle">💬</button>
+      <div class="chat-window hidden">
+        <div class="chat-header">
+          <span>CrowdResolve Assistant</span>
+          <button id="chatCloseBtn" class="chat-close">✕</button>
+        </div>
+        <div id="chatMessages" class="chat-messages">
+          <div class="msg bot">
+            Hi! I’m the CrowdResolve Assistant. Ask me how to report an issue or
+            track your status.
+          </div>
+        </div>
+        <form id="chatForm" class="chat-input-row">
+          <input
+            type="text"
+            id="chatInput"
+            placeholder="Type your question..."
+            required
+          />
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+
+    <script src="app.js"></script>
+  </body>
+</html>
