@@ -1,0 +1,78 @@
+"use client"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { AreaChart, Bot, Droplets, FlaskConical, HardDrive, HeartPulse, LayoutDashboard, Map, ShieldAlert, Sprout } from "lucide-react";
+
+import {
+  SidebarProvider,
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarInset,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { OrchardEyeLogo } from "@/components/icons";
+
+const navItems = [
+  { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/drone-control", label: "Drone Control", icon: HardDrive },
+  { href: "/disease-detection", label: "Disease Detection", icon: ShieldAlert },
+  { href: "/health-assessment", label: "Health Assessment", icon: HeartPulse },
+  { href: "/irrigation", label: "Irrigation", icon: Droplets },
+  { href: "/yield-estimation", label: "Yield Estimation", icon: AreaChart },
+  { href: "/geospatial-map", label: "Geospatial Map", icon: Map },
+  { href: "/soil-testing", label: "Soil Testing", icon: FlaskConical },
+];
+
+function MainSidebar() {
+  const pathname = usePathname();
+
+  return (
+    <Sidebar>
+      <SidebarHeader>
+        <div className="flex items-center gap-2">
+          <OrchardEyeLogo className="w-8 h-8 text-primary" />
+          <span className="text-lg font-semibold font-headline">OrchardEye</span>
+        </div>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarMenu>
+          {navItems.map((item) => (
+            <SidebarMenuItem key={item.href}>
+              <Link href={item.href}>
+                <SidebarMenuButton
+                  isActive={pathname === item.href}
+                  tooltip={item.label}
+                >
+                  <item.icon />
+                  <span>{item.label}</span>
+                </SidebarMenuButton>
+              </Link>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarContent>
+    </Sidebar>
+  );
+}
+
+export default function MainLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <SidebarProvider>
+      <MainSidebar />
+      <SidebarInset>
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 md:hidden">
+          <SidebarTrigger />
+        </header>
+        <main className="p-4 sm:p-6">{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
+  );
+}

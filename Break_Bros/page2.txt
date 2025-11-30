@@ -1,0 +1,15 @@
+import { PageHeader } from "@/components/page-header";
+import { PhTestingClient } from "./ph-testing-client";
+import { analyzePHLevel } from "@/ai/flows/analyze-ph-level";
+
+export default function SoilPhTestingPage() {
+  return (
+    <>
+      <PageHeader
+        title="Soil pH Testing"
+        description="Enter your soil's pH level to get AI-powered recommendations for amendments."
+      />
+      <PhTestingClient analyzePhLevelAction={analyzePHLevel} />
+    </>
+  );
+}

@@ -1,0 +1,15 @@
+import { PageHeader } from "@/components/page-header";
+import { analyzeSoil } from "@/ai/flows/analyze-soil";
+import { SoilTestingClient } from "./soil-testing-client";
+
+export default function SoilTestingPage() {
+  return (
+    <>
+      <PageHeader
+        title="Soil Testing Analysis"
+        description="Enter soil test results to get AI-powered amendment recommendations."
+      />
+      <SoilTestingClient analyzeSoilAction={analyzeSoil} />
+    </>
+  );
+}

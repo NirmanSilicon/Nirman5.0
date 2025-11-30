@@ -1,0 +1,63 @@
+'use server';
+/**
+ * @fileOverview Analyzes soil data and provides amendment recommendations.
+ *
+ * - analyzeSoil - A function that handles the soil analysis process.
+ * - AnalyzeSoilInput - The input type for the analyzeSoil function.
+ * - AnalyzeSoilOutput - The return type for the analyzeSoil function.
+ */
+
+import {ai} from '@/ai/genkit';
+import {z} from 'genkit';
+
+export const AnalyzeSoilInputSchema = z.object({
+  ph: z.number().min(0).max(14).describe('The pH level of the soil (0-14).'),
+  nitrogen: z.number().min(0).describe('The nitrogen content in ppm.'),
+  phosphorus: z.number().min(0).describe('The phosphorus content in ppm.'),
+  potassium: z.number().min(0).describe('The potassium content in ppm.'),
+  cropType: z.string().optional().describe('The type of crop being grown (e.g., apples, tomatoes).'),
+});
+export type AnalyzeSoilInput = z.infer<typeof AnalyzeSoilInputSchema>;
+
+export const AnalyzeSoilOutputSchema = z.object({
+  recommendations: z.string().describe('Detailed recommendations for soil amendments to improve fertility for the specified crop.'),
+  phAnalysis: z.string().describe('Analysis of the current pH level.'),
+  nutrientAnalysis: z.string().describe('Analysis of the N-P-K levels.'),
+});
+export type AnalyzeSoilOutput = z.infer<typeof AnalyzeSoilOutputSchema>;
+
+export async function analyzeSoil(input: AnalyzeSoilInput): Promise<AnalyzeSoilOutput> {
+  return analyzeSoilFlow(input);
+}
+
+const prompt = ai.definePrompt({
+  name: 'analyzeSoilPrompt',
+  input: {schema: AnalyzeSoilInputSchema},
+  output: {schema: AnalyzeSoilOutputSchema},
+  prompt: `You are an expert agronomist specializing in soil health. Analyze the provided soil data for a crop.
+
+Soil Data:
+- pH: {{{ph}}}
+- Nitrogen (N): {{{nitrogen}}} ppm
+- Phosphorus (P): {{{phosphorus}}} ppm
+- Potassium (K): {{{potassium}}} ppm
+- Crop: {{{cropType 'General Purpose'}}}
+
+Based on the data, provide:
+1.  A brief analysis of the pH level and its suitability for the crop.
+2.  A brief analysis of the N-P-K nutrient levels.
+3.  Detailed, actionable recommendations for soil amendments. Suggest specific organic or synthetic fertilizers and application rates to correct any deficiencies or imbalances for the specified crop. If the crop is not specified, provide general recommendations.
+`,
+});
+
+const analyzeSoilFlow = ai.defineFlow(
+  {
+    name: 'analyzeSoilFlow',
+    inputSchema: AnalyzeSoilInputSchema,
+    outputSchema: AnalyzeSoilOutputSchema,
+  },
+  async input => {
+    const {output} = await prompt(input);
+    return output!;
+  }
+);

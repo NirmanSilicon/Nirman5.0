@@ -1,0 +1,150 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Bot, FlaskConical, Loader } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
+import type {
+  AnalyzePhLevelOutput,
+} from "@/ai/flows/analyze-ph-level";
+
+const phLevelFormSchema = z.object({
+  phLevel: z.coerce.number().min(0).max(14),
+});
+
+type PhTestingClientProps = {
+  analyzePhLevelAction: (
+    input: string
+  ) => Promise<AnalyzePhLevelOutput>;
+};
+
+export function PhTestingClient({
+  analyzePhLevelAction,
+}: PhTestingClientProps) {
+  const [isPending, startTransition] = useTransition();
+  const [result, setResult] = useState<AnalyzePhLevelOutput | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const form = useForm<{phLevel: number}>({
+    resolver: zodResolver(phLevelFormSchema),
+    defaultValues: {
+      phLevel: 7.0,
+    },
+  });
+
+  const onSubmit = (values: {phLevel: number}) => {
+    setError(null);
+    setResult(null);
+    startTransition(async () => {
+      try {
+        const res = await analyzePhLevelAction(String(values.phLevel));
+        setResult(res);
+      } catch (e) {
+        setError("An error occurred during analysis. Please try again.");
+        console.error(e);
+      }
+    });
+  };
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-2">
+      <Card>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <CardHeader>
+              <CardTitle>Enter Soil pH</CardTitle>
+              <CardDescription>
+                Input the pH value from your soil test results.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FormField
+                control={form.control}
+                name="phLevel"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>pH Level</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="14"
+                        placeholder="e.g., 6.5"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+            <CardFooter>
+              <Button type="submit" disabled={isPending}>
+                {isPending && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+                Analyze pH
+              </Button>
+            </CardFooter>
+          </form>
+        </Form>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Analysis & Recommendations</CardTitle>
+          <CardDescription>
+            AI-powered advice to balance your soil's pH.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isPending ? (
+            <div className="space-y-4">
+              <Skeleton className="h-6 w-1/4" />
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+            </div>
+          ) : error ? (
+            <Alert variant="destructive">
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          ) : result ? (
+            <div className="prose prose-sm max-w-none text-sm text-muted-foreground">
+              <p>{result.recommendations}</p>
+            </div>
+          ) : (
+            <div className="flex h-full min-h-48 flex-col items-center justify-center rounded-lg border-2 border-dashed p-12 text-center">
+              <FlaskConical className="h-12 w-12 text-muted-foreground" />
+              <h3 className="mt-4 text-lg font-semibold">
+                Results will appear here
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Enter a pH value and click "Analyze pH" to get recommendations.
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

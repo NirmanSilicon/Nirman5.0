@@ -1,0 +1,47 @@
+'use server';
+/**
+ * @fileOverview Analyzes soil pH levels and provides amendment recommendations.
+ *
+ * - analyzePHLevel - A function that handles the soil pH analysis process.
+ */
+
+import {ai} from '@/ai/genkit';
+import {z} from 'genkit';
+
+const AnalyzePhLevelInputSchema = z.string().describe('The pH level of the soil (0-14).');
+
+const AnalyzePhLevelOutputSchema = z.object({
+  assessment: z.string().describe("A brief assessment of the soil pH level (e.g., 'Optimal', 'Slightly Acidic', 'Very Alkaline')."),
+  recommendations: z.array(z.object({
+    action: z.string().describe("The recommended action to take (e.g., 'Add Agricultural Lime')."),
+    details: z.string().describe("Details about the action, including application rates and tips."),
+  })).describe('A list of specific, actionable recommendations.'),
+  explanation: z.string().describe('A general explanation of why these recommendations are important for soil health.')
+});
+
+const prompt = ai.definePrompt({
+  name: 'analyzePhLevelPrompt',
+  input: {schema: AnalyzePhLevelInputSchema},
+  output: {schema: AnalyzePhLevelOutputSchema},
+  prompt: `You are an expert soil scientist. A user has provided a soil pH level.
+
+Soil pH: {{{prompt}}}
+
+Based on this pH level, provide a structured analysis.
+- Your 'assessment' should be a short, clear summary describing the current pH level (e.g., "A pH of 5.5 is considered very acidic.").
+- Your 'recommendations' should be a list of actionable steps. For each, provide a clear 'action' (like "Add Lime") and 'details' on how to do it.
+- If the pH is too acidic (below 6.0), recommend ways to raise it (e.g., adding lime).
+- If the pH is too alkaline (above 7.5), recommend ways to lower it (e.g., adding sulfur or organic matter).
+- If the pH is in the optimal range (6.0-7.5), the main action should be to "Maintain Current Level" and provide details on how to do so.
+- Your 'explanation' should summarize why maintaining the correct pH is important.
+
+Provide practical advice and application rates if possible.`,
+});
+
+export async function analyzePHLevel(input: string) {
+  const { output } = await prompt(input);
+  if (!output) {
+    throw new Error('No output from AI');
+  }
+  return output;
+}
