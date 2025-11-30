@@ -1,0 +1,932 @@
+/* =============================
+   EVChargeHub.module.css
+   ============================= */
+
+.page {
+  background-color: #f5f7fa;
+  color: #202124;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* =============================
+   Map Section
+   ============================= */
+.mapSection {
+  margin-top: 2rem;
+  margin-bottom: 0.1rem;
+  border-radius: 12px;
+}
+
+.mapContainer {
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.leaflet-control-attribution,
+.leaflet-control {
+  display: none !important;
+}
+
+/* =============================
+   Booking Section
+   ============================= */
+.bookingSection {
+  padding: 30px 20px;
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: center;
+}
+
+.bookingPanel {
+  width: 100%;
+  max-width: 900px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  padding-bottom: 20px;
+}
+
+/* Header */
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background-color: #1a73e8;
+  color: white;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.panelTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+/* Form Layout */
+.searchForm {
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Form Groups */
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGroup label {
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.formControl {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.formControl:focus {
+  border-color: #1a73e8;
+}
+
+/* =============================
+   Custom Layout Rows
+   ============================= */
+
+/* Pickup Row (Desktop: horizontal) */
+.rowGroup {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.flexGrow {
+  flex: 1;
+  /* Make input take available space */
+  display: flex;
+  flex-direction: column;
+}
+
+.flexGrow .formControl {
+  width: 100%;
+  /* Ensure full width within flex container */
+}
+
+/* Full width rows */
+.fullRow {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.fullRow .formControl {
+  width: 100%;
+}
+
+/* Right-aligned button row */
+.buttonRow {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+/* =============================
+   Suggestion List Styling
+   ============================= */
+
+.suggestionList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 100px;
+  overflow-y: auto;
+  z-index: 1000;
+  margin-top: 4px;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  /* Ensure it matches parent width */
+  box-sizing: border-box;
+  /* Include borders in width calculation */
+}
+
+.suggestionItem {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.suggestionItem:hover {
+  background-color: #f8f9fa;
+}
+
+.suggestionItem:last-child {
+  border-bottom: none;
+}
+
+/* Make the input container relative for absolute positioning */
+.flexGrow {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* Important for absolute positioning of suggestions */
+}
+
+/* Ensure input takes full width */
+.flexGrow .formControl {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* =============================
+   Responsive (Mobile)
+   ============================= */
+@media (max-width: 768px) {
+  .suggestionList {
+    position: relative;
+    /* Change to relative on mobile if needed */
+    width: 100%;
+  }
+
+  .suggestionItem {
+    padding: 12px 15px;
+    font-size: 1rem;
+  }
+}
+
+/* =============================
+   Buttons
+   ============================= */
+
+.btnPrimary {
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  transition: background 0.3s;
+  min-width: 150px;
+}
+
+.btnPrimary:hover {
+  background-color: #0d47a1;
+}
+
+.liveBtn {
+  background: #198754;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: 0.2s ease;
+  min-width: 140px;
+  height: fit-content;
+}
+
+.liveBtn:hover {
+  background: #146c43;
+}
+
+/* =============================
+   Responsive (Mobile)
+   ============================= */
+@media (max-width: 768px) {
+  .searchForm {
+    padding: 20px 15px;
+  }
+
+  /* Convert Pickup Row into stacked layout */
+  .rowGroup {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .liveBtn {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .buttonRow {
+    justify-content: center;
+  }
+
+  .btnPrimary {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+/* =============================
+   Station Section
+   ============================= */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: transparent !important;
+}
+
+.brandsSection {
+  background-color: transparent !important;
+  padding: 20px;
+}
+
+.stationCard {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stationCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.stationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.stationLogo {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1a73e8;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stationName {
+  font-weight: 600;
+  color: #333;
+  text-align: right;
+}
+
+.stationRating {
+  color: #fbbc05;
+  font-weight: 500;
+}
+
+.sectionTitle {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.sectionTitle h2 {
+  font-size: 2rem;
+  color: #1a73e8;
+  font-weight: 600;
+}
+
+.brandsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.detailLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #555;
+}
+
+.price {
+  color: #1a73e8;
+  font-weight: 600;
+}
+
+.bookBtn {
+  margin-top: 10px;
+  background-color: #34a853;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s;
+}
+
+.bookBtn:hover {
+  background-color: #2c8e46;
+}
+
+/* =============================
+   Modal Styling
+   ============================= */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  /* ✅ make visible when rendered */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.modalContent {
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease-in-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modalIcon {
+  color: #34a853;
+  font-size: 3rem;
+  /* margin-bottom: 10px; */
+}
+
+.modalButtons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.modalBtn {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modalBtn.confirm {
+  background-color: #1a73e8;
+  color: white;
+}
+
+.modalBtn.confirm:hover {
+  background-color: #0d47a1;
+}
+
+.modalBtn.cancel {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.modalBtn.cancel:hover {
+  background-color: red !important;
+  color: white !important;
+}
+
+/* =============================
+   Responsive Design
+   ============================= */
+@media (max-width: 768px) {
+  .mapSection {
+    height: 400px;
+  }
+
+  .searchForm {
+    grid-template-columns: 1fr;
+  }
+
+  .brandCard {
+    padding: 15px;
+  }
+}
+
+
+/* Enhanced Modal Styles */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.bookingSection {
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.bookingSection h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+}
+
+.vehicleGrid,
+.paymentGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.vehicleCard,
+.paymentCard {
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vehicleCard:hover,
+.paymentCard:hover {
+  border-color: #007bff;
+}
+
+.vehicleCard.selected,
+.paymentCard.selected {
+  border-color: #007bff;
+  background-color: #f8f9fa;
+}
+
+.vehicleInfo {
+  flex: 1;
+}
+
+.vehicleInfo strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.vehicleInfo span {
+  display: block;
+  font-size: 0.9rem;
+  color: #666;
+  margin: 2px 0;
+}
+
+.paymentInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.defaultBadge {
+  background: #28a745;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  margin-left: 10px;
+}
+
+.checkIcon {
+  color: #007bff;
+}
+
+.costSummary {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.costDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.costRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.totalCost {
+  font-weight: bold;
+  color: #28a745;
+  font-size: 1.1em;
+}
+
+.sufficient {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.insufficient {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cancelBtn,
+.confirmBtn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.cancelBtn {
+  background: #6c757d;
+  color: white;
+}
+
+.confirmBtn {
+  background: #007bff;
+  color: white;
+}
+
+.confirmBtn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.warning {
+  background: #fff3cd;
+  color: #856404;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Navigation Modal Styles */
+.navigationInstructions {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px 0;
+}
+
+.instructionList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.instructionItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.instructionNumber {
+  background: #007bff;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.instructionText {
+  color: #555;
+  line-height: 1.4;
+}
+
+.locationStatus {
+  background: #e7f3ff;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px 0;
+  border-left: 4px solid #007bff;
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.atStation {
+  color: #28a745;
+}
+
+.notAtStation {
+  color: #007bff;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.modalBtn.startMonitoring {
+  background: #007bff;
+  color: white;
+}
+
+.modalBtn.startMonitoring:hover {
+  background: #0056b3;
+}
+
+.note {
+  background: #fff3cd;
+  color: #856404;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modalContent {
+    margin: 10px;
+    padding: 20px;
+  }
+
+  .instructionItem {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .modalActions {
+    flex-direction: column;
+  }
+
+  .vehicleCard,
+  .paymentCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+/* ================================
+   Active Charging Top Bar
+================================ */
+
+/* Wrapper */
+.activeSessionBar {
+  background: #0d6efd;
+  padding: 12px 16px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  animation: slideDown 0.3s ease-out;
+}
+
+/* Text */
+.activeSessionText {
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Buttons container */
+.activeSessionActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Open button */
+.activeSessionOpenBtn {
+  background: white;
+  color: #0d6efd;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.activeSessionOpenBtn:hover {
+  background: #e8f0ff;
+}
+
+/* Close button */
+.activeSessionCloseBtn {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.activeSessionCloseBtn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.viewDetailsBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.viewDetailsBtn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Animation */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .activeSessionBar {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .activeSessionActions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .activeSessionOpenBtn,
+  .activeSessionCloseBtn {
+    width: 45%;
+    text-align: center;
+  }
+}
+

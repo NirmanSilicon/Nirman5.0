@@ -1,0 +1,41 @@
+.tableDark{
+    --bs-table-bg: #052730 !important;
+}
+
+.walletSuccess{
+    color: #28a745 !important;
+}
+
+.walletDanger{
+    color: #dc3545 !important;
+}
+
+.modalHeaderBg {
+    background-color: #052730 !important; 
+    border-bottom: none !important;
+}
+
+.bg-light-green {
+    background-color: #d4edda; /* Light green for credit */
+}
+
+.bg-light-red {
+    background-color: #f8d7da; /* Light red for debit/danger */
+}
+
+.historyCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.walletSuccess {
+  color: #16a34a;
+}
+
+.walletDanger {
+  color: #dc2626;
+}
+
+.tableDark {
+  background-color: #222;
+}

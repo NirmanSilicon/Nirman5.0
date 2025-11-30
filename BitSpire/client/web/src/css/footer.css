@@ -1,0 +1,148 @@
+:root {
+  --primary-color: #1a73e8;
+  --secondary-color: #34a853;
+  --accent-color: #fbbc04;
+  --dark-color: #202124;
+  --light-color: #f8f9fa;
+}
+
+/* 🌌 Footer Base */
+footer {
+  background-image: linear-gradient(180deg, #052730 0%, #1b1a1a 100%);
+  color: white;
+  padding: 60px 0 30px 0;
+  overflow: hidden;
+}
+
+/* 🏷 Headings */
+.footerHead h5 {
+  color: white !important;
+  position: relative;
+  padding-bottom: 10px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+.footerHead h5::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+/* 🔗 Footer Links */
+.footerLinks {
+  padding-left: 0;
+}
+
+.footerLinks li {
+  margin-bottom: 10px;
+  list-style: none;
+}
+
+.footerLinks a {
+  color: #aaa;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.footerLinks a:hover {
+  color: white;
+}
+
+/* 🌐 Social Icons */
+.socialIcons a {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  margin-right: 10px;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.socialIcons a:hover {
+  background: var(--secondary-color);
+  transform: translateY(-5px);
+}
+
+/* 📞 Contact Section */
+.footerLinks li svg {
+  margin-right: 8px;
+  color: var(--secondary-color);
+}
+
+/* 🧾 Copyright */
+.copyright {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+  margin-top: 40px;
+  text-align: center;
+  color: #aaa;
+  font-size: 14px;
+}
+
+/* 📱 RESPONSIVE DESIGN */
+@media (max-width: 992px) {
+  footer {
+    text-align: center;
+  }
+
+  .footerHead h5::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .footer-logo-image {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .socialIcons {
+    justify-content: center;
+  }
+
+  .footerLinks {
+    padding-left: 0;
+  }
+
+  .footerLinks li {
+    display: inline-block;
+    margin: 6px 12px;
+  }
+
+  .footerHead {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  footer {
+    padding: 40px 0 20px 0;
+  }
+
+  .socialIcons a {
+    width: 34px;
+    height: 34px;
+    font-size: 0.9rem;
+  }
+
+  .footerHead h5 {
+    font-size: 1rem;
+  }
+
+  .footerLinks a {
+    font-size: 0.9rem;
+  }
+}

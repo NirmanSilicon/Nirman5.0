@@ -1,0 +1,226 @@
+.cardContainer {
+  border-radius: 0.75rem;
+  border: 2px solid #e0e0e0;
+  transition: all 0.2s ease-in-out;
+  background-color: #fff;
+}
+
+.cardContainer:hover {
+  border-color: #69A316;
+  box-shadow: 0 4px 10px rgba(105, 163, 22, 0.15);
+}
+
+/* Card body layout */
+.cardBody {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+/* Content section - takes available space */
+.contentSection {
+  flex: 1;
+  min-width: 0;
+  /* Prevents flex item from overflowing */
+}
+
+/* Image section - fixed width for large screens */
+.imageSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 350px;
+  flex-shrink: 0;
+}
+
+/* Header styling */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.textSuccess {
+  color: green !important;
+}
+
+/* Low balance alert */
+.lowBalance {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 10px rgba(220, 53, 69, 0.2);
+}
+
+/* Wallet info items */
+.walletItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1.5px solid #dee2e6;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1rem;
+  background-color: #fafafa;
+  margin-bottom: 0.6rem;
+}
+
+.walletItem:last-child {
+  margin-bottom: 0;
+}
+
+/* Warning section */
+.warningBox {
+  border: 1.5px dashed #dc3545;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.8rem;
+  background-color: #fff5f5;
+  margin-bottom: 0.6rem;
+}
+
+/* Edit button */
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.3rem 0.6rem;
+  white-space: nowrap;
+}
+
+.addButton:hover {
+  background-color: #69A316;
+  color: white;
+  border-color: #69A316;
+}
+
+/* Wallet image styling */
+.walletImage {
+  width: 100%;
+  height: auto;
+  max-width: 1000px;
+  object-fit: contain;
+  opacity: 0.9;
+}
+
+.cancelBtn {
+  transition: all 0.3s;
+}
+
+.cancelBtn:hover {
+  background-color: red !important;
+  border-color: red !important;
+}
+
+.saveBtn {
+  transition: all 0.3s;
+}
+
+.saveBtn:hover {
+  background-color: green !important;
+  border-color: green !important;
+}
+
+.dropdown {
+  border: 2px solid #69A316;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  background-color: #f8f9fa;
+  transition: all 0.2s ease;
+  appearance: none;
+}
+
+/* Remove default Bootstrap focus styles */
+.dropdown:focus {
+  border-color: #69A316 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background-color: #fff;
+}
+
+/* Mobile styles - stack vertically and hide image */
+@media (max-width: 768px) {
+  .cardBody {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .imageSection {
+    display: none;
+    /* Completely hide image on mobile */
+  }
+
+  .header {
+    margin-bottom: 1rem;
+  }
+
+  .walletItem {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 576px) {
+  .cardBody {
+    padding: 1rem;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  .addButton {
+    align-self: flex-start;
+  }
+}
+
+/* RGB Border Animated Button */
+.rgbButton {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #222;
+  background: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+
+  /* Magic for colorful border only */
+  background-image: linear-gradient(white, white), 
+    linear-gradient(45deg, red, orange, yellow, green, cyan, blue, violet, red);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-size: 100% 100%, 300% 300%;
+  animation: rgbBorder 4s linear infinite;
+}
+
+@keyframes rgbBorder {
+  0% {
+    background-position: 0% 50%, 0% 50%;
+  }
+  100% {
+    background-position: 300% 50%, 300% 50%;
+  }
+}
+
+/* Box to display AI suggestion */
+.aiSuggestBox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8f9fa;
+  padding: 6px 10px;
+  border-radius: 5px;
+  border-left: 3px solid #0dcaf0;
+}
+
+.textSuccess{
+  color: green !important;
+}
