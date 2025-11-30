@@ -21,27 +21,27 @@ const AppContent = ({ onLogout }: { onLogout: () => void }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1A120B] text-[#E5E5CB]">
-      {location.pathname === '/home' ? (
-        <Hero onLogout={handleLogout} />
-      ) : (
-        <>
-          <Navigation onLogout={handleLogout} />
-          <main className="pt-20">
-            <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/scanner" element={<SecurityScanner />} />
-              <Route path="/threats" element={<ThreatDetection />} />
-              <Route path="/hardening" element={<HardeningPlatform />} />
-              <Route path="/lab" element={<VirtualCCTVLab />} />
-              <Route path="/home" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
-            </Routes>
-          </main>
-        </>
-      )}
-    </div>
+      <div className="min-h-screen bg-[#1A120B] text-[#E5E5CB]">
+        {location.pathname === '/home' ? (
+          <Hero onLogout={handleLogout} />
+        ) : (
+          <>
+            <Navigation onLogout={handleLogout} />
+            <main className="pt-20">
+              <Routes>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/scanner" element={<SecurityScanner />} />
+                <Route path="/threats" element={<ThreatDetection />} />
+                <Route path="/hardening" element={<HardeningPlatform />} />
+                <Route path="/lab" element={<VirtualCCTVLab />} />
+                <Route path="/home" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              </Routes>
+            </main>
+          </>
+        )}
+      </div>
   );
 };
 

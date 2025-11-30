@@ -109,23 +109,23 @@ export function SecurityScanner() {
           findings.openPorts.push(port);
           if (findings.openPorts.length > 0) {
             vulnerabilities.push(`${findings.openPorts.length} Open Ports`);
-          }
+      }
         }
-
-        let status: 'critical' | 'high' | 'medium' | 'low';
+      
+      let status: 'critical' | 'high' | 'medium' | 'low';
         let riskScore: number;
-
+      
         if (findings.unencryptedStream && findings.openPorts.length > 0) {
-          status = 'critical';
+        status = 'critical';
           riskScore = 90;
         } else if (findings.unencryptedStream || findings.openPorts.length > 0) {
-          status = 'high';
+        status = 'high';
           riskScore = 70;
         } else if (urlObj.protocol === 'rtsps:') {
           status = 'low';
           riskScore = 20;
         } else {
-          status = 'medium';
+        status = 'medium';
           riskScore = 50;
         }
 
@@ -143,19 +143,19 @@ export function SecurityScanner() {
 
         try {
           await apiService.createScan(scanData);
-          
-          const result: ScanResult = {
+      
+      const result: ScanResult = {
             id: scanId,
-            rtspUrl: rtspUrl,
-            vulnerabilities,
-            riskScore,
-            status,
-            timestamp: new Date().toISOString(),
+        rtspUrl: rtspUrl,
+        vulnerabilities,
+        riskScore,
+        status,
+        timestamp: new Date().toISOString(),
             findings,
-          };
-          
-          addScanResult(result);
-          setCurrentScan(result);
+      };
+      
+      addScanResult(result);
+      setCurrentScan(result);
         } catch (apiError) {
           console.error('Error saving scan to backend:', apiError);
           const result: ScanResult = {
@@ -174,10 +174,10 @@ export function SecurityScanner() {
         console.error('Scan error:', error);
         alert('An error occurred during scanning. Please try again.');
       } finally {
-        setIsScanning(false);
-        setScanningStep(0);
+      setIsScanning(false);
+      setScanningStep(0);
         setScanProgress(100);
-        setRtspUrl('');
+      setRtspUrl('');
       }
     }, 3500);
   };
@@ -337,15 +337,15 @@ export function SecurityScanner() {
                 <p className="text-sm text-[#D5CEA3]">{currentScan.rtspUrl}</p>
               </div>
               <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <div className="text-4xl text-[#E5E5CB] mb-1">{currentScan.riskScore}</div>
-                  <div className={`text-sm px-3 py-1 rounded-full inline-block ${
-                    currentScan.status === 'critical' ? 'bg-red-500/20 text-red-400' :
-                    currentScan.status === 'high' ? 'bg-orange-500/20 text-orange-400' :
-                    currentScan.status === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                    'bg-green-500/20 text-green-400'
-                  }`}>
-                    {currentScan.status.toUpperCase()} RISK
+              <div className="text-right">
+                <div className="text-4xl text-[#E5E5CB] mb-1">{currentScan.riskScore}</div>
+                <div className={`text-sm px-3 py-1 rounded-full inline-block ${
+                  currentScan.status === 'critical' ? 'bg-red-500/20 text-red-400' :
+                  currentScan.status === 'high' ? 'bg-orange-500/20 text-orange-400' :
+                  currentScan.status === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                  'bg-green-500/20 text-green-400'
+                }`}>
+                  {currentScan.status.toUpperCase()} RISK
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -483,12 +483,12 @@ export function SecurityScanner() {
                 </div>
               ) : (
                 filteredResults.map((result) => (
-                  <div 
-                    key={result.id}
+                <div 
+                  key={result.id}
                     className="flex items-center justify-between p-4 bg-[#1A120B]/40 rounded-lg border border-[#D5CEA3]/10 hover:border-[#D5CEA3]/30 transition-colors cursor-pointer group"
-                    onClick={() => setCurrentScan(result)}
-                  >
-                    <div className="flex-1">
+                  onClick={() => setCurrentScan(result)}
+                >
+                  <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <div className="text-[#E5E5CB]">{result.rtspUrl}</div>
                         {result.id === currentScan?.id && (
@@ -498,8 +498,8 @@ export function SecurityScanner() {
                       <div className="text-sm text-[#E5E5CB]/60">
                         {result.vulnerabilities.length} vulnerabilities • {new Date(result.timestamp).toLocaleString()}
                       </div>
-                    </div>
-                    <div className="flex items-center gap-4">
+                  </div>
+                  <div className="flex items-center gap-4">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -510,18 +510,18 @@ export function SecurityScanner() {
                       >
                         <RefreshCw className="w-4 h-4 text-[#D5CEA3]" />
                       </button>
-                      <div className="text-right">
-                        <div className="text-2xl text-[#E5E5CB]">{result.riskScore}</div>
-                        <div className="text-xs text-[#D5CEA3]">Risk Score</div>
-                      </div>
-                      <div className={`w-3 h-3 rounded-full ${
-                        result.status === 'critical' ? 'bg-red-500' :
-                        result.status === 'high' ? 'bg-orange-500' :
-                        result.status === 'medium' ? 'bg-yellow-500' :
-                        'bg-green-500'
-                      }`}></div>
+                    <div className="text-right">
+                      <div className="text-2xl text-[#E5E5CB]">{result.riskScore}</div>
+                      <div className="text-xs text-[#D5CEA3]">Risk Score</div>
                     </div>
+                    <div className={`w-3 h-3 rounded-full ${
+                      result.status === 'critical' ? 'bg-red-500' :
+                      result.status === 'high' ? 'bg-orange-500' :
+                      result.status === 'medium' ? 'bg-yellow-500' :
+                      'bg-green-500'
+                    }`}></div>
                   </div>
+                </div>
                 ))
               )}
             </div>

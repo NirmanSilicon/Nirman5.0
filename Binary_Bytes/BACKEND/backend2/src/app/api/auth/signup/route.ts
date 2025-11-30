@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { dbConnect } from '@/app/lib/db';
 import User from '@/app/models/User';
 import { generateToken, setAuthToken } from '@/app/lib/auth';
-import { corsHeaders, handleCORS, addCorsHeaders } from '@/app/lib/cors';
+import { corsHeaders, handleCORS, addCorsHeaders, createCorsResponse } from '@/app/lib/cors';
 
 export async function OPTIONS(req: NextRequest) {
   return handleCORS(req);
@@ -54,14 +54,16 @@ export async function POST(req: NextRequest) {
 
     const token = generateToken(user._id.toString());
 
-
-    const response = NextResponse.json(
+    const response = createCorsResponse(
       { user: { id: user._id, name: user.name, email: user.email } },
-      { status: 201 }
+      201,
+      req
     );
 
     setAuthToken(response, token);
-    return addCorsHeaders(response, req);
+    addCorsHeaders(response, req);
+    response.headers.set('Access-Control-Allow-Credentials', 'true');
+    return response;
   } catch (error) {
     console.error('Signup error:', error);
     const errorResponse = NextResponse.json(

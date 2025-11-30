@@ -133,7 +133,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         showNotification('Failed to initialize data from backend', 'error');
       } finally {
         setLoading(false);
-      }
+          }
     };
 
     const currentUser = localStorage.getItem('currentUser');

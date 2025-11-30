@@ -55,8 +55,8 @@ export function Dashboard() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl mb-2 text-[#E5E5CB]">Security Operations Center</h1>
-            <p className="text-[#D5CEA3]">Real-time CCTV network monitoring and threat analysis</p>
+          <h1 className="text-4xl mb-2 text-[#E5E5CB]">Security Operations Center</h1>
+          <p className="text-[#D5CEA3]">Real-time CCTV network monitoring and threat analysis</p>
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -291,7 +291,7 @@ export function Dashboard() {
                   };
 
                   const camera = cameras.find(c => c.id === alert.camera);
-                  
+
                   return (
                     <div 
                       key={alert.id}

@@ -30,9 +30,53 @@ export async function PATCH(
 
     const body = await req.json();
     
+    if (Object.keys(body).length === 0) {
+      const errorResponse = NextResponse.json(
+        { error: "No fields to update" },
+        { status: 400 }
+      );
+      return addCorsHeaders(errorResponse, req);
+    }
+
+    const validTypes = ['unauthorized_access', 'brute_force', 'anomaly', 'intrusion'];
+    const validSeverities = ['critical', 'high', 'medium', 'low'];
+    const validStatuses = ['active', 'investigating', 'resolved'];
+
+    if (body.type && !validTypes.includes(body.type)) {
+      const errorResponse = NextResponse.json(
+        { error: `Invalid type. Must be one of: ${validTypes.join(', ')}` },
+        { status: 400 }
+      );
+      return addCorsHeaders(errorResponse, req);
+    }
+
+    if (body.severity && !validSeverities.includes(body.severity)) {
+      const errorResponse = NextResponse.json(
+        { error: `Invalid severity. Must be one of: ${validSeverities.join(', ')}` },
+        { status: 400 }
+      );
+      return addCorsHeaders(errorResponse, req);
+    }
+
+    if (body.status && !validStatuses.includes(body.status)) {
+      const errorResponse = NextResponse.json(
+        { error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` },
+        { status: 400 }
+      );
+      return addCorsHeaders(errorResponse, req);
+    }
+
+    const updateData: any = { ...body };
+    delete updateData.userId;
+    delete updateData.id;
+
+    if (updateData.timestamp) {
+      updateData.timestamp = new Date(updateData.timestamp);
+    }
+
     const threat = await Threat.findOneAndUpdate(
       { userId: decoded.userId, id: id },
-      { $set: body },
+      { $set: updateData },
       { new: true, runValidators: true }
     );
 

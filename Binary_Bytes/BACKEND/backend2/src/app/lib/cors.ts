@@ -26,9 +26,29 @@ export function handleCORS(request: NextRequest) {
 
 export function addCorsHeaders(response: NextResponse, request: NextRequest): NextResponse {
   const origin = request.headers.get('origin');
-  Object.entries(corsHeaders(origin)).forEach(([key, value]) => {
-    response.headers.set(key, value);
-  });
+  const headers = corsHeaders(origin);
+  
+  for (const [key, value] of Object.entries(headers)) {
+    if (value) {
+      response.headers.set(key, String(value));
+    }
+  }
+  
+  return response;
+}
+
+export function createCorsResponse(data: any, status: number, request: NextRequest): NextResponse {
+  const origin = request.headers.get('origin');
+  const corsHeadersObj = corsHeaders(origin);
+  
+  const response = NextResponse.json(data, { status });
+  
+  for (const [key, value] of Object.entries(corsHeadersObj)) {
+    if (value) {
+      response.headers.set(key, String(value));
+    }
+  }
+  
   return response;
 }
 

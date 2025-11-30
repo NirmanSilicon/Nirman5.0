@@ -28,11 +28,28 @@ export async function GET(req: NextRequest) {
     const status = searchParams.get('status');
     const severity = searchParams.get('severity');
 
+    const validStatuses = ['active', 'investigating', 'resolved'];
+    const validSeverities = ['critical', 'high', 'medium', 'low'];
+
     const query: any = { userId: decoded.userId };
     if (status && status !== 'all') {
+      if (!validStatuses.includes(status)) {
+        const errorResponse = NextResponse.json(
+          { error: `Invalid status filter. Must be one of: ${validStatuses.join(', ')}, or 'all'` },
+          { status: 400 }
+        );
+        return addCorsHeaders(errorResponse, req);
+      }
       query.status = status;
     }
     if (severity && severity !== 'all') {
+      if (!validSeverities.includes(severity)) {
+        const errorResponse = NextResponse.json(
+          { error: `Invalid severity filter. Must be one of: ${validSeverities.join(', ')}, or 'all'` },
+          { status: 400 }
+        );
+        return addCorsHeaders(errorResponse, req);
+      }
       query.severity = severity;
     }
 
@@ -71,7 +88,35 @@ export async function POST(req: NextRequest) {
 
     if (!id || !type || !severity || !source || !camera || !description) {
       const errorResponse = NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Missing required fields: id, type, severity, source, camera, and description are required" },
+        { status: 400 }
+      );
+      return addCorsHeaders(errorResponse, req);
+    }
+
+    const validTypes = ['unauthorized_access', 'brute_force', 'anomaly', 'intrusion'];
+    const validSeverities = ['critical', 'high', 'medium', 'low'];
+    const validStatuses = ['active', 'investigating', 'resolved'];
+
+    if (!validTypes.includes(type)) {
+      const errorResponse = NextResponse.json(
+        { error: `Invalid type. Must be one of: ${validTypes.join(', ')}` },
+        { status: 400 }
+      );
+      return addCorsHeaders(errorResponse, req);
+    }
+
+    if (!validSeverities.includes(severity)) {
+      const errorResponse = NextResponse.json(
+        { error: `Invalid severity. Must be one of: ${validSeverities.join(', ')}` },
+        { status: 400 }
+      );
+      return addCorsHeaders(errorResponse, req);
+    }
+
+    if (status && !validStatuses.includes(status)) {
+      const errorResponse = NextResponse.json(
+        { error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` },
         { status: 400 }
       );
       return addCorsHeaders(errorResponse, req);

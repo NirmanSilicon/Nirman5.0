@@ -55,8 +55,10 @@ export function ThreatDetection() {
         
         const randomCamera = cameras[Math.floor(Math.random() * cameras.length)];
         
+        const timestamp = Date.now();
+        const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
         const newThreat = {
-          id: `THR-${String(threats.length + 1).padStart(3, '0')}`,
+          id: `THR-${timestamp}-${randomSuffix}`,
           timestamp: new Date().toISOString(),
           type: threatTypes[Math.floor(Math.random() * threatTypes.length)],
           severity: severities[Math.floor(Math.random() * severities.length)],

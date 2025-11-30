@@ -477,8 +477,8 @@ function CameraCard({ camera, onHarden, isHardening, isSelected = false, onToggl
             </button>
           )}
           <div className="flex-1">
-            <h3 className="text-xl text-[#E5E5CB] mb-1">{camera.name}</h3>
-            <div className="text-sm text-[#E5E5CB]/60">{camera.id} • {camera.ip}</div>
+          <h3 className="text-xl text-[#E5E5CB] mb-1">{camera.name}</h3>
+          <div className="text-sm text-[#E5E5CB]/60">{camera.id} • {camera.ip}</div>
           </div>
         </div>
         <div className={`px-3 py-1 rounded-full text-xs uppercase ${
@@ -508,12 +508,12 @@ function CameraCard({ camera, onHarden, isHardening, isSelected = false, onToggl
               style={{ width: `${hardeningProgressValue}%` }}
             ></div>
           ) : (
-            <div 
-              className={`h-full transition-all duration-500 ${
+          <div 
+            className={`h-full transition-all duration-500 ${
                 securityProgress === 100 ? 'bg-green-500' : securityProgress > 50 ? 'bg-yellow-500' : 'bg-red-500'
-              }`}
+            }`}
               style={{ width: `${securityProgress}%` }}
-            ></div>
+          ></div>
           )}
         </div>
       </div>

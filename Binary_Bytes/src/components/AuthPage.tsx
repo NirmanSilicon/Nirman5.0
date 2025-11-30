@@ -40,7 +40,7 @@ export function AuthPage({ onLogin }: AuthPageProps) {
         });
 
         localStorage.setItem('currentUser', JSON.stringify(response.user));
-        setSuccess('Login successful! Redirecting...');
+          setSuccess('Login successful! Redirecting...');
         onLogin(true);
       } else {
         if (!formData.name || !formData.email || !formData.password) {
