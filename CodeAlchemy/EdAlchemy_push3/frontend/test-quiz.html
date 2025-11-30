@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Generator Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .question { margin: 15px 0; padding: 15px; border-left: 4px solid #007bff; background: #f8f9fa; }
+        .correct { border-left-color: #28a745; background: #d4edda; }
+        .incorrect { border-left-color: #dc3545; background: #f8d7da; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Quiz Generator Test</h1>
+        
+        <div class="section">
+            <h2>1. Test API Connection</h2>
+            <button onclick="testAPI()">Test Quiz API</button>
+            <div id="apiResult"></div>
+        </div>
+
+        <div class="section">
+            <h2>2. Generate Simple Quiz</h2>
+            <label>Number of Questions:</label>
+            <select id="questionCount">
+                <option value="3">3 Questions</option>
+                <option value="5" selected>5 Questions</option>
+                <option value="10">10 Questions</option>
+            </select>
+            
+            <label>Topic:</label>
+            <input type="text" id="topic" value="programming" placeholder="Enter topic">
+            
+            <button onclick="generateQuiz()">Generate Quiz</button>
+            <div id="quizResult"></div>
+        </div>
+
+        <div class="section" id="quizSection" style="display: none;">
+            <h2>3. Take the Quiz</h2>
+            <div id="questionsContainer"></div>
+            <button onclick="submitQuiz()" id="submitBtn">Submit Quiz</button>
+        </div>
+
+        <div class="section" id="resultsSection" style="display: none;">
+            <h2>4. Results</h2>
+            <div id="results"></div>
+            <button onclick="resetQuiz()">Start New Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        let currentQuiz = null;
+        let userAnswers = {};
+
+        async function testAPI() {
+            try {
+                const response = await fetch('/api/quiz/test');
+                const data = await response.json();
+                document.getElementById('apiResult').innerHTML = `
+                    <p style="color: green;">✅ ${data.message}</p>
+                    <p>API is working correctly!</p>
+                `;
+            } catch (error) {
+                document.getElementById('apiResult').innerHTML = `
+                    <p style="color: red;">❌ API Error: ${error.message}</p>
+                `;
+            }
+        }
+
+        async function generateQuiz() {
+            const numQuestions = document.getElementById('questionCount').value;
+            const topic = document.getElementById('topic').value;
+
+            try {
+                const response = await fetch('/api/quiz/generate-simple', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        numQuestions: parseInt(numQuestions),
+                        topic: topic
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentQuiz = data.quiz;
+                    displayQuiz(currentQuiz);
+                    document.getElementById('quizResult').innerHTML = `
+                        <p style="color: green;">✅ ${data.message}</p>
+                    `;
+                } else {
+                    document.getElementById('quizResult').innerHTML = `
+                        <p style="color: red;">❌ ${data.message}</p>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('quizResult').innerHTML = `
+                    <p style="color: red;">❌ Error: ${error.message}</p>
+                `;
+            }
+        }
+
+        function displayQuiz(quiz) {
+            document.getElementById('quizSection').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = `<h3>${quiz.title}</h3><p>${quiz.description}</p>`;
+
+            userAnswers = {}; // Reset answers
+
+            quiz.questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <p><strong>Q${index + 1}:</strong> ${question.questionText}</p>
+                    
+                    ${question.questionType === 'mcq' ? `
+                        ${Object.entries(question.options).map(([key, value]) => `
+                            <label style="display: block; margin: 5px 0;">
+                                <input type="radio" name="q${question.id}" value="${key}" onchange="saveAnswer(${question.id}, '${key}')">
+                                ${key.toUpperCase()}. ${value}
+                            </label>
+                        `).join('')}
+                    ` : question.questionType === 'true_false' ? `
+                        <label style="display: block; margin: 5px 0;">
+                            <input type="radio" name="q${question.id}" value="a" onchange="saveAnswer(${question.id}, 'a')">
+                            True
+                        </label>
+                        <label style="display: block; margin: 5px 0;">
+                            <input type="radio" name="q${question.id}" value="b" onchange="saveAnswer(${question.id}, 'b')">
+                            False
+                        </label>
+                    ` : `
+                        <input type="text" name="q${question.id}" placeholder="Type your answer here" 
+                               onchange="saveAnswer(${question.id}, this.value)" style="width: 100%; padding: 8px; margin: 5px 0;">
+                    `}
+                    <small>Points: ${question.points} | Difficulty: ${question.difficulty}</small>
+                `;
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function saveAnswer(questionId, answer) {
+            userAnswers[questionId] = answer;
+        }
+
+        async function submitQuiz() {
+            if (!currentQuiz) {
+                alert('No quiz to submit!');
+                return;
+            }
+
+            // Check if all questions are answered
+            const unanswered = currentQuiz.questions.filter(q => !userAnswers[q.id]);
+            if (unanswered.length > 0) {
+                if (!confirm(`You have ${unanswered.length} unanswered questions. Submit anyway?`)) {
+                    return;
+                }
+            }
+
+            try {
+                const response = await fetch('/api/quiz/submit-simple', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        quizId: currentQuiz.id,
+                        answers: userAnswers
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResults(data);
+                } else {
+                    alert('Submission failed: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        function showResults(data) {
+            document.getElementById('quizSection').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'block';
+
+            const resultsDiv = document.getElementById('results');
+            
+            let resultsHTML = `
+                <div style="text-align: center; margin: 20px 0;">
+                    <h3 style="color: ${data.results.percentage >= 70 ? 'green' : data.results.percentage >= 50 ? 'orange' : 'red'}">
+                        Score: ${data.results.score}/${data.results.maxScore} (${data.results.percentage}%)
+                    </h3>
+                    <p>Correct Answers: ${data.results.correctAnswers}/${data.results.totalQuestions}</p>
+                </div>
+                <hr>
+                <h4>Question Review:</h4>
+            `;
+
+            data.quiz.questions.forEach((question, index) => {
+                const userAnswer = data.userAnswers[question.id];
+                const isCorrect = userAnswer && userAnswer.toLowerCase() === question.correctAnswer.toLowerCase();
+                
+                resultsHTML += `
+                    <div class="question ${isCorrect ? 'correct' : 'incorrect'}">
+                        <p><strong>Q${index + 1}:</strong> ${question.questionText}</p>
+                        <p>Your Answer: <strong>${userAnswer || 'Not answered'}</strong></p>
+                        <p>Correct Answer: <strong>${question.correctAnswer}</strong></p>
+                        <p><em>${question.explanation}</em></p>
+                    </div>
+                `;
+            });
+
+            resultsDiv.innerHTML = resultsHTML;
+        }
+
+        function resetQuiz() {
+            currentQuiz = null;
+            userAnswers = {};
+            document.getElementById('quizSection').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('questionsContainer').innerHTML = '';
+            document.getElementById('results').innerHTML = '';
+        }
+
+        // Test API on page load
+        window.onload = testAPI;
+    </script>
+</body>
+</html>

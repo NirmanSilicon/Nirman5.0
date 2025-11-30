@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Generator - EdAlchemy</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            text-align: center;
+            color: white;
+            padding: 40px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .btn {
+            background: white;
+            color: #667eea;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .feature {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 AI Quiz Generator</h1>
+        <p>Create custom quizzes instantly with artificial intelligence</p>
+        
+        <a href="quiz.html" class="btn">Get Started</a>
+        <a href="../index.html" class="btn" style="background: transparent; border: 2px solid white; color: white;">Back to Home</a>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>🚀 Quick Generation</h3>
+                <p>Generate quizzes in seconds</p>
+            </div>
+            <div class="feature">
+                <h3>🎯 Customizable</h3>
+                <p>Choose topics and difficulty</p>
+            </div>
+            <div class="feature">
+                <h3>📊 Instant Results</h3>
+                <p>Get scores and feedback immediately</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
