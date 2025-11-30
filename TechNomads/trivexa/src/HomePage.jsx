@@ -132,10 +132,19 @@ const HomePage = () => {
         </div>
 
         <div className="pe-banner pe-banner-right">
-          <h2>Minor issue?</h2>
-          <p>Chat with a doctor in minutes on WhatsApp</p>
-          <button className="pe-wa-btn">ORDER ON WHATSAPP</button>
-        </div>
+  <h2>Minor issue?</h2>
+  <p>Chat with a doctor in minutes on WhatsApp</p>
+
+  <a
+    href="https://wa.me/918917574294?text=Hello%2C%20I%20need%20a%20doctor%20consultation"
+    className="pe-wa-btn"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    ORDER ON WHATSAPP
+  </a>
+</div>
+
       </section>
       {/* AI MODE BUTTON */}
 

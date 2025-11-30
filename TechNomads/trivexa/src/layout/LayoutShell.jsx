@@ -60,15 +60,52 @@ const LayoutShell = () => {
           </div>
           <div>
             <h4>Company</h4>
-            <p>About</p>
-            <p>Careers</p>
-            <p>Contact</p>
+          <p><a href="#" title="We are a trusted healthcare platform offering fast and reliable access to essential medicines.
+Our website provides safe home delivery of prescriptions and health products at affordable prices.
+We also connect users with certified doctors for online consultations and medical guidance.
+Our mission is to make quality healthcare accessible, convenient, and patient-friendly for everyone.
+Your health and well-being are our top priority.">
+    About
+</a></p> 
+
+            <p><a href="#" title="Join our growing team dedicated to transforming digital healthcare and improving patient well-being.
+We offer exciting career opportunities in pharmacy operations, medical support, technology, and customer care.
+Our workplace encourages innovation, learning, and compassionate service.
+By working with us, you'll help deliver essential medicines, support doctor consultations, and make healthcare accessible to millions.
+Build a meaningful career where your skills directly impact people’s health and lives.">
+   Career
+</a></p>
+            <p><a href="#" title="We’re here to support you with all your healthcare needs—whether it’s ordering medicines or scheduling a doctor consultation.
+Our customer support team is available to assist with inquiries, orders, prescriptions, and technical help.
+You can reach out to us through phone, email, or our online helpdesk for quick and reliable assistance.
+We value your feedback and are committed to providing a smooth, trustworthy healthcare experience.
+Contact us anytime for a healthier and hassle-free journey with our services">
+   Contact
+</a></p>
           </div>
           <div>
             <h4>Legal</h4>
-            <p>Terms & Conditions</p>
-            <p>Privacy Policy</p>
-            <p>Refund & Cancellation</p>
+            <p><a href="#" title="By using our healthcare platform, you agree to access our services responsibly and provide accurate personal and medical information.
+All medicines, consultations, and health-related services offered on our website follow regulatory guidelines, but they do not replace emergency medical care.
+Users must upload valid prescriptions for restricted medicines and follow the doctor’s advice provided during consultations.
+We are not liable for delays caused by third-party delivery partners or inaccurate information shared by users.
+Continued use of our website means you accept all policies regarding privacy, payments, returns, and service usage.">
+   Terms and conditions
+</a></p>
+            <p><a href="#" title="We are committed to protecting your personal and medical information with strict confidentiality and secure data practices.
+Any details you share—including prescriptions, health history, or contact information—are used only to provide medicines, consultations, and related healthcare services.
+We do not sell or share your data with third parties except those essential for service delivery, such as doctors or delivery partners.
+All transactions and records are encrypted to ensure maximum security and privacy.
+By using our website, you consent to the safe collection, storage, and use of your information as outlined in our privacy policy.">
+   Privacy policy
+</a></p>
+            <p><a href="#" title="Orders can be cancelled within a limited time window before they are processed or dispatched.
+Refunds are issued only for eligible items such as damaged, incorrect, or undelivered medicines, following proper verification.
+Certain products—like temperature-sensitive medicines and opened medical packages—are not eligible for return or refund.
+Refunds will be credited to your original payment method within the standard processing period.
+By placing an order, you agree to follow our refund, replacement, and cancellation policies.">
+   Refund & cancellation
+</a></p>
           </div>
         </div>
         <p style={{ marginTop: "16px", fontSize: "0.75rem" }}>© {new Date().getFullYear()} Trivexa Health Pvt. Ltd.</p>

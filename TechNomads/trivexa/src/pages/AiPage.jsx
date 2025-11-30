@@ -8,7 +8,7 @@ const AiPage = () => {
 
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([
-    { from: "bot", text: "Hello! Enter your symptom and I will suggest medicines." },
+    { from: "bot", text: "Hello! Enter your medicines." },
   ]);
   const [products, setProducts] = useState([]);
 
@@ -98,7 +98,7 @@ const AiPage = () => {
       <div className="pe-ai-search">
         <input
           type="text"
-          placeholder="Type your symptom or medicine..."
+          placeholder="Type your medicine..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
