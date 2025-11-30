@@ -1,0 +1,4 @@
+user_id,session_id,module,time_spent_sec,quiz_score_0_3,wallet_checks_completed_0_4,tx_trace_performed,quiz_correct_ratio,interaction_count,risk_awareness_score_0_100,reward_unlocked,prediction,timestamp,notes
+demo_user,96777667-afb8-46ce-97ed-78e6223222ce,Blockchain Fundamentals,7.0,3.0,0.0,0.0,1.0,4.0,70.0,1.0,prediction_error,2025-11-29T23:01:58.879Z,
+demo_user,9bab9b98-f9bb-4c87-bb9d-6f4e0caa3960,Blockchain Fundamentals,5.0,3.0,0.0,0.0,1.0,4.0,70.0,1.0,prediction_error,2025-11-30T00:26:36.457Z,
+demo_user,98e7cfc1-e9ec-4f87-9109-13b1bd200bf3,Blockchain Fundamentals,30.0,3.0,0.0,0.0,1.0,4.0,70.0,1.0,prediction_error,2025-11-30T00:32:26.909Z,

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Digital Forge — DeFi Detective</title>
+    <style>
+        :root {
+            --bg: #0f1720;
+            --panel: #0c1b1a;
+            --accent: #39c0a6;
+            --muted: #9fbfb6;
+            --card: #082726;
+            --danger: #ff7a7a;
+            --gold: #f5c142;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+            background: linear-gradient(180deg, #071014 0%, #071a1a 100%);
+            color: #e6fff7;
+            padding: 18px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 18px
+        }
+
+        header h1 {
+            margin: 6px 0;
+            color: var(--gold);
+            font-size: 26px
+        }
+
+        header p {
+            margin: 0;
+            color: var(--muted);
+            font-weight: 600
+        }
+
+        .layout {
+            max-width: 980px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns:1fr 340px;
+            gap: 18px;
+        }
+
+        @media (max-width: 920px) {
+            .layout {
+                grid-template-columns:1fr;
+                padding: 0 12px
+            }
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.006));
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.03)
+        }
+
+        h2 {
+            color: var(--accent);
+            margin: 6px 0 12px 0
+        }
+
+        p {
+            color: var(--muted);
+            line-height: 1.5
+        }
+
+        .meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px
+        }
+
+        .pill {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--muted);
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.02)
+        }
+
+        ul {
+            padding-left: 18px;
+            color: var(--muted)
+        }
+
+        ol {
+            padding-left: 18px;
+            color: var(--muted)
+        }
+
+        .btn {
+            background: var(--accent);
+            color: #012;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700
+        }
+
+        .btn.ghost {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid rgba(57, 192, 166, 0.12)
+        }
+
+        .quiz .question {
+            margin-bottom: 12px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.012);
+            border-radius: 8px;
+        }
+
+        .options button {
+            margin: 6px 8px 6px 0;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            cursor: pointer
+        }
+
+        .options button.correct {
+            border-color: rgba(57, 192, 166, 0.6);
+            background: rgba(57, 192, 166, 0.06);
+            color: var(--accent)
+        }
+
+        .options button.wrong {
+            border-color: rgba(255, 122, 122, 0.5);
+            background: rgba(255, 122, 122, 0.03);
+            color: var(--danger)
+        }
+
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px
+        }
+
+        .check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.01);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .check input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .module-list li {
+            margin-bottom: 8px
+        }
+
+        .reward {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, rgba(245, 193, 66, 0.08), rgba(57, 192, 166, 0.04));
+            color: var(--gold);
+            font-weight: 800;
+            display: inline-block
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 13px
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Digital Forge — Beginner</h1>
+    <p>DeFi Detective — Learn blockchain, smart contracts, and DeFi safely</p>
+</header>
+
+<div class="layout">
+    <!-- Main -->
+    <main>
+        <section class="card">
+            <h2>Overview</h2>
+            <p>Enter the world of decentralized finance (DeFi). Understand blockchain basics, smart contracts, and how
+                DeFi protocols work without
+                traditional financial intermediaries.</p>
+            <div class="meta">
+                <div class="pill"><strong>Duration:</strong> 25–30 minutes</div>
+                <div class="pill"><strong>Objectives:</strong> 4 Goals</div>
+                <div class="pill"><strong>Rewards:</strong> 4 Items</div>
+            </div>
+        </section>
+
+        <section class="card" style="margin-top:14px">
+            <h2>Learning Objectives</h2>
+            <ul>
+                <li>Understand blockchain technology and distributed ledgers</li>
+                <li>Learn how smart contracts automate financial agreements</li>
+                <li>Explore DeFi protocols: lending, borrowing, liquidity pools</li>
+                <li>Recognize the benefits and risks of decentralized systems</li>
+            </ul>
+        </section>
+
+        <section class="card" style="margin-top:14px">
+            <h2>Course Modules</h2>
+            <ol class="module-list">
+                <li><strong>Blockchain Fundamentals</strong> — Distributed ledgers, consensus, immutability</li>
+                <li><strong>Smart Contract Basics</strong> — Code that runs agreements automatically</li>
+                <li><strong>DeFi Protocol Tour</strong> — Lending platforms, DEXs, yield farming</li>
+                <li><strong>Wallet Security 101</strong> — Private keys, seed phrases, secure storage</li>
+                <li><strong>DeFi Risk Assessment</strong> — Smart contract risk, impermanent loss, rug pulls</li>
+            </ol>
+        </section>
+
+        <section class="card" style="margin-top:14px">
+            <h2>Quick Interactive — DeFi Quiz</h2>
+            <p style="color:var(--muted)">Test basic understanding (3 quick questions). Correct answers give progress
+                toward rewards.</p>
+
+            <div class="quiz" id="quiz">
+                <!-- JS will inject questions here -->
+            </div>
+
+            <div style="margin-top:12px">
+                <button id="revealScore" class="btn">Reveal Score</button>
+                <span id="scoreDisplay" style="margin-left:12px;color:var(--muted);font-weight:700"></span>
+            </div>
+
+        </section>
+
+        <section class="card" style="margin-top:14px">
+            <h2>Mini Tool — Trace a Mock Transaction</h2>
+            <p style="color:var(--muted)">Enter a mock transaction hash (any text) to see how a transaction flows
+                through simple steps.</p>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+                <input id="txInput" type="text" placeholder="tx_hash_abc123"
+                       style="flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit"/>
+                <button id="traceBtn" class="btn">Trace</button>
+            </div>
+            <div id="traceResult" style="margin-top:10px;color:var(--muted)"></div>
+        </section>
+    </main>
+
+    <!-- Sidebar -->
+    <aside>
+        <div class="card">
+            <h2>Skills You'll Master</h2>
+            <ul>
+                <li>Blockchain Understanding</li>
+                <li>Smart Contracts</li>
+                <li>DeFi Protocols</li>
+                <li>Wallet Management</li>
+                <li>Security Awareness</li>
+            </ul>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+            <h2>Wallet Security Checklist</h2>
+            <div class="checklist" id="securityChecks">
+                <label class="check"><input type="checkbox" data-key="backup"> Backup seed phrase securely
+                    (offline)</label>
+                <label class="check"><input type="checkbox" data-key="pin"> Use hardware wallet or PIN-protected wallet</label>
+                <label class="check"><input type="checkbox" data-key="phish"> Avoid clicking unknown links
+                    (phishing)</label>
+                <label class="check"><input type="checkbox" data-key="small"> Test new contracts with small amounts
+                    first</label>
+            </div>
+            <div style="margin-top:8px">
+                <button id="checkReward" class="btn">Check Rewards</button>
+                <div id="checkStatus" style="margin-top:8px;color:var(--muted)"></div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+            <h2>Completion Rewards</h2>
+            <div id="rewardsArea">
+                <div class="reward">DeFi Detective Badge</div>
+                <div style="margin-top:8px;color:var(--muted)">Unlock Intermediate: Tokenomics Tussle</div>
+                <div style="margin-top:6px;color:var(--muted)">DeFi Protocol Explorer</div>
+                <div style="margin-top:6px;color:var(--muted)">75 XP Points</div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<footer>FIN-FORGE • Digital Forge — DeFi Detective</footer>
+
+<script>
+    // ============================================================
+    // FIN‑FORGE — BLOCKCHAIN QUIZ + SECURITY MODULE
+    // Sends session data to Flask:
+    //   POST http://127.0.0.1:5000/predict/defi_detective
+    // ============================================================
+
+    // ------------------------------
+    // USER + SESSION
+    // ------------------------------
+    const USER_ID = "demo_user";
+    const SESSION_ID = crypto.randomUUID();
+    const MODULE_NAME = "Blockchain Fundamentals";
+    const SESSION_START = Date.now();
+
+    let interactionCount = 0;
+    let submitted = false;   // prevent duplicate sends
+    let quizCompleted = false; // only send when quiz is actually completed
+
+    function countInteraction() {
+        interactionCount++;
+    }
+
+    // ------------------------------
+    // QUIZ DATA
+    // ------------------------------
+    const questions = [
+        {
+            q: "What does a blockchain primarily provide?",
+            opts: ["Centralized control", "Immutable ledger", "Faster bank transfers"],
+            a: 1,
+        },
+        {
+            q: "What is a smart contract?",
+            opts: [
+                "A legal contract signed digitally",
+                "Code that executes rules automatically",
+                "A wallet type",
+            ],
+            a: 1,
+        },
+        {
+            q: "What is impermanent loss related to?",
+            opts: ["Staking rewards", "Holding NFTs", "Providing liquidity to pools"],
+            a: 2,
+        },
+    ];
+
+    const quizEl = document.getElementById("quiz");
+    let userAnswers = Array(questions.length).fill(null);
+
+    // ------------------------------
+    // QUIZ RENDER
+    // ------------------------------
+    function renderQuiz() {
+        quizEl.innerHTML = "";
+        questions.forEach((item, idx) => {
+            const div = document.createElement("div");
+            div.className = "question";
+            div.innerHTML = `
+      <div style="font-weight:700;margin-bottom:8px">
+        ${idx + 1}. ${item.q}
+      </div>
+    `;
+
+            const opts = document.createElement("div");
+            opts.className = "options";
+
+            item.opts.forEach((o, oi) => {
+                const btn = document.createElement("button");
+                btn.textContent = o;
+                btn.type = "button";
+                btn.onclick = () => {
+                    chooseAnswer(idx, oi, btn);
+                    countInteraction();
+                };
+                opts.appendChild(btn);
+            });
+
+            div.appendChild(opts);
+            quizEl.appendChild(div);
+        });
+    }
+
+    function chooseAnswer(qIdx, optIdx, btn) {
+        userAnswers[qIdx] = optIdx;
+
+        const parent = btn.parentElement;
+        Array.from(parent.children).forEach((b, i) => {
+            b.classList.remove("correct", "wrong");
+            b.disabled = false;
+            if (i === optIdx) {
+                b.style.borderColor = "rgba(255,255,255,0.06)";
+            }
+        });
+    }
+
+    // ------------------------------
+    // TX TRACE
+    // ------------------------------
+    let txTraceUsed = false;
+
+    document.getElementById("traceBtn").addEventListener("click", () => {
+        countInteraction();
+        txTraceUsed = true;
+
+        const hash =
+            document.getElementById("txInput").value.trim() || "tx_xxx_123";
+
+        const steps = [
+            `Received by mempool: ${hash}`,
+            `Included in block #${Math.floor(Math.random() * 1000000)}`,
+            `Validated by consensus (confirmations: ${
+                Math.floor(Math.random() * 12) + 1
+            })`,
+            `State updated on-chain: transfers settled`,
+        ];
+
+        const container = document.getElementById("traceResult");
+        container.innerHTML = steps
+            .map((s) => `<div style="margin-bottom:6px">• ${s}</div>`)
+            .join("");
+    });
+
+    // ------------------------------
+    // SECURITY CHECKS
+    // ------------------------------
+    document.getElementById("checkReward").addEventListener("click", () => {
+        countInteraction();
+
+        const checks = Array.from(
+            document.querySelectorAll("#securityChecks input")
+        ).map((i) => i.checked);
+
+        const count = checks.filter(Boolean).length;
+        const status = document.getElementById("checkStatus");
+
+        if (count === checks.length) {
+            status.innerHTML = `
+      <strong style="color:var(--gold)">
+        All checks complete — Wallet Secure!
+      </strong>
+    `;
+            const r = document.createElement("div");
+            r.className = "reward";
+            r.style.marginTop = "8px";
+            r.textContent = "Unlocked: Security Badge";
+            document.getElementById("rewardsArea").appendChild(r);
+        } else {
+            status.innerHTML = `
+      <span style="color:var(--muted)">
+        ${count}/${checks.length} steps done — complete all to unlock security badge.
+      </span>
+    `;
+        }
+    });
+
+    // ------------------------------
+    // REVEAL SCORE → SUBMIT DATA
+    // ------------------------------
+    document.getElementById("revealScore").addEventListener("click", async () => {
+        countInteraction();
+
+        let correct = 0;
+        questions.forEach((q, i) => {
+            const qDiv = quizEl.children[i];
+            const buttons = qDiv.querySelectorAll("button");
+            buttons.forEach((b, bi) => {
+                b.disabled = true;
+                if (bi === q.a) b.classList.add("correct");
+                if (userAnswers[i] === bi && userAnswers[i] !== q.a) {
+                    b.classList.add("wrong");
+                }
+            });
+            if (userAnswers[i] === q.a) correct++;
+        });
+
+        // basic "did they actually play?" check:
+        const answeredCount = userAnswers.filter((x) => x !== null).length;
+        if (answeredCount === 0) {
+            console.warn("No answers given — skipping sendSessionData");
+            document.getElementById("scoreDisplay").textContent =
+                "Please answer at least one question.";
+            return;
+        }
+
+        quizCompleted = true;
+
+        document.getElementById("scoreDisplay").textContent =
+            `${correct}/${questions.length} correct`;
+
+        // reward badge if quiz score good
+        if (correct >= 2) {
+            const r = document.createElement("div");
+            r.className = "reward";
+            r.style.marginTop = "8px";
+            r.textContent = "Unlocked: Quiz Badge";
+            document.getElementById("rewardsArea").appendChild(r);
+        }
+
+        // ✅ Send to backend NOW (after valid quiz completion)
+        await sendSessionData();
+    });
+
+    // ------------------------------
+    // FINAL DATA DISPATCH
+    // ------------------------------
+    async function sendSessionData() {
+        // Only send once and only if quiz was actually completed
+        if (submitted || !quizCompleted) return;
+        submitted = true;
+
+        // quiz scoring
+        let correctCount = 0;
+        userAnswers.forEach((ans, i) => {
+            if (ans === questions[i].a) correctCount++;
+        });
+        const quizRatio = correctCount / questions.length;
+
+        // security checks
+        const checks = Array.from(
+            document.querySelectorAll("#securityChecks input")
+        ).map((i) => i.checked);
+        const checkedCount = checks.filter(Boolean).length;
+
+        // simple awareness score (0–100)
+        const awarenessScore = Math.round(
+            quizRatio * 70 + (checkedCount / 4) * 30
+        );
+
+        // rewards
+        const rewardUnlocked =
+            document.querySelectorAll(".reward").length > 0 ? 1 : 0;
+
+        const timeSpent = Math.round((Date.now() - SESSION_START) / 1000);
+
+        const payload = {
+            user_id: USER_ID,
+            session_id: SESSION_ID,
+            module: MODULE_NAME,
+            time_spent_sec: timeSpent,
+            quiz_score_0_3: correctCount,
+            wallet_checks_completed_0_4: checkedCount,
+            tx_trace_performed: txTraceUsed,
+            quiz_correct_ratio: quizRatio,
+            interaction_count: interactionCount,
+            risk_awareness_score_0_100: awarenessScore,
+            reward_unlocked: rewardUnlocked,
+            timestamp: new Date().toISOString(),
+            notes: "",
+        };
+
+        try {
+            const res = await fetch("http://127.0.0.1:5000/predict/defi_detective", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(payload),
+            });
+
+            if (!res.ok) {
+                console.error("❌ DeFi Detective API error:", res.status);
+                return;
+            }
+
+            const data = await res.json();
+            console.log("✅ DeFi Detective saved:", data);
+        } catch (err) {
+            console.error("❌ Failed to report session:", err);
+        }
+    }
+
+    // ------------------------------
+    // INITIALIZE
+    // ------------------------------
+    renderQuiz();
+</script>
+</body>
+</html>

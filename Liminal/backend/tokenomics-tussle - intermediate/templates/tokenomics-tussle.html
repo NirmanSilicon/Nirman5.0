@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Digital Forge — Tokenomics Tussle</title>
+    <style>
+        :root {
+            --bg: #06060a;
+            --panel: #0f1113;
+            --muted: #9fb0b8;
+            --accent: #7afcff;
+            --accent2: #b27bff;
+            --good: #6ef0a1;
+            --bad: #ff7b7b;
+            --glass: rgba(255, 255, 255, 0.03);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, "Trebuchet MS", Arial, sans-serif;
+            background: linear-gradient(180deg, #030305, #0b0b0e);
+            color: #eaf6f7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 26px auto;
+            padding: 18px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px
+        }
+
+        .title {
+            display: flex;
+            flex-direction: column
+        }
+
+        h1 {
+            margin: 0;
+            color: var(--accent);
+            text-shadow: 0 0 14px rgba(122, 252, 255, 0.06)
+        }
+
+        .sub {
+            margin: 4px 0 0;
+            color: var(--accent2);
+            font-size: 14px
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        .btn {
+            background: var(--accent);
+            color: #001;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-weight: 800;
+            box-shadow: 0 10px 30px rgba(122, 252, 255, 0.04);
+        }
+
+        .btn.ghost {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--muted);
+            font-weight: 700
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:1fr 380px;
+            gap: 18px;
+            margin-top: 18px
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03)
+        }
+
+        .modules {
+            display: grid;
+            grid-template-columns:repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px
+        }
+
+        .module {
+            background: var(--glass);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.02)
+        }
+
+        .m-title {
+            font-weight: 800;
+            color: #dff;
+            margin-bottom: 6px
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .small {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .panel-right {
+            position: sticky;
+            top: 18px
+        }
+
+        .status {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.03)
+        }
+
+        .xp {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--good);
+            margin: 8px 0
+        }
+
+        .xpbar {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 8px
+        }
+
+        .xpfill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--good));
+            width: 0%
+        }
+
+        .log {
+            margin-top: 12px;
+            height: 260px;
+            overflow: auto;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.25);
+            font-family: monospace;
+            font-size: 13px;
+            color: #dff
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #ddd, #fff);
+            color: #002;
+            font-weight: 800;
+            margin-right: 6px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px
+        }
+
+        td, th {
+            padding: 6px;
+            text-align: left;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
+            font-size: 13px
+        }
+
+        .center {
+            text-align: center
+        }
+
+        @media (max-width: 960px) {
+            .grid {
+                grid-template-columns:1fr
+            }
+
+            .modules {
+                grid-template-columns:1fr
+            }
+
+            .panel-right {
+                position: relative;
+                top: 0
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <div class="title">
+            <h1>🛠 Digital Forge</h1>
+            <div class="sub">Tokenomics Tussle — Intermediate • Master token economics</div>
+        </div>
+        <div class="actions">
+            <button id="startBtn" class="btn">▶ Start Challenge</button>
+            <button id="resetBtn" class="btn ghost">↺ Reset</button>
+            <button id="unlockBtn" class="btn ghost">🔒 Unlock Advanced (Soon)</button>
+        </div>
+    </header>
+
+    <div class="grid">
+        <!-- left -->
+        <div class="card">
+            <h3>Course Modules</h3>
+            <div class="small">Use module buttons to simulate tokenomics decisions. Complete modules to earn XP and unlock the Tokenomics Expert
+                Badge.
+            </div>
+
+            <div class="modules">
+                <!-- 1 -->
+                <div class="module">
+                    <div class="m-title">1. Token Supply Economics</div>
+                    <div class="small">Explore max supply, circulating supply, emission schedules, and inflation vs deflation.</div>
+                    <div class="controls" style="margin-top:8px">
+                        <button class="btn" data-action="supply_emission">View Emission</button>
+                        <button class="btn ghost" data-action="supply_vesting">Check Vesting</button>
+                        <button class="btn ghost" data-action="supply_burn">Simulate Burn</button>
+                    </div>
+                </div>
+
+                <!-- 2 -->
+                <div class="module">
+                    <div class="m-title">2. Token Utility Analysis</div>
+                    <div class="small">Decide what gives a token value: utility, fees, staking, or access.</div>
+                    <div class="controls" style="margin-top:8px">
+                        <button class="btn" data-action="util_staking">Add Staking</button>
+                        <button class="btn ghost" data-action="util_fees">Introduce Fees</button>
+                        <button class="btn ghost" data-action="util_access">Create Access Perks</button>
+                    </div>
+                </div>
+
+                <!-- 3 -->
+                <div class="module">
+                    <div class="m-title">3. Governance Token Deep Dive</div>
+                    <div class="small">Simulate voting, proposal passing, and token-weighted governance.</div>
+                    <div class="controls" style="margin-top:8px">
+                        <button class="btn" data-action="gov_vote">Hold a Vote</button>
+                        <button class="btn ghost" data-action="gov_quorum">Test Quorum</button>
+                        <button class="btn ghost" data-action="gov_attack">Simulate Attack</button>
+                    </div>
+                </div>
+
+                <!-- 4 -->
+                <div class="module">
+                    <div class="m-title">4. Tokenomics Case Studies</div>
+                    <div class="small">Analyze Bitcoin, Ethereum, and DeFi token models for lessons.</div>
+                    <div class="controls" style="margin-top:8px">
+                        <button class="btn" data-action="case_bitcoin">Study Bitcoin</button>
+                        <button class="btn ghost" data-action="case_eth">Study Ethereum</button>
+                        <button class="btn ghost" data-action="case_defi">Analyze DeFi</button>
+                    </div>
+                </div>
+
+                <!-- 5 -->
+                <div class="module">
+                    <div class="m-title">5. Whitepaper Analysis Workshop</div>
+                    <div class="small">Inspect token distribution, tokenomics incentives, and red flags.</div>
+                    <div class="controls" style="margin-top:8px">
+                        <button class="btn" data-action="wp_check">Scan Whitepaper</button>
+                        <button class="btn ghost" data-action="wp_flag">Flag Risks</button>
+                        <button class="btn ghost" data-action="wp_score">Score Project</button>
+                    </div>
+                </div>
+
+                <!-- 6 -->
+                <div class="module">
+                    <div class="m-title">6. Token Valuation Models</div>
+                    <div class="small">Apply simple valuation: discounted cashflows, utility multipliers, and network effects.</div>
+                    <div class="controls" style="margin-top:8px">
+                        <button class="btn" data-action="val_model">Run Valuation</button>
+                        <button class="btn ghost" data-action="val_sensitivity">Sensitivity</button>
+                        <button class="btn ghost" data-action="val_compare">Compare Tokens</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:14px" class="small">Duration: 35–40 minutes. Complete modules to reach 125 XP and earn the Tokenomics Expert
+                Badge.
+            </div>
+        </div>
+
+        <!-- right -->
+        <div class="card panel-right">
+            <h3>Status & Progress</h3>
+            <div class="status">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div>
+                        <div class="small">XP</div>
+                        <div class="xp" id="xp">0 XP</div>
+                        <div class="xpbar">
+                            <div id="xpFill" class="xpfill" style="width:0%"></div>
+                        </div>
+                        <div style="margin-top:8px">
+                            <span id="badge" class="badge" style="background:linear-gradient(90deg,#ccc,#fff);color:#002">Locked</span>
+                        </div>
+                    </div>
+                    <div style="text-align:right">
+                        <div class="small">Timer</div>
+                        <div id="timer" style="font-weight:800;font-size:20px">00:00</div>
+                        <div class="small" style="margin-top:6px">Modules Done: <strong id="done">0</strong>/6</div>
+                    </div>
+                </div>
+
+                <div class="log" id="log">Welcome to Digital Forge — press Start Challenge to begin.</div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Tokenomics IQ</td>
+                        <td id="iq">Novice</td>
+                    </tr>
+                    <tr>
+                        <td>Risk Awareness</td>
+                        <td id="riskAw">Low</td>
+                    </tr>
+                    <tr>
+                        <td>Governance Savvy</td>
+                        <td id="gov">Low</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="small" style="margin-top:8px">Tip: simulate vesting and burns to see supply effects on price pressure.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // state
+    let xp = 0;
+    let started = false;
+    let done = 0;
+    let timer = null;
+    let seconds = 0;
+
+    const logEl = document.getElementById('log');
+    const xpEl = document.getElementById('xp');
+    const xpFill = document.getElementById('xpFill');
+    const badgeEl = document.getElementById('badge');
+    const doneEl = document.getElementById('done');
+    const iqEl = document.getElementById('iq');
+    const riskEl = document.getElementById('riskAw');
+    const govEl = document.getElementById('gov');
+    const timerEl = document.getElementById('timer');
+
+    function log(msg) {
+        const t = new Date().toLocaleTimeString();
+        logEl.innerHTML = `<div>[${t}] ${msg}</div>` + logEl.innerHTML;
+    }
+
+    function addXP(n) {
+        xp = Math.max(0, xp + n);
+        xpEl.textContent = `${xp} XP`;
+        const pct = Math.min(100, Math.round((xp / 125) * 100));
+        xpFill.style.width = pct + '%';
+        if (xp >= 125) {
+            badgeEl.textContent = 'Tokenomics Expert';
+            badgeEl.style.background = 'linear-gradient(90deg,var(--accent),var(--good))';
+            badgeEl.style.color = '#001';
+            log('🏅 Badge unlocked: Tokenomics Expert!');
+        }
+    }
+
+    function updateMetrics({iqDelta = 0, riskDelta = 0, govDelta = 0}) {
+        // very simple metric progression strings
+        const levels = ['Low', 'Moderate', 'High', 'Expert'];
+
+        function bump(curr, delta) {
+            const idx = Math.max(0, Math.min(3, levels.indexOf(curr) === -1 ? 0 : levels.indexOf(curr) + delta));
+            return levels[idx];
+        }
+
+        iqEl.textContent = bump(iqEl.textContent || 'Low', iqDelta);
+        riskEl.textContent = bump(riskEl.textContent || 'Low', riskDelta);
+        govEl.textContent = bump(govEl.textContent || 'Low', govDelta);
+    }
+
+    function completeModule() {
+        done++;
+        doneEl.textContent = done;
+    }
+
+    function startTimer() {
+        if (timer) clearInterval(timer);
+        seconds = 0;
+        timerEl.textContent = '00:00';
+        timer = setInterval(() => {
+            seconds++;
+            const mm = String(Math.floor(seconds / 60)).padStart(2, '0');
+            const ss = String(seconds % 60).padStart(2, '0');
+            timerEl.textContent = `${mm}:${ss}`;
+        }, 1000);
+    }
+
+    function stopTimer() {
+        if (timer) clearInterval(timer);
+        timer = null;
+    }
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+        if (!started) {
+            started = true;
+            startTimer();
+            addXP(5);
+            log('Challenge started — explore modules and run simulations.');
+            document.getElementById('startBtn').textContent = '⏸ Pause';
+        } else {
+            started = false;
+            stopTimer();
+            document.getElementById('startBtn').textContent = '▶ Resume';
+            log('Challenge paused.');
+        }
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+        xp = 0;
+        started = false;
+        done = 0;
+        stopTimer();
+        seconds = 0;
+        xpEl.textContent = '0 XP';
+        xpFill.style.width = '0%';
+        badgeEl.textContent = 'Locked';
+        badgeEl.style.background = '';
+        badgeEl.style.color = '';
+        doneEl.textContent = '0';
+        iqEl.textContent = 'Novice';
+        riskEl.textContent = 'Low';
+        govEl.textContent = 'Low';
+        timerEl.textContent = '00:00';
+        logEl.innerHTML = 'Welcome to Digital Forge — press Start Challenge to begin.';
+        document.getElementById('startBtn').textContent = '▶ Start Challenge';
+        log('Game reset.');
+    });
+
+    document.getElementById('unlockBtn').addEventListener('click', () => {
+        if (xp >= 90) {
+            log('Advanced Level unlocked: Token Analysis Dashboard available (Coming Soon).');
+            addXP(10);
+            alert('Advanced unlocked! (Demo)');
+        } else {
+            log('Need 90 XP to unlock Advanced Level. Complete more modules.');
+            alert('Earn 90 XP to unlock Advanced Level.');
+        }
+    });
+
+    // helper chance
+    function chance(p) {
+        return Math.random() * 100 < p;
+    }
+
+    // action handler
+    document.body.addEventListener('click', (e) => {
+        const action = e.target.getAttribute('data-action');
+        if (!action) return;
+        if (!started) {
+            log('Start the challenge first to run simulations.');
+            alert('Press Start Challenge first.');
+            return;
+        }
+
+        switch (action) {
+            // supply
+            case 'supply_emission':
+                if (chance(70)) {
+                    addXP(12);
+                    completeModule();
+                    updateMetrics({iqDelta: 1, riskDelta: 0, govDelta: 0});
+                    log('Emission schedule optimized — lower inflation risk. +12 XP');
+                } else {
+                    addXP(6);
+                    completeModule();
+                    updateMetrics({iqDelta: 0, riskDelta: 0, govDelta: 0});
+                    log('Emission complexity revealed — partial learning. +6 XP');
+                }
+                break;
+            case 'supply_vesting':
+                addXP(8);
+                completeModule();
+                updateMetrics({iqDelta: 1, riskDelta: 1});
+                log('Vesting schedule assessed — vesting cliffs noted. +8 XP');
+                break;
+            case 'supply_burn':
+                if (chance(60)) {
+                    addXP(10);
+                    completeModule();
+                    updateMetrics({iqDelta: 1, riskDelta: 1});
+                    log('Token burn improved scarcity; price pressure modeled. +10 XP');
+                } else {
+                    addXP(5);
+                    completeModule();
+                    updateMetrics({iqDelta: 0, riskDelta: 0});
+                    log('Burn had limited effect due to emission rates. +5 XP');
+                }
+                break;
+
+            // utility
+            case 'util_staking':
+                addXP(11);
+                completeModule();
+                updateMetrics({iqDelta: 1, riskDelta: 1});
+                log('Staking mechanics implemented — utility increased. +11 XP');
+                break;
+            case 'util_fees':
+                addXP(7);
+                completeModule();
+                updateMetrics({iqDelta: 0, riskDelta: 1});
+                log('Protocol fees added — improved token sink. +7 XP');
+                break;
+            case 'util_access':
+                addXP(9);
+                completeModule();
+                updateMetrics({iqDelta: 1});
+                log('Access perks created — community utility improved. +9 XP');
+                break;
+
+            // governance
+            case 'gov_vote':
+                if (chance(55)) {
+                    addXP(13);
+                    completeModule();
+                    updateMetrics({iqDelta: 1, govDelta: 1});
+                    log('Vote passed with strong participation. Governance improved. +13 XP');
+                } else {
+                    addXP(6);
+                    completeModule();
+                    updateMetrics({iqDelta: 0, govDelta: 0});
+                    log('Vote failed — governance lessons learned. +6 XP');
+                }
+                break;
+            case 'gov_quorum':
+                addXP(8);
+                completeModule();
+                updateMetrics({govDelta: 1});
+                log('Quorum analysis revealed engagement patterns. +8 XP');
+                break;
+            case 'gov_attack':
+                addXP(4);
+                completeModule();
+                updateMetrics({govDelta: -1, riskDelta: 1});
+                log('Governance attack simulated — vulnerabilities exposed. +4 XP');
+                break;
+
+            // cases
+            case 'case_bitcoin':
+                addXP(10);
+                completeModule();
+                updateMetrics({iqDelta: 1});
+                log('Bitcoin case study: fixed supply, store-of-value lessons. +10 XP');
+                break;
+            case 'case_eth':
+                addXP(10);
+                completeModule();
+                updateMetrics({iqDelta: 1});
+                log('Ethereum case study: utility, gas, and EIP lessons. +10 XP');
+                break;
+            case 'case_defi':
+                addXP(12);
+                completeModule();
+                updateMetrics({iqDelta: 1, riskDelta: 1});
+                log('DeFi case study: token incentives and risks. +12 XP');
+                break;
+
+            // whitepaper
+            case 'wp_check':
+                addXP(11);
+                completeModule();
+                updateMetrics({iqDelta: 1});
+                log('Whitepaper scanned: distribution, vesting & roadmap checked. +11 XP');
+                break;
+            case 'wp_flag':
+                addXP(6);
+                completeModule();
+                updateMetrics({iqDelta: 0, riskDelta: 1});
+                log('Red flags flagged: centralization & mass vesting. +6 XP');
+                break;
+            case 'wp_score':
+                addXP(10);
+                completeModule();
+                updateMetrics({iqDelta: 1});
+                log('Project scored: fundamentals vs token mechanics. +10 XP');
+                break;
+
+            // valuation
+            case 'val_model':
+                addXP(13);
+                completeModule();
+                updateMetrics({iqDelta: 1, riskDelta: 1});
+                log('Valuation run: utility model vs user growth. +13 XP');
+                break;
+            case 'val_sensitivity':
+                addXP(8);
+                completeModule();
+                updateMetrics({iqDelta: 1});
+                log('Sensitivity analysis: price drivers examined. +8 XP');
+                break;
+            case 'val_compare':
+                addXP(9);
+                completeModule();
+                updateMetrics({iqDelta: 1});
+                log('Tokens compared: relative value & moat. +9 XP');
+                break;
+
+            default:
+                break;
+        }
+    });
+
+    // keyboard shortcuts (optional)
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'S') document.getElementById('startBtn').click();
+        if (e.key === 'R') document.getElementById('resetBtn').click();
+    });
+
+    // initial friendly message
+    log('Digital Forge ready. Press "Start Challenge" to begin tokenomics simulations.');
+</script>
+</body>
+</html>

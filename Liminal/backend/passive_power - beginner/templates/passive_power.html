@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Market Forge — Passive Power (SIP Simulator)</title>
+    <style>
+        :root {
+            --bg: #f6faf9;
+            --card: #ffffff;
+            --accent: #1f7a7a;
+            --muted: #4f6362;
+            --positive: #2ea66b;
+            --shadow: 0 8px 24px rgba(15, 20, 20, 0.06);
+            --gold: #f5c142;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+            background: linear-gradient(180deg, #f2fbfa, #eef8f7);
+            color: #052;
+            padding: 18px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        header h1 {
+            margin: 6px 0;
+            color: var(--accent);
+            font-size: 26px
+        }
+
+        header p {
+            margin: 0;
+            color: var(--muted);
+            font-weight: 600
+        }
+
+        .layout {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns:1fr 340px;
+            gap: 18px;
+        }
+
+        @media (max-width: 920px) {
+            .layout {
+                grid-template-columns:1fr;
+                padding: 0 12px
+            }
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(10, 20, 20, 0.03)
+        }
+
+        h2 {
+            color: var(--accent);
+            margin: 6px 0 12px 0
+        }
+
+        p {
+            color: var(--muted);
+            line-height: 1.45
+        }
+
+        .meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px
+        }
+
+        .badge {
+            background: #f4fffb;
+            color: var(--muted);
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 600;
+            border: 1px solid rgba(10, 20, 20, 0.03)
+        }
+
+        form .row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            align-items: center
+        }
+
+        form label {
+            font-size: 13px;
+            color: var(--muted);
+            min-width: 120px
+        }
+
+        input[type="number"], select {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(10, 20, 20, 0.06);
+            width: 100%
+        }
+
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: 0 8px 16px rgba(31, 122, 122, 0.12)
+        }
+
+        .btn.ghost {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid rgba(31, 122, 122, 0.12)
+        }
+
+        .chart-wrap {
+            margin-top: 12px
+        }
+
+        canvas {
+            width: 100%;
+            height: 240px;
+            border-radius: 8px;
+            background: linear-gradient(180deg, #ffffff, #f8fffd);
+            display: block
+        }
+
+        ul {
+            padding-left: 18px
+        }
+
+        ol {
+            padding-left: 18px
+        }
+
+        .result-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+            flex-wrap: wrap
+        }
+
+        .stat {
+            background: #f7fffb;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            color: var(--muted);
+            border: 1px solid rgba(10, 20, 20, 0.03)
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 13px
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Market Forge — Beginner</h1>
+    <p>Passive Power — Discover SIP & compound growth</p>
+</header>
+
+<div class="layout">
+    <!-- Main column -->
+    <main>
+        <section class="card">
+            <h2>Overview</h2>
+            <p>Discover the power of passive investing through Systematic Investment Plans (SIP) and compound growth. Learn why consistent, long-term
+                investing beats trying to time the market.</p>
+            <div class="meta" style="margin-top:12px">
+                <div class="badge"><strong>Duration:</strong> 20–25 minutes</div>
+                <div class="badge"><strong>Objectives:</strong> 4 Goals</div>
+                <div class="badge"><strong>Rewards:</strong> 4 Items</div>
+            </div>
+        </section>
+
+        <section class="card" style="margin-top:14px">
+            <h2>Learning Objectives</h2>
+            <ul>
+                <li>Understand the power of compound interest over time</li>
+                <li>Learn how SIP (Systematic Investment Plan) works</li>
+                <li>Compare lump-sum vs periodic investing strategies</li>
+                <li>Grasp the concept of rupee cost averaging</li>
+            </ul>
+        </section>
+
+        <section class="card" style="margin-top:14px">
+            <h2>Course Modules</h2>
+            <ol>
+                <li><strong>Introduction to Stock Market Basics</strong> — Understand stocks, mutual funds, ETFs, and index funds</li>
+                <li><strong>The Magic of Compounding</strong> — Interactive calculator showing exponential growth over 10, 20, 30 years</li>
+                <li><strong>SIP Strategy Simulator</strong> — Invest virtual money monthly and watch it grow through market cycles</li>
+                <li><strong>Market Timing vs Time in Market</strong> — Compare outcomes of trying to time the market vs staying invested</li>
+                <li><strong>Risk and Return Basics</strong> — Understand relationship between risk tolerance and expected returns</li>
+            </ol>
+        </section>
+
+        <section class="card" style="margin-top:14px">
+            <h2>Simulator — SIP vs Lump-Sum</h2>
+
+            <form id="simForm" onsubmit="return false;">
+                <div class="row">
+                    <label for="monthly">Monthly SIP (₹):</label>
+                    <input id="monthly" type="number" min="0" value="2000"/>
+                </div>
+                <div class="row">
+                    <label for="lumpsum">Lump-sum (₹) initial:</label>
+                    <input id="lumpsum" type="number" min="0" value="0"/>
+                </div>
+                <div class="row">
+                    <label for="annualRate">Expected annual return (%):</label>
+                    <input id="annualRate" type="number" min="0" max="100" step="0.1" value="10"/>
+                </div>
+                <div class="row">
+                    <label for="years">Investment horizon (years):</label>
+                    <select id="years">
+                        <option>5</option>
+                        <option selected>10</option>
+                        <option>15</option>
+                        <option>20</option>
+                        <option>30</option>
+                    </select>
+                </div>
+
+                <div style="margin-top:12px; display:flex; gap:8px;">
+                    <button id="runBtn" class="btn">Run Simulation</button>
+                    <button id="resetBtn" class="btn ghost">Reset</button>
+                </div>
+            </form>
+
+            <div class="result-row">
+                <div class="stat" id="finalSIP">SIP Future Value: —</div>
+                <div class="stat" id="finalLump">Lump-sum Future: —</div>
+                <div class="stat" id="totalContrib">Total Invested: —</div>
+            </div>
+
+            <div class="chart-wrap card" style="margin-top:12px; padding:12px">
+                <canvas id="growthChart" width="800" height="240"></canvas>
+                <small style="color:var(--muted)">Chart shows growth of SIP (monthly contributions) vs Lump-sum over the chosen horizon.</small>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Sidebar -->
+    <aside>
+        <div class="card">
+            <h2>Skills You'll Master</h2>
+            <ul>
+                <li>SIP Understanding</li>
+                <li>Compound Interest</li>
+                <li>Long-term Investing</li>
+                <li>Market Fundamentals</li>
+                <li>Passive Investing</li>
+            </ul>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+            <h2>Completion Rewards</h2>
+            <ul>
+                <li><strong>Passive Investor Badge</strong></li>
+                <li>Unlock Intermediate: Behavioral Trap</li>
+                <li>SIP Calculator Tool</li>
+                <li>75 XP Points</li>
+            </ul>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+            <h2>Quick Tips</h2>
+            <ul>
+                <li>Start early — compounding amplifies time.</li>
+                <li>Consistency beats timing the market.</li>
+                <li>Use SIP to reduce volatility via rupee-cost averaging.</li>
+            </ul>
+        </div>
+    </aside>
+</div>
+
+<footer>FIN-FORGE • Market Forge — Passive Power</footer>
+
+<script>
+    // ============================================================
+    // FIN‑FORGE — DEFI DETECTIVE (Blockchain Quiz + Security)
+    // Sends session data ONLY when user presses "Check Reward"
+    // Endpoint: POST http://127.0.0.1:5000/predict/defi_detective
+    // ============================================================
+
+    // ------------------------------
+    // USER + SESSION
+    // ------------------------------
+    const USER_ID = "demo_user";
+    const SESSION_ID = crypto.randomUUID();
+    const MODULE_NAME = "Blockchain Fundamentals";
+    const SESSION_START = Date.now();
+
+    let interactionCount = 0;
+    let submitted = false;
+    let txTraceUsed = false;
+
+    function countInteraction() {
+        interactionCount++;
+    }
+
+    // ------------------------------
+    // QUIZ DATA
+    // ------------------------------
+    const questions = [
+        {
+            q: "What does a blockchain primarily provide?",
+            opts: ["Centralized control", "Immutable ledger", "Faster bank transfers"],
+            a: 1,
+        },
+        {
+            q: "What is a smart contract?",
+            opts: [
+                "A legal contract signed digitally",
+                "Code that executes rules automatically",
+                "A wallet type",
+            ],
+            a: 1,
+        },
+        {
+            q: "What is impermanent loss related to?",
+            opts: ["Staking rewards", "Holding NFTs", "Providing liquidity to pools"],
+            a: 2,
+        },
+    ];
+
+    const quizEl = document.getElementById("quiz");
+    let userAnswers = Array(questions.length).fill(null);
+
+    // ------------------------------
+    // QUIZ RENDER
+    // ------------------------------
+    function renderQuiz() {
+        quizEl.innerHTML = "";
+
+        questions.forEach((item, idx) => {
+            const div = document.createElement("div");
+            div.className = "question";
+
+            div.innerHTML = `
+      <div style="font-weight:700;margin-bottom:8px">
+        ${idx + 1}. ${item.q}
+      </div>
+    `;
+
+            const opts = document.createElement("div");
+            opts.className = "options";
+
+            item.opts.forEach((o, oi) => {
+                const btn = document.createElement("button");
+                btn.textContent = o;
+                btn.type = "button";
+                btn.onclick = () => {
+                    chooseAnswer(idx, oi, btn);
+                    countInteraction();
+                };
+                opts.appendChild(btn);
+            });
+
+            div.appendChild(opts);
+            quizEl.appendChild(div);
+        });
+    }
+
+    function chooseAnswer(qIdx, optIdx, btn) {
+        userAnswers[qIdx] = optIdx;
+
+        const parent = btn.parentElement;
+        Array.from(parent.children).forEach((b, i) => {
+            b.classList.remove("correct", "wrong");
+            b.disabled = false;
+            if (i === optIdx) {
+                b.style.borderColor = "rgba(255,255,255,0.06)";
+            }
+        });
+    }
+
+    // ------------------------------
+    // TX TRACE
+    // ------------------------------
+    document.getElementById("traceBtn").addEventListener("click", () => {
+        countInteraction();
+        txTraceUsed = true;
+
+        const hash = document.getElementById("txInput").value.trim() || "tx_xxx_123";
+
+        const steps = [
+            `Received by mempool: ${hash}`,
+            `Included in block #${Math.floor(Math.random() * 1000000)}`,
+            `Validated by consensus (confirmations: ${
+                Math.floor(Math.random() * 12) + 1
+            })`,
+            "State updated on-chain: transfers settled",
+        ];
+
+        const container = document.getElementById("traceResult");
+        container.innerHTML = steps.map((s) => `<div>• ${s}</div>`).join("");
+    });
+
+    // ------------------------------
+    // SECURITY CHECKS  +  SAVE ROW
+    // ------------------------------
+    document.getElementById("checkReward").addEventListener("click", async () => {
+        countInteraction();
+
+        const checks = Array.from(
+            document.querySelectorAll("#securityChecks input")
+        ).map((i) => i.checked);
+        const count = checks.filter(Boolean).length;
+        const status = document.getElementById("checkStatus");
+
+        if (count === checks.length) {
+            status.innerHTML = `
+      <strong style="color:var(--gold)">
+        All checks complete — Wallet Secure!
+      </strong>
+    `;
+
+            const r = document.createElement("div");
+            r.className = "reward";
+            r.style.marginTop = "8px";
+            r.textContent = "Unlocked: Security Badge";
+            document.getElementById("rewardsArea").appendChild(r);
+        } else {
+            status.innerHTML = `
+      <span style="color:var(--muted)">
+        ${count}/${checks.length} steps done — complete all to unlock security badge.
+      </span>
+    `;
+        }
+
+        // ✅ When "Check Reward" is pressed, send data to backend
+        await sendSessionData();
+    });
+
+    // ------------------------------
+    // REVEAL SCORE (UI ONLY)
+    // ------------------------------
+    document.getElementById("revealScore").addEventListener("click", () => {
+        countInteraction();
+
+        let correct = 0;
+
+        questions.forEach((q, i) => {
+            const qDiv = quizEl.children[i];
+            const buttons = qDiv.querySelectorAll("button");
+
+            buttons.forEach((b, bi) => {
+                b.disabled = true;
+                if (bi === q.a) b.classList.add("correct");
+                if (userAnswers[i] === bi && userAnswers[i] !== q.a) {
+                    b.classList.add("wrong");
+                }
+            });
+
+            if (userAnswers[i] === q.a) correct++;
+        });
+
+        document.getElementById("scoreDisplay").textContent =
+            `${correct}/${questions.length} correct`;
+
+        if (correct >= 2) {
+            const r = document.createElement("div");
+            r.className = "reward";
+            r.style.marginTop = "8px";
+            r.textContent = "Unlocked: Quiz Badge";
+            document.getElementById("rewardsArea").appendChild(r);
+        }
+
+        // ❌ No API call here – only UI feedback
+    });
+
+    // ------------------------------
+    // FINAL DATA DISPATCH (called from Check Reward)
+    // ------------------------------
+    async function sendSessionData() {
+        // Prevent duplicate rows
+        if (submitted) return;
+
+        // No interactions → skip logging
+        if (interactionCount === 0) {
+            console.log("No interactions – skipping log.");
+            return;
+        }
+
+        submitted = true;
+
+        // Quiz scoring
+        let correctCount = 0;
+        userAnswers.forEach((ans, i) => {
+            if (ans === questions[i].a) correctCount++;
+        });
+        const quizRatio = correctCount / questions.length;
+
+        // Security checks
+        const checks = Array.from(
+            document.querySelectorAll("#securityChecks input")
+        ).map((i) => i.checked);
+        const checkedCount = checks.filter(Boolean).length;
+
+        // Risk awareness score (0–100)
+        const awarenessScore = Math.round(
+            quizRatio * 70 + (checkedCount / 4) * 30
+        );
+
+        // Reward flag
+        const rewardUnlocked =
+            document.querySelectorAll(".reward").length > 0 ? 1 : 0;
+
+        // Time spent
+        const timeSpent = Math.round((Date.now() - SESSION_START) / 1000);
+
+        // Payload that matches CSV structure (except "prediction" which backend fills)
+        const payload = {
+            user_id: USER_ID,
+            session_id: SESSION_ID,
+            module: MODULE_NAME,
+            time_spent_sec: timeSpent,
+            quiz_score_0_3: correctCount,
+            wallet_checks_completed_0_4: checkedCount,
+            tx_trace_performed: txTraceUsed,
+            quiz_correct_ratio: quizRatio,
+            interaction_count: interactionCount,
+            risk_awareness_score_0_100: awarenessScore,
+            reward_unlocked: rewardUnlocked,
+            timestamp: new Date().toISOString(),
+            notes: "",
+        };
+
+        try {
+            const res = await fetch("http://127.0.0.1:5000/predict/defi_detective", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(payload),
+            });
+
+            if (!res.ok) {
+                console.error("❌ API error:", res.status);
+                return;
+            }
+
+            const data = await res.json();
+            console.log("✅ DeFi Detective saved:", data);
+        } catch (err) {
+            console.error("❌ Failed to report session:", err);
+        }
+    }
+
+    // ------------------------------
+    // IMPORTANT: no beforeunload hook
+    // (no rows on refresh)
+    // ------------------------------
+    // (Intentionally none)
+
+    // ------------------------------
+    // BOOT
+    // ------------------------------
+    renderQuiz();
+</script>
+
+</body>
+</html>
