@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Tools Page - YieldWise
+  </title>
+  <!-- Poppins Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <script>
+   tailwind.config = {
+    darkMode: 'class',
+    theme: {
+        extend: {
+            fontFamily: {
+                sans: ['Poppins', 'ui-sans-serif', 'system-ui']
+            },
+            colors: {
+                brand: {
+                    green: '#2E7D32'
+                }
+            }
+        }
+    }
+}
+  </script>
+  <!-- Font Awesome 6 -->
+  <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-1fQ1wG+v0fI4WsdobE9D6l+QpV1Ff7wYp0ZrhTeB9E7TL30wHwbC7SgQqkJH9bXGQvV3O4wXf2HnFJwYf3D0jg==" referrerpolicy="no-referrer" rel="stylesheet">
+   <!-- SweetAlert2 -->
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+   </script>
+   <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-borderless@5/borderless.css" rel="stylesheet"/>
+   <!-- ApexCharts -->
+   <script src="https://cdn.jsdelivr.net/npm/apexcharts">
+   </script>
+   <!-- Global Site Theme -->
+   <link href="style.css" rel="stylesheet">
+    <!-- Page-specific CSS (move to tools_page.css if needed) -->
+    <style>
+     /* Tools Page specific styles - keep minimal to avoid duplication */
+    .tools-hero {
+      background: linear-gradient(135deg, rgba(46, 125, 50, 0.08) 0%, rgba(46, 125, 50, 0.02) 100%), center/cover no-repeat;
+    }
+    .tool-card {
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .tool-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(46, 125, 50, 0.15);
+    }
+    .swal2-popup { font-family: Poppins, system-ui; }
+    .dark .tools-hero { filter: brightness(0.9); }
+    </style>
+   </link>
+  </link>
+ 
+<!-- CSS Loader Script -->
+<script src="./css_loader.js"></script>
+</head>
+ <body class="bg-gray-50 text-gray-800">
+  <!-- Header (Common Component) - DO NOT MODIFY CONTENT OR STRUCTURE -->
+  <header class="w-full bg-white border-b border-[#2E7D32] sticky top-0 z-50">
+   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+     <div class="flex items-center gap-3">
+      <img alt="YieldWise" class="h-9 w-auto" onerror="this.src='https://ibb.co/JW4DnZwH'" src="https://i.ibb.co/p68Y2qBd/Logo-02.png"/>
+      <span class="text-xl font-semibold text-[#2E7D32]">
+       Tools &amp; Schemes
+      </span>
+     </div>
+     <div class="flex-1 max-w-lg mx-6 hidden md:block">
+      <div class="relative">
+       <input class="w-full border border-gray-300 rounded-md pl-10 pr-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#2E7D32] focus:border-[#2E7D32]" placeholder="Search tools or schemes..." type="text"/>
+       <i class="fas fa-search absolute left-3 top-2.5 text-gray-400">
+       </i>
+      </div>
+     </div>
+     <div class="flex items-center gap-2">
+      <a class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[#2E7D32] rounded-md hover:opacity-90" href="#tools_page?tool=crop_health">
+       <i class="fas fa-stethoscope">
+       </i>
+       Crop Health
+      </a>
+      <a class="hidden sm:inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-[#2E7D32] bg-green-50 border border-[#2E7D32] rounded-md hover:bg-green-100" href="#tools_page?tool=soil_health">
+       <i class="fas fa-flask">
+       </i>
+       Soil Health
+      </a>
+      <button class="p-2 rounded hover:bg-gray-100" title="Notifications">
+       <i class="fas fa-bell text-gray-700">
+       </i>
+      </button>
+      <details class="relative">
+       <summary class="list-none cursor-pointer flex items-center gap-2">
+        <img alt="User" class="h-8 w-8 rounded-full" onerror="this.onerror=null;this.src='https://ibb.co/RpZL1PWH'" src="https://i.ibb.co/XZNm9pTJ/Default-male-avatar.webp"/>
+        <span class="text-sm text-gray-700">
+         Farmer
+        </span>
+        <i class="fas fa-chevron-down text-gray-500">
+        </i>
+       </summary>
+       <div class="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-md shadow-lg">
+        <a class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" href="#home_dashboard">
+         <i class="fas fa-home mr-2">
+         </i>
+         Home
+        </a>
+        <a class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" href="#farmer_profile">
+         <i class="fas fa-user mr-2">
+         </i>
+         Profile
+        </a>
+        <div class="border-t border-gray-200">
+        </div>
+        <a class="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50" href="#">
+         <i class="fas fa-sign-out-alt mr-2">
+         </i>
+         Logout
+        </a>
+       </div>
+      </details>
+     </div>
+    </div>
+   </div>
+  </header>
+  <!-- Page Layout: Sidebar + Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+   <div class="flex gap-6">
+    <!-- Sidebar (Common Component) - DO NOT MODIFY CONTENT OR STRUCTURE -->
+    <aside class="hidden md:block w-64 bg-white border-r border-gray-200 min-h-screen pt-4 px-2" id="sidebar-tools">
+     <nav class="space-y-2">
+      <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase">
+       Tools &amp; Schemes
+      </h3>
+      <details class="px-3 py-2 rounded-md" open="">
+       <summary class="flex items-center gap-3 cursor-pointer text-gray-700 hover:text-[#2E7D32]">
+        <i class="fas fa-tools text-[#2E7D32]">
+        </i>
+        <span>
+         Calculators
+        </span>
+       </summary>
+       <div class="mt-2 ml-6 space-y-1" id="calculator-links">
+        <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" data-tool="soil" href="#tools_page?tool=soil_health">
+         <i class="fas fa-flask mr-2">
+         </i>
+         Soil Health
+        </a>
+        <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" data-tool="rain" href="#tools_page?tool=rainwater">
+         <i class="fas fa-cloud-rain mr-2">
+         </i>
+         Rainwater Harvesting
+        </a>
+        <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" data-tool="seed" href="#tools_page?tool=seed_quantity">
+         <i class="fas fa-seedling mr-2">
+         </i>
+         Seed Quantity
+        </a>
+        <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" data-tool="fertilizer" href="#tools_page?tool=fertilizer_planner">
+         <i class="fas fa-prescription-bottle-alt mr-2">
+         </i>
+         Fertilizer Planner
+        </a>
+        <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" data-tool="crop" href="#tools_page?tool=crop_health">
+         <i class="fas fa-stethoscope mr-2">
+         </i>
+         Crop Health Detector
+        </a>
+       </div>
+      </details>
+      <details class="px-3 py-2 rounded-md">
+       <summary class="flex items-center gap-3 cursor-pointer text-gray-700 hover:text-[#2E7D32]">
+        <i class="fas fa-hands-helping text-[#2E7D32]">
+        </i>
+        <span>
+         Government Schemes
+        </span>
+       </summary>
+       <div class="mt-2 ml-6 space-y-1">
+        <a class="block px-2 py-1 text-sm text-gray-600 hover:text-[#2E7D32]" href="#government_schemes">
+         <i class="fas fa-list mr-2">
+         </i>
+         Browse Schemes
+        </a>
+       </div>
+      </details>
+      <a class="group flex items-center gap-3 px-3 py-2 text-gray-700 rounded-md hover:bg-green-50 hover:text-[#2E7D32]" href="#home_dashboard">
+       <i class="fas fa-home text-[#2E7D32]">
+       </i>
+       <span>
+        Back to Home
+       </span>
+      </a>
+     </nav>
+    </aside>
+    <!-- Main Content -->
+    <main class="flex-1">
+     <!-- Hero Section -->
+     <section class="tools-hero rounded-xl border border-green-100 bg-green-50 overflow-hidden">
+      <div class="p-6 sm:p-8 lg:p-10">
+       <div class="flex items-center gap-3 mb-2">
+        <i class="fas fa-tools text-brand-green text-2xl">
+        </i>
+        <h1 class="text-2xl sm:text-3xl font-semibold text-brand-green">
+         Tools Hub
+        </h1>
+       </div>
+       <p class="text-gray-700 max-w-2xl">
+        Centralized access to farmer-friendly offline calculators and the Crop Health Detector. Choose a tool below to plan inputs, estimate resources, and diagnose common crop issues.
+       </p>
+       <div class="mt-4 flex flex-wrap items-center gap-3">
+        <button class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-brand-green bg-green-50 border border-brand-green rounded-md hover:bg-green-100" id="darkModeToggle">
+         <i class="fas fa-moon">
+         </i>
+         Toggle Dark Mode
+        </button>
+        <div class="flex items-center gap-2">
+         <label class="text-sm text-gray-700">
+          Language:
+         </label>
+         <select class="border border-gray-300 rounded-md py-1 px-2 text-sm" id="langSelect">
+          <option value="en">
+           English
+          </option>
+          <option value="hi">
+           हिन्दी
+          </option>
+         </select>
+        </div>
+        <a class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-brand-green rounded-md hover:opacity-90" href="./smart_advisory.html">
+         <i class="fas fa-lightbulb">
+         </i>
+         Get Advisory
+        </a>
+        <a class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-brand-green bg-green-50 border border-brand-green rounded-md hover:bg-green-100" href="./government_schemes.html">
+         <i class="fas fa-hands-helping">
+         </i>
+         View Schemes
+        </a>
+       </div>
+      </div>
+     </section>
+     <!-- Tools Grid -->
+     <section class="mt-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="toolsGrid">
+       <!-- Tool cards populated by JS for clarity -->
+      </div>
+     </section>
+     <!-- Data Insights: ApexCharts Example -->
+     <section class="mt-8 bg-white rounded-lg border border-gray-200 p-4">
+      <div class="flex items-center justify-between">
+       <h2 class="text-lg font-semibold text-gray-800">
+        Seasonal Rainfall Trend
+       </h2>
+       <div class="text-sm text-gray-500">
+        Interactive chart with tooltips and zoom
+       </div>
+      </div>
+      <div class="w-full h-64" id="rainfallChart">
+      </div>
+     </section>
+     <!-- Seed Rates Table (Mock Data) -->
+     <section class="mt-8 bg-white rounded-lg border border-gray-200 p-4">
+      <div class="flex items-center justify-between mb-4">
+       <h2 class="text-lg font-semibold text-gray-800">
+        Seed Rates Reference
+       </h2>
+       <div class="flex items-center gap-2">
+        <input class="border border-gray-300 rounded-md py-1 px-2 text-sm" id="seedSearch" placeholder="Filter crop..." type="text">
+         <button class="text-sm px-2 py-1 border rounded-md hover:bg-gray-50" id="seedSort">
+          Sort by Seed Rate
+         </button>
+        </input>
+       </div>
+      </div>
+      <div class="overflow-x-auto">
+       <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+         <tr>
+          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+           Crop
+          </th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+           Seed Rate (kg/acre)
+          </th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+           Typical Spacing
+          </th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+           Season
+          </th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+           Actions
+          </th>
+         </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200" id="seedTableBody">
+         <!-- Rows injected by JS -->
+        </tbody>
+       </table>
+      </div>
+      <div class="mt-3 text-sm text-gray-500">
+       <span id="paginationInfo">
+        Page 1 of 1 • 6 rows
+       </span>
+      </div>
+     </section>
+     <!-- System Feedback Area -->
+     <section class="mt-8">
+      <div class="hidden border border-green-200 bg-green-50 text-green-700 rounded-md p-3" id="feedbackArea">
+      </div>
+     </section>
+    </main>
+   </div>
+  </div>
+  <!-- Footer (Common Component) - DO NOT MODIFY CONTENT OR STRUCTURE -->
+  <footer class="w-full bg-white border-t border-gray-200">
+   <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+     <img alt="Logo" class="h-5 w-5" onerror="this.src='https://ibb.co/JW4DnZwH'" src="https://i.ibb.co/p68Y2qBd/Logo-02.png"/>
+     <span class="text-sm text-gray-600">
+      Tools &amp; Schemes
+     </span>
+    </div>
+    <div class="flex items-center gap-4">
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="#tools_page">
+      <i class="fas fa-tools mr-1">
+      </i>
+      All Tools
+     </a>
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="#government_schemes">
+      <i class="fas fa-hands-helping mr-1">
+      </i>
+      Schemes
+     </a>
+     <span class="mx-2 text-gray-300">
+      |
+     </span>
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="#terms">
+      Terms
+     </a>
+     <a class="text-sm text-gray-600 hover:text-[#2E7D32]" href="#privacy">
+      Privacy
+     </a>
+    </div>
+   </div>
+  </footer>
+  <!-- Templates for SweetAlert Modals (generated via JS) -->
+  <script>
+   // Language dictionary for simple labels ( only)
+const i18n = {
+    en: {
+        soil: 'Soil Health Calculator',
+        rain: 'Rainwater Harvesting',
+        seed: 'Seed Quantity Calculator',
+        fertilizer: 'Fertilizer Planner',
+        crop: 'Crop Health Detector',
+        open: 'Open',
+        quickAccess: 'Quick Access'
+    },
+    hi: {
+        soil: 'मृदा स्वास्थ्य कैलकुलेटर',
+        rain: 'वर्षा जल संचयन',
+        seed: 'बीज मात्रा कैलकुलेटर',
+        fertilizer: 'उर्वरक योजना',
+        crop: 'फसल स्वास्थ्य जांच',
+        open: 'खोलें',
+        quickAccess: 'त्वरित पहुँच'
+    }
+};
+
+const toolList = [{
+    id: 'soil',
+    icon: 'fa-flask',
+    color: 'bg-green-50',
+    accent: 'text-brand-green',
+    desc: 'Input pH, N, P, K to get recommendations.'
+}, {
+    id: 'rain',
+    icon: 'fa-cloud-rain',
+    color: 'bg-blue-50',
+    accent: 'text-blue-600',
+    desc: 'Estimate harvestable rainwater by area.'
+}, {
+    id: 'seed',
+    icon: 'fa-seedling',
+    color: 'bg-amber-50',
+    accent: 'text-amber-600',
+    desc: 'Calculate seed quantity for crop & area.'
+}, {
+    id: 'fertilizer',
+    icon: 'fa-prescription-bottle-alt',
+    color: 'bg-purple-50',
+    accent: 'text-purple-600',
+    desc: 'Plan fertilizer needs based on soil & crop.'
+}, {
+    id: 'crop',
+    icon: 'fa-stethoscope',
+    color: 'bg-rose-50',
+    accent: 'text-rose-600',
+    desc: 'Upload leaf image for simulated diagnosis.'
+}];
+
+const toolsGrid = document.getElementById('toolsGrid');
+const langSelect = document.getElementById('langSelect');
+
+function renderTools(lang = 'en') {
+    toolsGrid.innerHTML = '';
+    toolList.forEach(t => {
+        const title = i18n[lang][t.id];
+        const card = document.createElement('div');
+        card.className = `tool-card rounded-xl border border-gray-200 p-5 ${t.color}`;
+        card.innerHTML = `
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-white border"><i class="fas ${t.icon} ${t.accent}"></i></div>
+            <h3 class="text-lg font-semibold text-gray-800">${title}</h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">${t.desc}</p>
+          <div class="flex items-center gap-2">
+            <button class="openToolBtn inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-brand-green rounded-md hover:opacity-90" data-tool="${t.id}">
+              <i class="fas fa-play"></i> ${i18n[lang].open}
+            </button>
+            ${t.id === 'crop' ? `<a href="./tools_page.html" class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-brand-green bg-green-50 border border-brand-green rounded-md hover:bg-green-100"><i class='fas fa-bolt'></i> ${i18n[lang].quickAccess}</a>` : ''}
+          </div>
+        `;
+        toolsGrid.appendChild(card);
+    });
+}
+
+langSelect.addEventListener('change', () => renderTools(langSelect.value));
+renderTools('en');
+
+// Dark Mode Toggle
+const darkToggle = document.getElementById('darkModeToggle');
+darkToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    document.body.classList.toggle('bg-gray-900');
+    document.body.classList.toggle('text-gray-100');
+});
+
+// Sidebar active link handling (apply active state to selected tool within calculators)
+function setSidebarActive(toolId) {
+    const links = document.querySelectorAll('#calculator-links a');
+    links.forEach(a => {
+        a.classList.remove('bg-green-50', 'text-[#2E7D32]', 'font-semibold');
+    });
+    const active = document.querySelector(`#calculator-links a[data-tool="${toolId}"]`);
+    if (active) {
+        active.classList.add('bg-green-50', 'text-[#2E7D32]', 'font-semibold');
+    }
+}
+
+// Voice Read Aloud (Web Speech TTS)
+function speak(text) {
+    try {
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = (langSelect.value === 'hi') ? 'hi-IN' : 'en-US';
+        window.speechSynthesis.speak(utter);
+    } catch (e) {
+        console.warn('Speech synthesis not supported');
+    }
+}
+
+// SweetAlert2 helpers
+function showResult(title, html, resultText) {
+    Swal.fire({
+        title: title,
+        html: html,
+        width: 600,
+        showCancelButton: false,
+        confirmButtonText: 'Close',
+        showDenyButton: true,
+        denyButtonText: 'Read Aloud',
+        customClass: {
+            popup: 'borderless'
+        }
+    }).then((res) => {
+        if (res.isDenied) {
+            speak(resultText || (typeof html === 'string' ? html.replace(/<[^>]+>/g, '') : ''));
+        }
+    });
+}
+
+// Tool logic implementations
+function openSoilHealth() {
+    setSidebarActive('soil');
+    const formHtml = `
+        <div class="text-left">
+          <label class="block text-sm mb-1">Soil pH</label>
+          <input id="soilPh" type="number" step="0.1" min="0" max="14" placeholder="e.g., 6.5" class="w-full border rounded-md px-2 py-1" />
+          <div class="grid grid-cols-3 gap-2 mt-3">
+            <div>
+              <label class="block text-sm mb-1">Nitrogen (N)</label>
+              <input id="soilN" type="number" step="0.1" placeholder="e.g., 20" class="w-full border rounded-md px-2 py-1" />
+            </div>
+            <div>
+              <label class="block text-sm mb-1">Phosphorus (P)</label>
+              <input id="soilP" type="number" step="0.1" placeholder="e.g., 15" class="w-full border rounded-md px-2 py-1" />
+            </div>
+            <div>
+              <label class="block text-sm mb-1">Potassium (K)</label>
+              <input id="soilK" type="number" step="0.1" placeholder="e.g., 25" class="w-full border rounded-md px-2 py-1" />
+            </div>
+          </div>
+          <button id="calcSoil" class="mt-4 inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-brand-green rounded-md hover:opacity-90"><i class="fas fa-calculator"></i> Calculate Soil Health</button>
+          <div id="soilResult" class="mt-3 hidden text-sm"></div>
+        </div>
+      `;
+    Swal.fire({
+        title: 'Soil Health Calculator',
+        html: formHtml,
+        showConfirmButton: false,
+        width: 600
+    });
+    setTimeout(() => {
+        const btn = document.getElementById('calcSoil');
+        btn.addEventListener('click', () => {
+            const pH = parseFloat(document.getElementById('soilPh').value);
+            const N = parseFloat(document.getElementById('soilN').value);
+            const P = parseFloat(document.getElementById('soilP').value);
+            const K = parseFloat(document.getElementById('soilK').value);
+            if (isNaN(pH) || pH < 0 || pH > 14 || [N, P, K].some(v => isNaN(v))) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Input',
+                    text: 'Please enter valid numbers. pH must be between 0 and 14.'
+                });
+                return;
+            }
+            let pHStatus = pH < 6 ? 'Acidic' : (pH <= 7.5 ? 'Neutral' : 'Alkaline');
+            const level = v => v < 15 ? 'Low' : (v <= 25 ? 'Medium' : 'High');
+            const recs = [];
+            if (pHStatus === 'Acidic') recs.push('Apply lime to raise pH.');
+            if (pHStatus === 'Alkaline') recs.push('Use sulfur or organic amendments to lower pH.');
+            if (level(N) === 'Low') recs.push('Add Nitrogen-rich fertilizer (Urea).');
+            if (level(P) === 'Low') recs.push('Apply phosphorus (DAP).');
+            if (level(K) === 'Low') recs.push('Supplement potassium (MOP).');
+            const resultText = `pH: ${pH} (${pHStatus}). N: ${level(N)}, P: ${level(P)}, K: ${level(K)}. Recommendations: ${recs.join(' ') || 'Balanced soil—maintain with compost.'}`;
+            document.getElementById('soilResult').classList.remove('hidden');
+            document.getElementById('soilResult').innerHTML = `<div class="p-3 bg-green-50 border border-green-200 rounded">${resultText}</div>`;
+            showResult('Soil Health Result', `<div class='text-left text-sm'>${resultText}</div>`, resultText);
+        });
+    }, 50);
+}
+
+function openRainwater() {
+    setSidebarActive('rain');
+    const formHtml = `
+        <div class="text-left">
+          <label class="block text-sm mb-1">Catchment Area (sq. meters)</label>
+          <input id="catchArea" type="number" min="0" step="0.1" placeholder="e.g., 100" class="w-full border rounded-md px-2 py-1" />
+          <label class="block text-sm mb-1 mt-3">Rainfall (mm)</label>
+          <input id="rainMm" type="number" min="0" step="0.1" placeholder="e.g., 50" class="w-full border rounded-md px-2 py-1" />
+          <button id="calcRain" class="mt-4 inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-brand-green rounded-md hover:opacity-90"><i class="fas fa-calculator"></i> Calculate</button>
+          <div id="rainResult" class="mt-3 hidden text-sm"></div>
+        </div>
+      `;
+    Swal.fire({
+        title: 'Rainwater Harvesting',
+        html: formHtml,
+        showConfirmButton: false,
+        width: 600
+    });
+    setTimeout(() => {
+        document.getElementById('calcRain').addEventListener('click', () => {
+            const A = parseFloat(document.getElementById('catchArea').value);
+            const R = parseFloat(document.getElementById('rainMm').value);
+            if (isNaN(A) || A <= 0 || isNaN(R) || R < 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Input',
+                    text: 'Area must be positive and rainfall must be zero or positive.'
+                });
+                return;
+            }
+            const coeff = 0.8; // runoff coefficient
+            const liters = A * R * coeff; // 1 mm = 1 liter/m2
+            const m3 = liters / 1000;
+            const resultText = `Estimated volume: ${liters.toFixed(0)} liters (${m3.toFixed(2)} m³). Assumes runoff coefficient 0.8.`;
+            document.getElementById('rainResult').classList.remove('hidden');
+            document.getElementById('rainResult').innerHTML = `<div class="p-3 bg-blue-50 border border-blue-200 rounded">${resultText}</div>`;
+            showResult('Rainwater Estimate', `<div class='text-left text-sm'>${resultText}</div>`, resultText);
+        });
+    }, 50);
+}
+
+function openSeedQuantity() {
+    setSidebarActive('seed');
+    const cropRates = {
+        'Wheat': {
+            kgPerAcre: 50,
+            spacing: '20 cm',
+            season: 'Rabi'
+        },
+        'Rice': {
+            kgPerAcre: 25,
+            spacing: '15 cm',
+            season: 'Kharif'
+        },
+        'Maize': {
+            kgPerAcre: 8,
+            spacing: '60 cm',
+            season: 'Kharif'
+        }
+    };
+    const formHtml = `
+        <div class="text-left">
+          <label class="block text-sm mb-1">Land Area (acres)</label>
+          <input id="seedArea" type="number" min="0" step="0.1" placeholder="e.g., 2.5" class="w-full border rounded-md px-2 py-1" />
+          <label class="block text-sm mb-1 mt-3">Select Crop</label>
+          <select id="seedCrop" class="w-full border rounded-md px-2 py-1">
+            <option>Wheat</option>
+            <option>Rice</option>
+            <option>Maize</option>
+          </select>
+          <button id="calcSeed" class="mt-4 inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-brand-green rounded-md hover:opacity-90"><i class="fas fa-calculator"></i> Calculate</button>
+          <div id="seedResult" class="mt-3 hidden text-sm"></div>
+        </div>
+      `;
+    Swal.fire({
+        title: 'Seed Quantity Calculator',
+        html: formHtml,
+        showConfirmButton: false,
+        width: 600
+    });
+    setTimeout(() => {
+        document.getElementById('calcSeed').addEventListener('click', () => {
+            const A = parseFloat(document.getElementById('seedArea').value);
+            const crop = document.getElementById('seedCrop').value;
+            if (isNaN(A) || A <= 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Input',
+                    text: 'Area must be a positive number.'
+                });
+                return;
+            }
+            const rate = cropRates[crop].kgPerAcre;
+            const totalKg = A * rate;
+            const resultText = `Crop: ${crop}. Area: ${A} acres. Required seed: ${totalKg.toFixed(1)} kg (Rate: ${rate} kg/acre).`;
+            document.getElementById('seedResult').classList.remove('hidden');
+            document.getElementById('seedResult').innerHTML = `<div class="p-3 bg-amber-50 border border-amber-200 rounded">${resultText}</div>`;
+            showResult('Seed Quantity Result', `<div class='text-left text-sm'>${resultText}</div>`, resultText);
+        });
+    }, 50);
+}
+
+function openFertilizerPlanner() {
+    setSidebarActive('fertilizer');
+    const formHtml = `
+        <div class="text-left">
+          <label class="block text-sm mb-1">Land Area (acres)</label>
+          <input id="fertArea" type="number" min="0" step="0.1" placeholder="e.g., 2.0" class="w-full border rounded-md px-2 py-1" />
+          <label class="block text-sm mb-1 mt-3">Select Crop</label>
+          <select id="fertCrop" class="w-full border rounded-md px-2 py-1">
+            <option>Wheat</option>
+            <option>Rice</option>
+            <option>Maize</option>
+          </select>
+          <label class="block text-sm mb-1 mt-3">Soil Nutrient Level</label>
+          <select id="soilLevel" class="w-full border rounded-md px-2 py-1">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+          <button id="calcFert" class="mt-4 inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-brand-green rounded-md hover:opacity-90"><i class="fas fa-calculator"></i> Calculate</button>
+          <div id="fertResult" class="mt-3 hidden text-sm"></div>
+        </div>
+      `;
+    Swal.fire({
+        title: 'Fertilizer Planner',
+        html: formHtml,
+        showConfirmButton: false,
+        width: 600
+    });
+    setTimeout(() => {
+        document.getElementById('calcFert').addEventListener('click', () => {
+            const A = parseFloat(document.getElementById('fertArea').value);
+            const crop = document.getElementById('fertCrop').value;
+            const level = document.getElementById('soilLevel').value;
+            if (isNaN(A) || A <= 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Input',
+                    text: 'Area must be a positive number.'
+                });
+                return;
+            }
+            // Basic rule-of-thumb recommendations (mock data)
+            const base = {
+                Wheat: {
+                    N: 40,
+                    P2O5: 20,
+                    K2O: 15
+                },
+                Rice: {
+                    N: 50,
+                    P2O5: 25,
+                    K2O: 20
+                },
+                Maize: {
+                    N: 60,
+                    P2O5: 25,
+                    K2O: 25
+                }
+            } [crop];
+            const factor = level === 'low' ? 1.2 : (level === 'medium' ? 1.0 : 0.8);
+            const plan = {
+                N: (base.N * A * factor).toFixed(1),
+                P2O5: (base.P2O5 * A * factor).toFixed(1),
+                K2O: (base.K2O * A * factor).toFixed(1)
+            };
+            const resultText = `Crop: ${crop}. Area: ${A} acres. Recommended nutrient application: N ${plan.N} kg, P₂O₅ ${plan.P2O5} kg, K₂O ${plan.K2O} kg (adjusted for ${level} soil).`;
+            document.getElementById('fertResult').classList.remove('hidden');
+            document.getElementById('fertResult').innerHTML = `<div class="p-3 bg-purple-50 border border-purple-200 rounded">${resultText}</div>`;
+            showResult('Fertilizer Plan', `<div class='text-left text-sm'>${resultText}</div>`, resultText);
+        });
+    }, 50);
+}
+
+function openCropHealth() {
+    setSidebarActive('crop');
+    const formHtml = `
+        <div class="text-left">
+          <label class="block text-sm mb-1">Upload Plant Image</label>
+          <input id="cropImg" type="file" accept="image/*" class="w-full border rounded-md px-2 py-1" />
+          <button id="analyzeCrop" disabled class="mt-4 inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-brand-green rounded-md opacity-50"><i class="fas fa-search"></i> Analyze</button>
+          <div id="cropPreview" class="mt-3 hidden"></div>
+        </div>
+      `;
+    Swal.fire({
+        title: 'Crop Health Detector',
+        html: formHtml,
+        showConfirmButton: false,
+        width: 600
+    });
+    setTimeout(() => {
+        const input = document.getElementById('cropImg');
+        const btn = document.getElementById('analyzeCrop');
+        input.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid File',
+                    text: 'Please upload a valid image file.'
+                });
+                return;
+            }
+            btn.disabled = false;
+            btn.classList.remove('opacity-50');
+            const reader = new FileReader();
+            reader.onload = () => {
+                document.getElementById('cropPreview').classList.remove('hidden');
+                document.getElementById('cropPreview').innerHTML = `<img alt="Leaf preview" class="max-h-40 rounded-md border" />`;
+            };
+            reader.readAsDataURL(file);
+        });
+        btn.addEventListener('click', () => {
+            // Simple rule-based mock diagnosis
+            const rules = [{
+                pattern: 'yellow',
+                result: 'Yellow leaves suggest Nitrogen deficiency. Apply urea moderately.'
+            }, {
+                pattern: 'spots',
+                result: 'Spots detected suggest fungal infection. Consider fungicide and remove infected leaves.'
+            }, {
+                pattern: 'curl',
+                result: 'Leaf curl hints at viral issues; use resistant varieties and control vectors.'
+            }];
+            const outcomes = [
+                'Yellow leaves suggest Nitrogen deficiency. Apply urea moderately.',
+                'Dark spots indicate possible fungal infection. Use recommended fungicide.',
+                'Curling suggests viral stress; manage pests and consider resistant seeds.',
+                'Dry edges indicate potassium shortage; supplement K₂O.'
+            ];
+            const pick = outcomes[Math.floor(Math.random() * outcomes.length)];
+            const resultText = `Diagnosis: ${pick}`;
+            showResult('Crop Health Diagnosis', `<div class='text-left text-sm'>${resultText}</div>`, resultText);
+        });
+    }, 50);
+}
+
+// Tool open handlers
+document.addEventListener('click', (e) => {
+    if (e.target.closest('.openToolBtn')) {
+        const tool = e.target.closest('.openToolBtn').dataset.tool;
+        switch (tool) {
+            case 'soil':
+                openSoilHealth();
+                break;
+            case 'rain':
+                openRainwater();
+                break;
+            case 'seed':
+                openSeedQuantity();
+                break;
+            case 'fertilizer':
+                openFertilizerPlanner();
+                break;
+            case 'crop':
+                openCropHealth();
+                break;
+        }
+    }
+});
+
+// Also allow opening from sidebar links (without changing common component links)
+document.querySelectorAll('#calculator-links a').forEach(a => {
+    a.addEventListener('click', (ev) => {
+        ev.preventDefault(); // Use modal open instead
+        const tool = a.dataset.tool;
+        switch (tool) {
+            case 'soil':
+                openSoilHealth();
+                break;
+            case 'rain':
+                openRainwater();
+                break;
+            case 'seed':
+                openSeedQuantity();
+                break;
+            case 'fertilizer':
+                openFertilizerPlanner();
+                break;
+            case 'crop':
+                openCropHealth();
+                break;
+        }
+    });
+});
+
+// ApexCharts: Rainfall Trend
+const chartOptions = {
+    chart: {
+        type: 'line',
+        height: 260,
+        zoom: {
+            enabled: true
+        }
+    },
+    series: [{
+        name: 'Rainfall (mm)',
+        data: [12, 25, 40, 85, 120, 160, 180, 140, 90, 45, 20, 10]
+    }],
+    xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    },
+    colors: ['#2E7D32'],
+    stroke: {
+        width: 3
+    },
+    grid: {
+        strokeDashArray: 3
+    },
+    tooltip: {
+        theme: 'light'
+    }
+};
+const rainfallChart = new ApexCharts(document.querySelector('#rainfallChart'), chartOptions);
+rainfallChart.render();
+
+// Seed Rates Table mock data, filtering & sorting
+const seedData = [{
+    crop: 'Wheat',
+    rate: 50,
+    spacing: '20 cm',
+    season: 'Rabi',
+    date: '2025-01-10'
+}, {
+    crop: 'Rice',
+    rate: 25,
+    spacing: '15 cm',
+    season: 'Kharif',
+    date: '2025-02-15'
+}, {
+    crop: 'Maize',
+    rate: 8,
+    spacing: '60 cm',
+    season: 'Kharif',
+    date: '2025-03-20'
+}, {
+    crop: 'Millet',
+    rate: 4,
+    spacing: '30 cm',
+    season: 'Kharif',
+    date: '2025-01-05'
+}, {
+    crop: 'Barley',
+    rate: 45,
+    spacing: '18 cm',
+    season: 'Rabi',
+    date: '2025-02-01'
+}, {
+    crop: 'Sorghum',
+    rate: 7,
+    spacing: '45 cm',
+    season: 'Kharif',
+    date: '2025-03-01'
+}];
+let sortAsc = true;
+
+function renderSeedTable(filter = '') {
+    const tbody = document.getElementById('seedTableBody');
+    tbody.innerHTML = '';
+    const rows = seedData.filter(r => r.crop.toLowerCase().includes(filter.toLowerCase()));
+    rows.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">${r.crop}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">${r.rate} kg</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">${r.spacing}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">${r.season}</td>
+          <td class="px-4 py-2 whitespace-nowrap text-sm">
+            <button class="px-2 py-1 border rounded-md hover:bg-gray-50 text-xs" onclick="Swal.fire({title:'Selected',text:'${r.crop} seed rate selected'});">Select</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+    });
+    document.getElementById('paginationInfo').textContent = `Page 1 of 1 • ${rows.length} rows`;
+}
+renderSeedTable('');
+
+document.getElementById('seedSearch').addEventListener('input', (e) => {
+    renderSeedTable(e.target.value);
+});
+
+document.getElementById('seedSort').addEventListener('click', () => {
+    seedData.sort((a, b) => sortAsc ? a.rate - b.rate : b.rate - a.rate);
+    sortAsc = !sortAsc;
+    renderSeedTable(document.getElementById('seedSearch').value || '');
+});
+
+// Example of system feedback
+function showFeedback(msg) {
+    const el = document.getElementById('feedbackArea');
+    el.textContent = msg;
+    el.classList.remove('hidden');
+    setTimeout(() => el.classList.add('hidden'), 4000);
+}
+showFeedback('Welcome to Tools Hub. Select a calculator to begin.');
+  </script>
+ </body>
+</html>
