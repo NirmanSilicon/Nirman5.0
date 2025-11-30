@@ -156,6 +156,7 @@ export default function LoginPage() {
                 size="sm"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="text-foreground hover:bg-accent smooth-transition p-2 sm:p-2.5"
+                suppressHydrationWarning
               >
                 {theme === "dark" ? <Sun className="h-4 w-4 sm:h-5 sm:w-5" /> : <Moon className="h-4 w-4 sm:h-5 sm:w-5" />}
               </Button>
@@ -180,11 +181,11 @@ export default function LoginPage() {
         </header>
 
         <div className="min-h-[calc(100vh-64px)] bg-background flex items-center justify-center p-4 sm:p-6">
-          <Card className="w-full max-w-md bg-card border-border fade-in-up scale-in hover-lift smooth-transition">
-            <CardHeader className="text-center p-4 sm:p-6">
+          <Card className="w-full max-w-md bg-card border-border fade-in-up scale-in hover-lift smooth-transition" suppressHydrationWarning>
+            <CardHeader className="text-center p-4 sm:p-6" suppressHydrationWarning>
               <div className="flex items-center justify-center mb-4">
-                <div className="p-3 bg-primary/10 rounded-lg float-animation">
-                  <Shield className="h-7 w-7 sm:h-8 sm:w-8 text-primary" />
+                <div className="p-3 bg-primary/10 rounded-lg" suppressHydrationWarning>
+                  <Shield className="h-7 w-7 sm:h-8 sm:w-8 text-primary" suppressHydrationWarning />
                 </div>
               </div>
               <CardTitle className="text-xl sm:text-2xl font-bold text-card-foreground">

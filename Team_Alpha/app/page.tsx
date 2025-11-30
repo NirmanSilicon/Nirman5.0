@@ -28,13 +28,15 @@ import {
 import { useTheme } from "next-themes"
 import Link from "next/link"
 import { GoogleGenerativeAI } from "@google/generative-ai"
+import SplashScreen from "@/components/splash-screen"
 
 export default function HomePage() {
+  const [showSplash, setShowSplash] = useState(true)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [symptomText, setSymptomText] = useState("")
-  const [possibleConditions, setPossibleConditions] = useState<string[]>([])
-  const [selectedCondition, setSelectedCondition] = useState<string | null>(null)
-  const [showResults, setShowResults] = useState(false)
+  const [chatMessages, setChatMessages] = useState<Array<{role: 'user' | 'assistant', content: string}>>([])
+  const [recommendedSpecializations, setRecommendedSpecializations] = useState<Array<{specialization: string, description: string, urgency: string}>>([])
+  const [isTyping, setIsTyping] = useState(false)
   const { theme, setTheme } = useTheme()
 
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -44,9 +46,14 @@ export default function HomePage() {
     { title: "Expert Care", subtitle: "Connect with healthcare professionals when needed", image: "/carousel3.jpg" },
   ]
 
-  const genAI = typeof window !== 'undefined' && process.env.NEXT_PUBLIC_GEMINI_API_KEY
-    ? new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY)
-    : null
+  // Use NEXT_PUBLIC_GOOGLE_GENERATIVE_AI_API_KEY, fallback to GOOGLE_GEMINI_API_KEY if not set
+  const apiKey = typeof window !== 'undefined'
+    ? (process.env.NEXT_PUBLIC_GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY)
+    : null;
+  if (!apiKey && typeof window !== 'undefined') {
+    console.error('Google Gemini API key is missing. Please set NEXT_PUBLIC_GOOGLE_GENERATIVE_AI_API_KEY in .env.local');
+  }
+  const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -55,68 +62,82 @@ export default function HomePage() {
     return () => clearInterval(timer)
   }, [slides.length])
 
-  const analyzeSymptoms = async () => {
+  useEffect(() => {
+    const splashTimer = setTimeout(() => {
+      setShowSplash(false)
+    }, 2000)
+    return () => clearTimeout(splashTimer)
+  }, [])
+
+  const sendMessage = async () => {
     if (!symptomText.trim()) return
+
+    const userMessage = symptomText
+    setChatMessages(prev => [...prev, { role: 'user', content: userMessage }])
+    setSymptomText("")
+    setIsTyping(true)
 
     try {
       if (!genAI) {
-        // Fallback to mock data if no API key
-        const fallbackConditions = [
-          "Diabetes - A chronic condition that affects how your body processes blood sugar.",
-          "Hypertension - High blood pressure that can lead to serious health problems.",
-          "Asthma - A condition in which your airways narrow and swell, causing breathing difficulties.",
-          "Common Cold - A viral infection of your nose and throat.",
-          "Migraine - A headache that can cause severe throbbing pain or a pulsing sensation.",
-          "Anemia - A condition where you lack enough healthy red blood cells.",
-          "Allergy - An immune system reaction to a foreign substance.",
-          "Bronchitis - Inflammation of the lining of your bronchial tubes.",
-          "Flu - A contagious respiratory illness caused by influenza viruses.",
-          "Gastroenteritis - Inflammation of the stomach and intestines causing vomiting and diarrhea."
-        ]
-        setPossibleConditions(fallbackConditions)
-        setShowResults(true)
+        const errorMessage = "AI service is currently unavailable. Please try again later or contact support."
+        setChatMessages(prev => [...prev, { role: 'assistant', content: errorMessage }])
+        setIsTyping(false)
         return
       }
 
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
-      const prompt = `You are a medical assistant. Based on the following symptoms: "${symptomText}", provide a list of 10 possible medical conditions with brief descriptions.`
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" })
+      const prompt = `You are a medical AI assistant. Based on the following symptoms: "${userMessage}", recommend 3-5 appropriate medical specializations that the patient should consult. For each specialization, provide:
+1. The specialization name
+2. A brief reason why this specialist is recommended
+3. Urgency level (low, medium, high)
+
+Format your response as a JSON array of objects with keys: specialization, description, urgency.
+
+Example format:
+[
+  {"specialization": "Cardiology", "description": "For chest pain and heart-related symptoms", "urgency": "high"},
+  {"specialization": "Pulmonology", "description": "For breathing difficulties and lung issues", "urgency": "medium"}
+]`
+
       const result = await model.generateContent(prompt)
       const response = await result.response
       const text = response.text()
 
-      // Parse the response text into an array of conditions
-      const conditions = text
-        .split("\n")
-        .map((line) => line.trim())
-        .filter((line) => line.length > 0)
-        .slice(0, 10)
+      // Extract JSON from response
+      const jsonMatch = text.match(/\[[\s\S]*\]/)
+      if (jsonMatch) {
+        try {
+          const specializations = JSON.parse(jsonMatch[0])
+          setRecommendedSpecializations(specializations)
 
-      setPossibleConditions(conditions)
-      setShowResults(true)
+          // Create a human-readable response
+          const assistantMessage = `Based on your symptoms, here are the recommended medical specializations to consult:\n\n${specializations.map((spec: any, index: number) =>
+            `${index + 1}. **${spec.specialization}** - ${spec.description} (Urgency: ${spec.urgency})`
+          ).join('\n')}\n\nPlease consider booking an appointment with one of these specialists for proper diagnosis and treatment.`
+
+          setChatMessages(prev => [...prev, { role: 'assistant', content: assistantMessage }])
+        } catch (parseError) {
+          console.error("Error parsing AI response:", parseError)
+          const errorMessage = "I couldn't properly analyze your symptoms. Please try rephrasing your symptoms or provide more details."
+          setChatMessages(prev => [...prev, { role: 'assistant', content: errorMessage }])
+        }
+      } else {
+        const errorMessage = "I couldn't generate recommendations from your symptoms. Please try providing more specific symptoms or contact a healthcare professional directly."
+        setChatMessages(prev => [...prev, { role: 'assistant', content: errorMessage }])
+      }
     } catch (error) {
       console.error("Error analyzing symptoms:", error)
-      // Fallback to mock data on error
-      const fallbackConditions = [
-        "Diabetes - A chronic condition that affects how your body processes blood sugar.",
-        "Hypertension - High blood pressure that can lead to serious health problems.",
-        "Asthma - A condition in which your airways narrow and swell, causing breathing difficulties.",
-        "Common Cold - A viral infection of your nose and throat.",
-        "Migraine - A headache that can cause severe throbbing pain or a pulsing sensation.",
-        "Anemia - A condition where you lack enough healthy red blood cells.",
-        "Allergy - An immune system reaction to a foreign substance.",
-        "Bronchitis - Inflammation of the lining of your bronchial tubes.",
-        "Flu - A contagious respiratory illness caused by influenza viruses.",
-        "Gastroenteritis - Inflammation of the stomach and intestines causing vomiting and diarrhea."
-      ]
-      setPossibleConditions(fallbackConditions)
-      setShowResults(true)
+      const errorMessage = "I'm experiencing technical difficulties. Please try again in a moment or consult a healthcare professional for immediate assistance."
+      setChatMessages(prev => [...prev, { role: 'assistant', content: errorMessage }])
+    } finally {
+      setIsTyping(false)
     }
   }
 
-  const selectCondition = (condition: string) => {
-    setSelectedCondition(condition)
-    const conditionPath = condition.toLowerCase().replace(/\s+/g, "-")
-    window.location.href = `/questionnaire/${conditionPath}`
+
+
+  if (showSplash) {
+    return <SplashScreen />
   }
 
   return (
@@ -215,6 +236,7 @@ export default function HomePage() {
                 size="sm"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="text-foreground hover:bg-accent smooth-transition p-2 sm:p-2.5"
+                suppressHydrationWarning
               >
                 {theme === "dark" ? <Sun className="h-4 w-4 sm:h-5 sm:w-5" /> : <Moon className="h-4 w-4 sm:h-5 sm:w-5" />}
               </Button>
@@ -278,73 +300,104 @@ export default function HomePage() {
         <main className="container mx-auto px-4 py-4 sm:py-6 max-w-6xl">
           <Card className="mb-6 bg-card border-border fade-in-up hover-lift smooth-transition">
             <CardHeader className="p-4 sm:p-5">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-card-foreground flex items-center gap-2 professional-heading">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-card-foreground flex items-center gap-2 professional-heading">
                 <Stethoscope className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-                Describe Your Symptoms
+                AI Health Assistant
               </h2>
               <p className="text-xs sm:text-sm md:text-base text-muted-foreground professional-body mt-1 sm:mt-2">
-                Tell us what you're experiencing and we'll help identify possible conditions
+                Describe your symptoms and get personalized doctor specialization recommendations
               </p>
             </CardHeader>
             <CardContent className="space-y-4 p-4 sm:p-5">
+              {/* Chat Messages */}
+              {chatMessages.length > 0 && (
+                <div className="space-y-3 mb-4 max-h-96 overflow-y-auto">
+                  {chatMessages.map((message, index) => (
+                    <div
+                      key={index}
+                      className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div
+                        className={`max-w-[80%] p-3 rounded-lg ${
+                          message.role === 'user'
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-muted text-muted-foreground'
+                        }`}
+                      >
+                        <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                      </div>
+                    </div>
+                  ))}
+                  {isTyping && (
+                    <div className="flex justify-start">
+                      <div className="bg-muted text-muted-foreground p-3 rounded-lg">
+                        <p className="text-sm">AI is analyzing your symptoms...</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Recommended Specializations */}
+              {recommendedSpecializations.length > 0 && (
+                <div className="space-y-3 mb-4">
+                  <h3 className="font-semibold text-card-foreground professional-heading text-base">Recommended Specializations:</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {recommendedSpecializations.map((spec, index) => (
+                      <Card key={index} className="bg-accent/50 border-border hover-lift smooth-transition">
+                        <CardContent className="p-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium text-card-foreground text-sm">{spec.specialization}</h4>
+                            <Badge
+                              variant={spec.urgency === 'high' ? 'destructive' : spec.urgency === 'medium' ? 'default' : 'secondary'}
+                              className="text-xs"
+                            >
+                              {spec.urgency}
+                            </Badge>
+                          </div>
+                          <p className="text-xs text-muted-foreground">{spec.description}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <Link href="/doctors">
+                      <Button variant="outline" size="sm" className="smooth-transition hover-scale">
+                        <Stethoscope className="h-4 w-4 mr-2" />
+                        Find Doctors
+                      </Button>
+                    </Link>
+                    <Link href="/auth/login">
+                      <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 smooth-transition hover-scale">
+                        Book Appointment
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )}
+
               <Textarea
-                placeholder="Describe your symptoms in detail... (e.g., headache, fever, nausea, fatigue)"
+                placeholder="Describe your symptoms... (e.g., chest pain, fever, headache)"
                 value={symptomText}
                 onChange={(e) => setSymptomText(e.target.value)}
                 className="min-h-[80px] sm:min-h-[100px] bg-input border-border text-foreground placeholder:text-muted-foreground professional-body text-sm sm:text-base resize-none"
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault()
+                    sendMessage()
+                  }
+                }}
               />
               <Button
-                onClick={analyzeSymptoms}
+                onClick={sendMessage}
                 className="w-full bg-primary text-primary-foreground hover:bg-primary/90 professional-body smooth-transition hover-scale disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={!symptomText.trim()}
+                disabled={!symptomText.trim() || isTyping}
               >
                 <AlertCircle className="h-4 w-4 mr-2" />
-                Analyze Symptoms
+                {isTyping ? 'Analyzing...' : 'Get Recommendations'}
               </Button>
             </CardContent>
           </Card>
-
-          {showResults && (
-            <Card className="mb-6 bg-card border-border fade-in-up scale-in">
-              <CardHeader className="p-4 sm:p-5">
-                <h3 className="text-lg sm:text-xl font-semibold text-card-foreground professional-heading">Possible Conditions</h3>
-                <p className="text-sm sm:text-base text-muted-foreground professional-body">
-                  Based on your symptoms, here are 5 possible conditions. Click one to answer more detailed questions.
-                </p>
-              </CardHeader>
-              <CardContent className="p-4 sm:p-5">
-                <div className="space-y-3">
-                  {possibleConditions.map((condition, index) => (
-                    <Card
-                      key={condition}
-                      className={`cursor-pointer smooth-transition hover-lift hover-glow ${
-                        selectedCondition === condition ? "ring-2 ring-primary bg-primary/5 scale-105" : ""
-                      }`}
-                      onClick={() => selectCondition(condition)}
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    >
-                      <CardContent className="p-3 sm:p-4">
-                        <div className="flex items-center justify-between gap-2 sm:gap-3">
-                          <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-xs sm:text-sm flex-shrink-0">
-                              {index + 1}
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <h4 className="font-medium text-card-foreground professional-heading text-sm sm:text-base truncate">{condition}</h4>
-                              <p className="text-xs sm:text-sm text-muted-foreground professional-body">
-                                Click to take detailed questionnaire (50 questions)
-                              </p>
-                            </div>
-                          </div>
-                          <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
 
           {/* How It Works Section */}
           <section className="mb-6 fade-in-up">
@@ -475,8 +528,7 @@ export default function HomePage() {
                 </Card>
               </div>
               <div className="order-1 md:order-2">
-                <div className="relative h-48 sm:h-64 md:h-72 rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 to-accent/30 flex items-center justify-center">
-                  <Users className="h-16 w-16 sm:h-24 sm:w-24 text-primary/30" />
+                <div className="relative h-48 sm:h-64 md:h-72 rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 to-accent/30 flex items-center justify-center" style={{ backgroundImage: `url(/fitgramsection.png)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                 </div>
               </div>
             </div>
@@ -486,8 +538,7 @@ export default function HomePage() {
           <section className="mb-6 fade-in-up">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-center">
               <div className="order-2 md:order-2">
-                <div className="relative h-48 sm:h-64 md:h-72 rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 to-accent/30 flex items-center justify-center">
-                  <Stethoscope className="h-16 w-16 sm:h-24 sm:w-24 text-primary/30" />
+                <div className="relative h-48 sm:h-64 md:h-72 rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 to-accent/30 flex items-center justify-center" style={{ backgroundImage: `url(/doctorsection.avif)`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                 </div>
               </div>
               <div className="order-1 md:order-1">
@@ -607,7 +658,7 @@ export default function HomePage() {
               <div className="sm:col-span-2 lg:col-span-2">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 bg-primary/10 rounded-lg">
-                    <Stethoscope className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
+                    <img src="/logosymptocare.png" alt="SymptoCare Logo" className="h-6 w-6 sm:h-7 sm:w-7" />
                   </div>
                   <h3 className="text-2xl sm:text-3xl font-bold text-primary professional-heading italic">SymptoCare</h3>
                 </div>
@@ -616,10 +667,7 @@ export default function HomePage() {
                   Your health is our priority.
                 </p>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <div className="p-1.5 bg-primary/10 rounded-md">
-                    <Shield className="h-4 w-4 text-primary" />
-                  </div>
-                  <span>© 2024 SymptoCare. All rights reserved.</span>
+                  <span>© 2025 SymptoCare. All rights reserved.</span>
                 </div>
               </div>
 
@@ -654,7 +702,7 @@ export default function HomePage() {
                         Coming Soon
                       </Badge>
                     </div>
-                    <p className="text-xs text-muted-foreground ml-6">+91XXXXXX</p>
+                    <p className="text-xs text-muted-foreground ml-6">   </p>
                   </div>
                   <div className="p-3 bg-accent/50 rounded-lg border border-border">
                     <div className="flex items-center gap-2">

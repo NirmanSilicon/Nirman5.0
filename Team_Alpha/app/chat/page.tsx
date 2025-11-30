@@ -66,7 +66,8 @@ export default function ChatPage() {
   const [filterSpecialization, setFilterSpecialization] = useState("all")
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!)
+  const genAI = new GoogleGenerativeAI("AIzaSyA8iAldcwFwBg_rAbFakFOzUlHkr-tJAWs")
+  console.log(process.env.GOOGLE_GENERATIVE_AI_API_KEY)
 
   // Mock data
   useEffect(() => {

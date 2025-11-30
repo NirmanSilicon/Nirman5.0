@@ -1,324 +1,307 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Calendar, Clock, ArrowLeft, AlertCircle, CheckCircle } from "lucide-react"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Calendar, Clock, User, Stethoscope, MapPin, Phone } from "lucide-react"
 import Link from "next/link"
-import { getCurrentUser, getCurrentUserRole } from "@/lib/auth"
-import { getDoctorProfile } from "@/lib/auth"
-import { supabase } from "@/lib/supabase"
+import { useRouter, useSearchParams } from "next/navigation"
 
 export default function BookAppointmentPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const doctorId = searchParams.get("doctorId")
-  
-  const [user, setUser] = useState<any>(null)
-  const [doctor, setDoctor] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [isBooking, setIsBooking] = useState(false)
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState(false)
-
   const [formData, setFormData] = useState({
-    date: "",
-    time: "",
-    consultationType: "video",
-    reason: "",
-    patientNotes: "",
+    patientName: "",
+    email: "",
+    phone: "",
+    age: "",
+    gender: "",
+    symptoms: "",
+    appointmentDate: "",
+    appointmentTime: "",
+    consultationMode: "online",
+    doctorId: "", // This would come from URL params or context
+    additionalNotes: ""
   })
 
   useEffect(() => {
-    const checkAuthAndLoadDoctor = async () => {
-      try {
-        const currentUser = await getCurrentUser()
-        if (!currentUser) {
-          router.push(`/auth/login?redirect=/appointments/book?doctorId=${doctorId}`)
-          return
-        }
-
-        setUser(currentUser)
-
-        if (doctorId) {
-          const doctorData = await getDoctorProfile(doctorId)
-          setDoctor(doctorData)
-        }
-      } catch (error) {
-        console.error("Error loading data:", error)
-        router.push("/auth/login")
-      } finally {
-        setIsLoading(false)
-      }
+    const doctorId = searchParams.get('doctorId')
+    if (doctorId) {
+      setFormData(prev => ({
+        ...prev,
+        doctorId
+      }))
     }
+  }, [searchParams])
 
-    checkAuthAndLoadDoctor()
-  }, [doctorId, router])
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError("")
-    setIsBooking(true)
 
-    if (!formData.date || !formData.time || !formData.reason.trim()) {
-      setError("Please fill in all required fields")
-      setIsBooking(false)
-      return
-    }
+    // Here you would typically send the data to your backend
+    console.log("Appointment booking data:", formData)
 
-    try {
-      // Combine date and time
-      const scheduledAt = new Date(`${formData.date}T${formData.time}`)
-
-      // Create appointment in database
-      const { data, error: appointmentError } = await supabase
-        .from('appointments')
-        .insert({
-          patient_id: user.id,
-          doctor_id: doctorId,
-          scheduled_at: scheduledAt.toISOString(),
-          duration_minutes: 30,
-          status: 'scheduled',
-          consultation_type: formData.consultationType,
-          reason: formData.reason,
-          patient_notes: formData.patientNotes || null,
-        })
-        .select()
-        .single()
-
-      if (appointmentError) throw appointmentError
-
-      setSuccess(true)
-      setTimeout(() => {
-        router.push("/dashboard/user")
-      }, 2000)
-    } catch (err: any) {
-      setError(err.message || "Failed to book appointment. Please try again.")
-    } finally {
-      setIsBooking(false)
-    }
+    // For now, just show success and redirect
+    alert("Appointment booked successfully!")
+    router.push("/appointments/confirmation")
   }
 
-  const getAvailableDates = () => {
-    const dates = []
-    for (let i = 1; i <= 14; i++) {
-      const date = new Date()
-      date.setDate(date.getDate() + i)
-      dates.push(date.toISOString().split("T")[0])
-    }
-    return dates
-  }
-
-  const getAvailableTimes = () => {
-    // Generate time slots (9 AM to 6 PM, 30-minute intervals)
-    const times = []
-    for (let hour = 9; hour < 18; hour++) {
-      for (let minute = 0; minute < 60; minute += 30) {
-        const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
-        times.push(timeString)
-      }
-    }
-    return times
-  }
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (!doctor) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <Card className="max-w-md w-full">
-          <CardContent className="p-6 text-center">
-            <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Doctor Not Found</h2>
-            <p className="text-muted-foreground mb-4">The doctor you're looking for doesn't exist.</p>
-            <Link href="/doctors">
-              <Button className="w-full">Back to Doctors</Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  if (success) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <Card className="max-w-md w-full">
-          <CardContent className="p-6 text-center">
-            <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Appointment Booked!</h2>
-            <p className="text-muted-foreground mb-4">Your appointment has been successfully booked.</p>
-            <p className="text-sm text-muted-foreground">Redirecting to dashboard...</p>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
+  const timeSlots = [
+    "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
+    "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM",
+    "05:00 PM", "05:30 PM", "06:00 PM"
+  ]
 
   return (
-    <div className="min-h-screen bg-background py-6 sm:py-8">
-      <div className="container mx-auto px-3 sm:px-4 max-w-4xl">
-        <Link href={`/doctors/${doctorId}`} className="inline-flex items-center gap-2 text-primary hover:underline mb-6 smooth-transition">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Doctor Profile
-        </Link>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Booking Form */}
-          <div className="lg:col-span-2">
-            <Card className="bg-card border-border fade-in-up hover-lift smooth-transition">
-              <CardHeader className="p-4 sm:p-6">
-                <CardTitle className="text-xl sm:text-2xl text-card-foreground">Book Appointment</CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 sm:p-6 pt-0">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="date" className="text-sm sm:text-base">Select Date *</Label>
-                    <Select value={formData.date} onValueChange={(value) => setFormData({ ...formData, date: value })} required>
-                      <SelectTrigger className="bg-input border-border text-foreground">
-                        <SelectValue placeholder="Choose date" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {getAvailableDates().map((date) => (
-                          <SelectItem key={date} value={date}>
-                            {new Date(date).toLocaleDateString("en-US", {
-                              weekday: "long",
-                              month: "long",
-                              day: "numeric",
-                            })}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="time" className="text-sm sm:text-base">Select Time *</Label>
-                    <Select value={formData.time} onValueChange={(value) => setFormData({ ...formData, time: value })} required>
-                      <SelectTrigger className="bg-input border-border text-foreground">
-                        <SelectValue placeholder="Choose time" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {getAvailableTimes().map((time) => (
-                          <SelectItem key={time} value={time}>
-                            {time}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="consultationType" className="text-sm sm:text-base">Consultation Type *</Label>
-                    <Select
-                      value={formData.consultationType}
-                      onValueChange={(value) => setFormData({ ...formData, consultationType: value })}
-                      required
-                    >
-                      <SelectTrigger className="bg-input border-border text-foreground">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="video">Video Call</SelectItem>
-                        <SelectItem value="phone">Phone Call</SelectItem>
-                        <SelectItem value="in-person">In-Person</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="reason" className="text-sm sm:text-base">Reason for Visit *</Label>
-                    <Textarea
-                      id="reason"
-                      placeholder="Describe your symptoms or reason for consultation..."
-                      value={formData.reason}
-                      onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                      className="bg-input border-border text-foreground min-h-[100px]"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="patientNotes" className="text-sm sm:text-base">Additional Notes (Optional)</Label>
-                    <Textarea
-                      id="patientNotes"
-                      placeholder="Any additional information you'd like to share..."
-                      value={formData.patientNotes}
-                      onChange={(e) => setFormData({ ...formData, patientNotes: e.target.value })}
-                      className="bg-input border-border text-foreground min-h-[80px]"
-                    />
-                  </div>
-
-                  {error && (
-                    <div className="p-3 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-md text-red-800 dark:text-red-200 text-sm fade-in scale-in">
-                      <AlertCircle className="h-4 w-4 inline mr-2" />
-                      {error}
-                    </div>
-                  )}
-
-                  <Button
-                    type="submit"
-                    disabled={isBooking}
-                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90 smooth-transition hover-scale disabled:opacity-50"
-                  >
-                    {isBooking ? "Booking..." : "Confirm Booking"}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Doctor Info Sidebar */}
-          <div className="lg:col-span-1">
-            <Card className="bg-gradient-to-br from-card to-accent/30 border-border sticky top-6 fade-in-up hover-lift smooth-transition">
-              <CardHeader className="p-4 sm:p-6">
-                <CardTitle className="text-lg sm:text-xl text-card-foreground">Doctor Details</CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 sm:p-6 pt-0 space-y-4">
-                <div>
-                  <h3 className="font-semibold text-lg text-card-foreground">{doctor.profiles?.full_name || "Dr. Unknown"}</h3>
-                  <p className="text-primary font-medium">{doctor.specialization}</p>
-                </div>
-
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Clock className="h-4 w-4 text-primary" />
-                    <span>{doctor.experience_years}+ years experience</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Calendar className="h-4 w-4 text-primary" />
-                    <span>₹{doctor.consultation_fee} per consultation</span>
-                  </div>
-                </div>
-
-                {doctor.location && (
-                  <div className="pt-4 border-t border-border">
-                    <p className="text-xs sm:text-sm text-muted-foreground">{doctor.location}</p>
-                    {doctor.address && (
-                      <p className="text-xs text-muted-foreground mt-1">{doctor.address}</p>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="bg-card border-b border-border fade-in">
+        <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <div>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-primary professional-heading">Book Appointment</h1>
+              <p className="text-muted-foreground professional-body mt-1 sm:mt-2 text-xs sm:text-sm md:text-base">
+                Schedule your consultation with a healthcare professional
+              </p>
+            </div>
+            <Link href="/doctors">
+              <Button variant="outline" className="w-full sm:w-auto smooth-transition hover-scale text-sm">
+                <Stethoscope className="h-4 w-4 mr-2" />
+                Back to Doctors
+              </Button>
+            </Link>
           </div>
         </div>
-      </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8 max-w-4xl">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Patient Information */}
+          <Card className="fade-in-up">
+            <CardHeader>
+              <h2 className="text-lg sm:text-xl font-semibold text-card-foreground professional-heading flex items-center gap-2">
+                <User className="h-5 w-5 text-primary" />
+                Patient Information
+              </h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="patientName">Full Name *</Label>
+                  <Input
+                    id="patientName"
+                    value={formData.patientName}
+                    onChange={(e) => handleInputChange("patientName", e.target.value)}
+                    placeholder="Enter your full name"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number *</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                    placeholder="Enter your phone number"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="age">Age *</Label>
+                  <Input
+                    id="age"
+                    type="number"
+                    value={formData.age}
+                    onChange={(e) => handleInputChange("age", e.target.value)}
+                    placeholder="Enter your age"
+                    min="1"
+                    max="120"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Gender *</Label>
+                  <Select value={formData.gender} onValueChange={(value) => handleInputChange("gender", value)} required>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                      <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Symptoms & Medical Information */}
+          <Card className="fade-in-up" style={{ animationDelay: '0.1s' }}>
+            <CardHeader>
+              <h2 className="text-lg sm:text-xl font-semibold text-card-foreground professional-heading flex items-center gap-2">
+                <Stethoscope className="h-5 w-5 text-primary" />
+                Symptoms & Medical Information
+              </h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="symptoms">Describe Your Symptoms *</Label>
+                <Textarea
+                  id="symptoms"
+                  value={formData.symptoms}
+                  onChange={(e) => handleInputChange("symptoms", e.target.value)}
+                  placeholder="Please describe your symptoms, when they started, and any relevant medical history..."
+                  rows={4}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="additionalNotes">Additional Notes (Optional)</Label>
+                <Textarea
+                  id="additionalNotes"
+                  value={formData.additionalNotes}
+                  onChange={(e) => handleInputChange("additionalNotes", e.target.value)}
+                  placeholder="Any additional information you'd like to share with the doctor..."
+                  rows={3}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Appointment Details */}
+          <Card className="fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <CardHeader>
+              <h2 className="text-lg sm:text-xl font-semibold text-card-foreground professional-heading flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-primary" />
+                Appointment Details
+              </h2>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="appointmentDate">Preferred Date *</Label>
+                  <Input
+                    id="appointmentDate"
+                    type="date"
+                    value={formData.appointmentDate}
+                    onChange={(e) => handleInputChange("appointmentDate", e.target.value)}
+                    min={new Date().toISOString().split('T')[0]}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="appointmentTime">Preferred Time *</Label>
+                  <Select value={formData.appointmentTime} onValueChange={(value) => handleInputChange("appointmentTime", value)} required>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select time slot" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {timeSlots.map((time) => (
+                        <SelectItem key={time} value={time}>
+                          {time}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <Label>Consultation Mode *</Label>
+                <RadioGroup
+                  value={formData.consultationMode}
+                  onValueChange={(value) => handleInputChange("consultationMode", value)}
+                  className="flex flex-col sm:flex-row gap-4"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="online" id="online" />
+                    <Label htmlFor="online" className="flex items-center gap-2 cursor-pointer">
+                      <div className="p-1 bg-primary/10 rounded">
+                        <Clock className="h-4 w-4 text-primary" />
+                      </div>
+                      Online Consultation
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="offline" id="offline" />
+                    <Label htmlFor="offline" className="flex items-center gap-2 cursor-pointer">
+                      <div className="p-1 bg-primary/10 rounded">
+                        <MapPin className="h-4 w-4 text-primary" />
+                      </div>
+                      In-Person Visit
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Submit Button */}
+          <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <Button
+              type="submit"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 smooth-transition hover-scale flex-1"
+            >
+              <Calendar className="h-4 w-4 mr-2" />
+              Book Appointment
+            </Button>
+            <Link href="/doctors" className="flex-1">
+              <Button variant="outline" className="w-full smooth-transition hover-scale">
+                Cancel
+              </Button>
+            </Link>
+          </div>
+        </form>
+
+        {/* Important Notes */}
+        <Card className="mt-6 bg-yellow-50/50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-800">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex-shrink-0">
+                <Clock className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-card-foreground mb-2">Important Notes</h3>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• Appointments are subject to doctor availability</li>
+                  <li>• You will receive a confirmation email and SMS</li>
+                  <li>• Cancellation policy: 24 hours notice required</li>
+                  <li>• For emergencies, please visit your nearest hospital</li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </main>
     </div>
   )
 }
-

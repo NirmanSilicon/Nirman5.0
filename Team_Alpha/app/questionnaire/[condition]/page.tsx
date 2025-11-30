@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { GoogleGenerativeAI } from "@google/generative-ai"
+
 import { ChevronLeft } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { getCurrentUser } from "@/lib/auth"
@@ -30,7 +30,7 @@ export default function QuestionnairePage({ params }: QuestionnaireProps) {
   const { theme } = useTheme()
   const router = useRouter()
 
-  const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!)
+
 
   useEffect(() => {
     const fetchQuestions = async () => {

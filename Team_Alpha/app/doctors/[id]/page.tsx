@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from "react"
@@ -302,11 +303,12 @@ export default function DoctorDetailPage() {
                 {/* Book Now Button */}
                 <Button
                   onClick={handleBookAppointment}
+                  disabled={isBooking}
                   className="w-full bg-primary text-primary-foreground hover:bg-primary/90 smooth-transition hover-scale text-base sm:text-lg py-6"
                   size="lg"
                 >
                   <Calendar className="h-5 w-5 mr-2" />
-                  {isBooking ? "Redirecting..." : "Book Appointment"}
+                  {isBooking ? "Booking..." : "Book Appointment"}
                 </Button>
 
                 <p className="text-xs text-center text-muted-foreground">
