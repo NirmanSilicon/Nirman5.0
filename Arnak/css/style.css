@@ -221,7 +221,7 @@ body{
 
 /* sections */
 .section{
-  padding:80px 0;
+  padding:48px 0;
   position:relative;
 }
 
@@ -236,6 +236,9 @@ body{
 
 .grid-3{
   grid-template-columns:repeat(3, minmax(0,1fr));
+}
+.grid-4{
+  grid-template-columns:repeat(4, minmax(0,1fr));
 }
 
 /* price card + chart placeholder */
@@ -1066,6 +1069,23 @@ input, textarea{
   background:var(--role-primary);
 }
 
+/* Marketplace Filter Buttons */
+.filter-btn{
+  transition:all 0.2s ease;
+}
+
+.filter-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+.filter-btn.active{
+  background:var(--primary) !important;
+  color:white !important;
+  border-color:var(--primary) !important;
+  box-shadow:0 4px 12px rgba(47,142,68,0.3);
+}
+
 /* Links and text in dark mode */
 a{color:inherit;transition: color 0.2s ease}
 [data-theme="dark"] a{color:var(--text)}
@@ -1075,6 +1095,46 @@ a{color:inherit;transition: color 0.2s ease}
 /* Additional dark mode adjustments */
 [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3, [data-theme="dark"] h4{color:var(--text)}
 [data-theme="dark"] .price-chart{background:linear-gradient(180deg, rgba(59,168,90,0.1), rgba(0,0,0,0.1))}
+
+.pie-chart-container{
+  position:relative;
+  background:var(--bg);
+  border-radius:12px;
+  border:1px solid var(--border);
+  padding:20px;
+  min-height:300px;
+}
+
+.pie-chart-container svg{
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+[data-theme="dark"] .pie-chart-container svg{
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+#pie-legend{
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+#pie-legend::-webkit-scrollbar{
+  width:6px;
+}
+
+#pie-legend::-webkit-scrollbar-track{
+  background:transparent;
+  border-radius:10px;
+}
+
+#pie-legend::-webkit-scrollbar-thumb{
+  background:var(--border);
+  border-radius:10px;
+}
+
+#pie-legend::-webkit-scrollbar-thumb:hover{
+  background:var(--muted);
+}
 
 /* Additional UI improvements */
 h2, h3, h4{

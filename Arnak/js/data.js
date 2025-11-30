@@ -10,10 +10,26 @@ window.AGRI = (function(){
   ];
 
   const MARKETPLACE_LISTINGS = [
-    { id:1, crop:"Organic Wheat", price:2200, unit:"quintal", quantity:50, location:"Punjab, India", grade:"A+", farmer:"Rajesh Kumar", image:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&q=80&w=1200" },
-    { id:2, crop:"Fresh Tomatoes", price:40, unit:"kg", quantity:200, location:"Nashik, Maharashtra", grade:"A", farmer:"Suresh Patil", image:"https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&q=80&w=1200" },
-    { id:3, crop:"Basmati Rice", price:4500, unit:"quintal", quantity:100, location:"Haryana, India", grade:"Premium", farmer:"Amit Singh", image:"https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=1200" },
-    { id:4, crop:"Red Onions", price:28, unit:"kg", quantity:500, location:"Madhya Pradesh", grade:"B+", farmer:"Vikram Yadav", image:"https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&q=80&w=1200" }
+    // Produce (default)
+    { id:1, crop:"Organic Wheat", price:2200, unit:"quintal", quantity:50, location:"Punjab, India", grade:"A+", farmer:"Rajesh Kumar", category:"produce", image:"https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&q=80&w=1200" },
+    { id:2, crop:"Fresh Tomatoes", price:40, unit:"kg", quantity:200, location:"Nashik, Maharashtra", grade:"A", farmer:"Suresh Patil", category:"produce", image:"https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&q=80&w=1200" },
+    { id:3, crop:"Basmati Rice", price:4500, unit:"quintal", quantity:100, location:"Haryana, India", grade:"Premium", farmer:"Amit Singh", category:"produce", image:"https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=1200" },
+    { id:4, crop:"Red Onions", price:28, unit:"kg", quantity:500, location:"Madhya Pradesh", grade:"B+", farmer:"Vikram Yadav", category:"produce", image:"https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&q=80&w=1200" },
+    // Seeds
+    { id:5, crop:"Hybrid Wheat Seeds", price:120, unit:"kg", quantity:100, location:"Punjab, India", grade:"Premium", farmer:"Seed Co.", category:"seeds", image:"https://images.unsplash.com/photo-1615485925503-7ec8340b4302?auto=format&fit=crop&q=80&w=1200" },
+    { id:6, crop:"Basmati Rice Seeds", price:180, unit:"kg", quantity:80, location:"Haryana, India", grade:"A+", farmer:"Agri Seeds Ltd", category:"seeds", image:"https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=1200" },
+    { id:7, crop:"Tomato Hybrid Seeds", price:250, unit:"100g", quantity:50, location:"Maharashtra, India", grade:"Premium", farmer:"Green Seeds", category:"seeds", image:"https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&q=80&w=1200" },
+    { id:8, crop:"Cotton Seeds", price:95, unit:"kg", quantity:200, location:"Gujarat, India", grade:"A", farmer:"Cotton Seed Co.", category:"seeds", image:"https://images.unsplash.com/photo-1615485925503-7ec8340b4302?auto=format&fit=crop&q=80&w=1200" },
+    // Pesticides
+    { id:9, crop:"Organic Neem Pesticide", price:450, unit:"liter", quantity:30, location:"Karnataka, India", grade:"Organic", farmer:"BioAgri Solutions", category:"pesticides", image:"assets/pesticides/neem_pesticides.jpg" },
+    { id:10, crop:"Insecticide Spray", price:380, unit:"liter", quantity:25, location:"Punjab, India", grade:"A", farmer:"Crop Care", category:"pesticides", image:"assets/pesticides/insecticide_spray.jpg" },
+    { id:11, crop:"Fungicide Solution", price:520, unit:"liter", quantity:20, location:"Maharashtra, India", grade:"Premium", farmer:"AgriChem", category:"pesticides", image:"assets/pesticides/fungicides.webp" },
+    { id:12, crop:"Herbicide", price:420, unit:"liter", quantity:35, location:"Haryana, India", grade:"A+", farmer:"Weed Control Pro", category:"pesticides", image:"assets/pesticides/herbicides.jpg" },
+    // Agritech
+    { id:13, crop:"Soil Moisture Sensor", price:2500, unit:"piece", quantity:15, location:"Bangalore, India", grade:"Tech", farmer:"AgriTech Solutions", category:"agritech", image:"assets/agritech/soil_moisture_sensor.jpg" },
+    { id:14, crop:"Drip Irrigation Kit", price:8500, unit:"acre", quantity:10, location:"Pune, India", grade:"Premium", farmer:"Irrigation Pro", category:"agritech", image:"assets/agritech/drip_irrigation_kit.webp" },
+    { id:15, crop:"Smart Farming App Subscription", price:1200, unit:"year", quantity:100, location:"Online", grade:"Digital", farmer:"FarmTech", category:"agritech", image:"https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200" },
+    { id:16, crop:"Weather Station", price:15000, unit:"unit", quantity:8, location:"Delhi, India", grade:"Tech", farmer:"WeatherTech", category:"agritech", image:"assets/agritech/weather_station.jpg" }
   ];
 
   const COMMUNITY_POSTS = [
