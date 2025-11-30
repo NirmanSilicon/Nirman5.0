@@ -1,0 +1,90 @@
+#DOCSIGNIN
+from ._anvil_designer import DoctorLoginTemplate
+from anvil import *
+import anvil.server
+
+
+class DoctorLogin(DoctorLoginTemplate):
+
+  def __init__(self, **properties):
+    self.init_components(**properties)
+    self.content_panel.visible = True
+
+
+  # -------------------------
+  # GO TO SIGNUP FORM
+  # -------------------------
+  def btn_go_signup_click(self, **event_args):
+    # Open the signup form inside the same Login package
+    open_form('Login.DoctorSignup')
+
+
+  # -------------------------
+  # LOGIN BUTTON CLICK
+  # -------------------------
+  def btn_login_click(self, **event_args):
+    email = self.txt_login_email.text
+    password = self.txt_login_password.text
+
+    if not email or not password:
+      alert("Please enter both email and password.")
+      return
+
+    doctor = anvil.server.call('doctor_login', email, password)
+
+    if doctor == "NO_USER":
+      alert("No doctor found with this email.")
+    elif doctor == "WRONG_PASS":
+      alert("Incorrect password.")
+    elif doctor == "NOT_APPROVED":
+      alert("Your account is not approved yet.")
+    else:
+      alert("Login Successful!")
+      open_form('DoctorDashboard')
+
+#DOCTORSIGNUP
+from ._anvil_designer import DoctorSignupTemplate
+from anvil import *
+import anvil.server
+
+class DoctorSignup(DoctorSignupTemplate):
+
+  def __init__(self, **properties):
+    self.init_components(**properties)
+
+
+  def btn_signup_click(self, **event_args):
+    name = self.txt_signup_name.text
+    email = self.txt_signup_email.text
+    password = self.txt_signup_password.text
+    confirm = self.txt_signup_confirm.text
+    specialization = self.txt_signup_specialization.text
+    experience = self.txt_signup_experience.text
+    phone = self.txt_signup_phone.text
+    registration= self.txt_signup_reg.text
+    meet_link = self.txt_meet_link.text
+
+    if not (name and email and password and specialization and phone and experience and registration):
+      alert("Please fill all required fields.")
+      return
+
+    if password != confirm:
+      alert("Passwords do not match!")
+      return
+
+    result = anvil.server.call(
+      "doctor_signup",
+      name, email, password, specialization, experience, phone, registration, meet_link
+    )
+
+    if result == "EXISTS":
+      alert("An account with this email already exists.")
+    else:
+      alert("Signup successful! Your account is under approval.")
+      open_form('Login.DoctorLogin')
+
+
+  def btn_back_login_click(self, **event_args):
+    open_form('Login.DoctorLogin')
+
+ 
