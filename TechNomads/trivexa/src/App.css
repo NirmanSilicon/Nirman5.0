@@ -461,20 +461,28 @@
   padding: 0 24px;
   z-index: 100;
 }
-/* AI PAGE */
+/* AI PAGE BASE */
 .ai-page {
   min-height: 100vh;
   background: #f5f7fb;
+  padding-bottom: 100px;
 }
 
-/* AI CHAT */
-.pe-ai-chat {
+/* SPLIT CHAT + PRODUCTS */
+.ai-split-container {
   margin: 110px auto 20px;
-  width: min(760px, 92%);
-  height: 360px;
+  width: 1300px;
+  height:450px;
+  display: grid;
+  grid-template-columns: 2fr 1.2fr;
+  gap: 16px;
+}
+
+/* LEFT CHAT */
+.ai-chat-left {
   background: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -483,14 +491,51 @@
 .pe-ai-messages {
   flex: 1;
   overflow-y: auto;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
+/* RIGHT PRODUCTS */
+.ai-products-right {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.ai-product-card {
+  background: #f9fafb;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.ai-product-card h4 {
+  margin-bottom: 6px;
+}
+
+.ai-product-card button {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: none;
+  background: #0f766e;
+  color: white;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.ai-no-product {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* CHAT MESSAGES */
 .ai-msg {
   padding: 10px 14px;
   margin-bottom: 8px;
   border-radius: 12px;
-  max-width: 80%;
+  max-width: 85%;
+  font-size: 0.9rem;
 }
 
 .ai-msg.user {
@@ -503,15 +548,16 @@
   align-self: flex-start;
 }
 
-/* SEARCH AT BOTTOM */
+/* SEARCH BAR BOTTOM */
 .pe-ai-search {
   position: fixed;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: min(760px, 92%);
+  width: min(900px, 95%);
   display: flex;
   gap: 10px;
+  z-index: 100;
 }
 
 .pe-ai-search input {
