@@ -1,0 +1,7 @@
+0 Potato_Early_Blight
+1 Potato_Healthy
+2 Potato_Late_Blight
+3 Tomato_Early_Blight
+4 Tomato_Healthy
+5 Tomato_Late_Blight
+6 Tomato_Leaf_Mold
