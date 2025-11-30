@@ -1,0 +1,354 @@
+<!-- frontend/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AyurScan – Ayurvedic Tongue Analyzer</title>
+
+  <style>
+    /* Ayurvedic color palette */
+    :root {
+      --bg-main: #fdf7ef;
+      --bg-card: #fff9f2;
+      --accent-primary: #c67b2f;   /* warm turmeric */
+      --accent-primary-soft: #f1c58b;
+      --accent-secondary: #5f8b6f; /* herbal green */
+      --accent-danger: #c0392b;
+      --text-main: #4b591b;
+      --text-soft: #7b6a5a;
+      --border-soft: #ead6bd;
+      --shadow-soft: 0 14px 45px rgba(0, 0, 0, 0.08);
+      --radius-lg: 18px;
+      --radius-md: 10px;
+      --transition-fast: 0.2s ease-out;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top left, rgba(252, 206, 139, 0.55), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(157, 192, 167, 0.45), transparent 55%),
+        var(--bg-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px 40px;
+    }
+
+    /* Heading / Hero */
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2.1rem, 3vw, 2.6rem);
+      letter-spacing: 0.04em;
+      text-align: center;
+      color: #5a3821;
+      text-shadow: 0 2px 6px rgba(127, 78, 32, 0.2);
+      position: relative;
+    }
+
+    /* Small decorative underline with a diya-inspired feel */
+    h1::after {
+      content: "";
+      display: block;
+      margin: 10px auto 0;
+      width: 90px;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #6a9e7a, #068825, #1f612c);
+    }
+
+    .subtitle {
+      margin: 0 0 24px;
+      font-size: 0.98rem;
+      text-align: center;
+      max-width: 540px;
+      line-height: 1.5;
+      color: var(--text-soft);
+    }
+
+    /* Cards */
+
+    .card {
+      width: 100%;
+      max-width: 860px;
+      background: rgba(255, 249, 242, 0.92);
+      border-radius: var(--radius-lg);
+      padding: 20px 18px 22px;
+      margin-top: 20px;
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Thin decorative strip on card top edge */
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 12px;
+      right: 12px;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #5f8b6f, #238137);
+      opacity: 0.75;
+    }
+
+    .card h2 {
+      margin-top: 6px;
+      margin-bottom: 12px;
+      font-size: 1.12rem;
+      color: #5a3821;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Ayurveda icon before section title */
+    .card h2::before {
+      content: "🌿";
+      font-size: 1.2rem;
+    }
+
+    /* Button Row */
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    /* Buttons */
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      transition:
+        background-color var(--transition-fast),
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        color var(--transition-fast),
+        opacity var(--transition-fast);
+    }
+
+    /* Primary actions */
+
+    #startCamera,
+    #analyzeBtn {
+      background: linear-gradient(135deg, #37972c, #0fde04);
+      color: #fff7ec;
+      box-shadow: 0 8px 20px rgba(198, 123, 47, 0.35);
+    }
+
+    #startCamera:hover,
+    #analyzeBtn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(198, 123, 47, 0.4);
+    }
+
+    /* Secondary actions */
+
+    #autoCapture,
+    #capture,
+    #stopCamera {
+      background: rgba(255, 255, 255, 0.9);
+      color: #5a3821;
+      border: 1px solid rgba(198, 123, 47, 0.3);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    #autoCapture:hover,
+    #capture:hover,
+    #stopCamera:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Disabled state */
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    /* Video / Preview */
+
+    #video,
+    #preview {
+      width: 100%;
+      max-width: 480px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      display: block;
+      margin: 6px auto 0;
+      background: #f8ece0;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Status text */
+
+    .meta,
+    #statusText {
+      font-size: 0.82rem;
+      margin-top: 10px;
+      text-align: center;
+      color: var(--text-soft);
+      font-style: italic;
+    }
+
+    /* Form elements */
+
+    label {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 4px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #5a3821;
+    }
+
+    select,
+    textarea {
+      width: 100%;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      padding: 8px 10px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: #fffdf8;
+      transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast);
+    }
+
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent-secondary);
+      box-shadow: 0 0 0 2px rgba(95, 139, 111, 0.25);
+      background: #fffef9;
+    }
+
+    textarea::placeholder {
+      color: #b29a87;
+    }
+
+    /* Result Section */
+
+    #result {
+      margin-bottom: 8px;
+    }
+
+    #result h3 {
+      margin-top: 0;
+      margin-bottom: 6px;
+      color: #5a3821;
+      font-size: 1.05rem;
+    }
+
+    #result p {
+      margin: 4px 0;
+      font-size: 0.92rem;
+      color: var(--text-soft);
+    }
+
+    /* Small “pill” tags inside result (if you add later) */
+    #result .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(95, 139, 111, 0.08);
+      border: 1px solid rgba(95, 139, 111, 0.3);
+      font-size: 0.78rem;
+      margin: 2px 3px 2px 0;
+    }
+
+    /* Responsive */
+
+    @media (max-width: 600px) {
+      body {
+        padding: 20px 10px 28px;
+      }
+
+      .card {
+        padding: 16px 14px 18px;
+      }
+
+      .button-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>AyurScan 🪔</h1>
+  <p class="subtitle">
+    Capture your tongue image, we analyze Dosha using AI and suggest Ayurvedic remedies.
+  </p>
+
+  <div class="card">
+    <h2>1. Camera & Smart Tongue Capture</h2>
+    <div class="button-row">
+      <button id="startCamera">Start Camera</button>
+      <button id="autoCapture" disabled>Smart Auto Capture</button>
+      <button id="capture" disabled>Manual Capture</button>
+      <button id="stopCamera" disabled>Stop Camera</button>
+    </div>
+
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <img id="preview" style="display:none;" alt="Captured tongue image preview">
+
+    <p id="statusText" class="meta"></p>
+  </div>
+
+  <div class="card">
+    <h2>2. Your Issue / Symptoms</h2>
+    <label>What issue are you mainly facing?</label>
+    <select id="diseaseKey">
+      <option value="constipation">Constipation / Gas / Bloating</option>
+      <option value="acidity">Acidity / Burning in chest</option>
+      <option value="cold_cough">Cold, Cough, Congestion</option>
+    </select>
+
+    <label>Describe your symptoms (optional):</label>
+    <textarea id="symptoms" rows="3" placeholder="e.g. gas, bloating, dry skin, disturbed sleep"></textarea>
+
+    <button id="analyzeBtn">Analyze Dosha & Get Remedies</button>
+  </div>
+
+  <div id="result" class="card" style="display:none;"></div>
+
+  <script src="/static/js/main.js"></script>
+</body>
+</html>
