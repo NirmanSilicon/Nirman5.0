@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "LeafSense AI",
+    "slug": "leafsense-ai",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "leafsense",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.leafsense.ai"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#388E3C",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.leafsense.ai"
+    },
+    "web": {
+      "output": "single",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#388E3C",
+          "dark": {
+            "backgroundColor": "#1F2123"
+          }
+        }
+      ],
+      "expo-web-browser",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "LeafSense AI needs access to your photos to analyze leaf images for disease detection.",
+          "cameraPermission": "LeafSense AI needs access to your camera to capture leaf images for disease detection."
+        }
+      ]
+    ],
+    "experiments": {
+      "reactCompiler": true
+    }
+  }
+}

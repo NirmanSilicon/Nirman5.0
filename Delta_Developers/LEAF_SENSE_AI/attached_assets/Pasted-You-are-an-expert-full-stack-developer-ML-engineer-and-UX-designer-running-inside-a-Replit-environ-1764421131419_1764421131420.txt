@@ -1,0 +1,504 @@
+You are an expert full-stack developer, ML engineer, and UX designer running inside a Replit environment.
+
+Build a complete project called LeafSense AI with:
+
+A Python FastAPI backend that serves:
+
+a CNN leaf disease prediction endpoint
+
+an AI-like chat endpoint (rule-based is fine)
+
+an online disease packs endpoint with predefined disease info
+
+A mobile-first web frontend (React + Vite or CRA) with a professional farmer-friendly UI
+
+All files organized properly in the Replit project
+
+This will be used as a hackathon demo of a “digital crop doctor” app.
+
+1. Project Overview
+
+App name: LeafSense AI
+
+Idea: A farmer can upload a leaf image → backend CNN model predicts the disease and confidence → frontend shows disease name, remedies, and prevention tips.
+
+Additional features:
+
+A chatbox where the farmer can ask simple questions (rule-based AI).
+
+An online “Disease Packs” section where the app fetches predefined disease info (e.g., for Tomato, Rice, Potato, etc.) from the backend. These packs contain disease descriptions, symptoms, treatments, and prevention tips.
+
+Think of “disease packs” as structured JSON served by the backend and browsed inside the app.
+
+2. Project Structure (inside Replit)
+
+Create a structure like this in the root of the Replit project:
+
+/
+├── backend/
+│   ├── main.py
+│   ├── model_loader.py
+│   ├── schemas.py
+│   ├── disease_packs.json        # optional static data file
+│   ├── requirements.txt
+│   └── ml/
+│       ├── train_cnn.py
+│       ├── leaf_model.h5
+│       └── class_names.json
+├── frontend/
+│   ├── package.json
+│   ├── index.html
+│   ├── src/
+│   │   ├── main.jsx
+│   │   ├── App.jsx
+│   │   ├── components/
+│   │   │   ├── BottomNav.jsx
+│   │   │   ├── HomeScreen.jsx
+│   │   │   ├── DiagnoseScreen.jsx
+│   │   │   ├── ChatScreen.jsx
+│   │   │   ├── DiseasePacksScreen.jsx
+│   │   │   └── ProfileScreen.jsx
+│   │   └── api.js
+└── README.md
+
+
+You can adjust minor details, but keep backend and frontend separated like this.
+
+3. CNN Model Requirements (backend/ml)
+
+In backend/ml/train_cnn.py:
+
+Use TensorFlow/Keras.
+
+Dataset directory format:
+
+dataset/
+  train/
+    healthy/
+    early_blight/
+    late_blight/
+    rust/
+  val/
+    healthy/
+    early_blight/
+    late_blight/
+    rust/
+
+
+Image size: 224x224
+
+Use a small CNN:
+
+Conv2D + MaxPool (32 filters)
+
+Conv2D + MaxPool (64 filters)
+
+Conv2D + MaxPool (128 filters)
+
+Flatten → Dense → Dropout → Dense (softmax)
+
+Compile with:
+
+optimizer: adam
+
+loss: sparse_categorical_crossentropy
+
+metrics: accuracy
+
+Train for ~5–10 epochs (just enough for demo).
+
+Save:
+
+leaf_model.h5 in backend/ml/
+
+class_names.json in backend/ml/ (list of class names)
+
+You can also simulate training or stub the model if needed but provide the real script.
+
+4. FastAPI Backend
+
+Create backend/main.py with a FastAPI app and these endpoints:
+
+a) GET /health
+
+Returns:
+
+{ "status": "ok" }
+
+b) POST /predict
+
+Accepts multipart/form-data with a file field called "file".
+
+Steps:
+
+Read image file.
+
+Convert to PIL image.
+
+Resize to 224x224.
+
+Normalize (divide by 255.0).
+
+Pass through loaded CNN model.
+
+Response:
+
+{
+  "predicted_class": "early_blight",
+  "confidence": 92.5
+}
+
+c) POST /chat
+
+JSON input:
+
+{
+  "disease": "early_blight",
+  "question": "Why did this happen?"
+}
+
+
+Implement simple rule-based logic:
+
+If disease contains "blight" and question has "why" → explain cause (humidity, poor airflow, fungal infection, etc.).
+
+If question has "treatment" or "what should I do" → return a recommended treatment message.
+
+If question has "prevent" → return prevention tips.
+
+Response:
+
+{
+  "answer": "This disease is usually caused by high humidity and poor airflow between plants..."
+}
+
+d) GET /disease-packs
+
+This is the new feature: predefined disease packs accessible online.
+
+Optional: Store a backend/disease_packs.json file with data like:
+
+{
+  "tomato": [
+    {
+      "name": "Early Blight",
+      "symptoms": "Dark spots with concentric rings on older leaves.",
+      "treatment": "Use copper-based fungicides, remove infected leaves.",
+      "prevention": "Crop rotation, avoid overhead irrigation."
+    },
+    {
+      "name": "Late Blight",
+      "symptoms": "Water-soaked lesions, fuzzy white growth under leaves.",
+      "treatment": "Fungicide spray, remove affected plants.",
+      "prevention": "Use resistant varieties, avoid waterlogged conditions."
+    }
+  ],
+  "potato": [
+    {
+      "name": "Black Scurf",
+      "symptoms": "Black crust-like spots on tubers.",
+      "treatment": "Use certified seeds, treat seed pieces.",
+      "prevention": "Crop rotation and proper soil drainage."
+    }
+  ]
+}
+
+
+GET /disease-packs returns a list of available crops and diseases:
+
+{
+  "packs": [
+    {
+      "crop": "Tomato",
+      "diseases": [
+        { "name": "Early Blight", "symptoms": "...", "treatment": "...", "prevention": "..." },
+        { "name": "Late Blight", "symptoms": "...", "treatment": "...", "prevention": "..." }
+      ]
+    },
+    {
+      "crop": "Potato",
+      "diseases": [ ... ]
+    }
+  ]
+}
+
+
+Backend can load this JSON file once on startup and return it.
+
+e) CORS & Dependencies
+
+Add CORS middleware to allow frontend origin (e.g., http://localhost:5173).
+
+backend/requirements.txt should include:
+
+fastapi
+
+uvicorn[standard]
+
+tensorflow
+
+pillow
+
+numpy
+
+python-multipart
+
+Also add a small snippet in README showing:
+
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+5. Frontend – React (Mobile-first UI)
+
+In frontend/, use React + Vite (or CRA) with mobile-first responsive UI.
+
+Styling:
+Use simple CSS or Tailwind. If Tailwind is too heavy, just use CSS modules or inline CSS.
+
+Theme:
+
+Primary: #388E3C
+
+Secondary: #66BB6A
+
+Background: #F5F7F8
+
+Rounded cards, shadows
+
+Big, clear typography for farmers
+
+6. Frontend Structure & Screens
+
+Use a single-page app with bottom tab-like navigation via React state.
+
+Tabs (and components):
+
+Home → HomeScreen.jsx
+
+Diagnose → DiagnoseScreen.jsx
+
+Disease Packs → DiseasePacksScreen.jsx (NEW)
+
+Chat → ChatScreen.jsx
+
+Profile → ProfileScreen.jsx
+
+Implement a BottomNav.jsx component with buttons that set activeTab.
+
+Screen A: Home
+
+Heading: Hello, Farmer! 👋
+
+Subtext: What do you want to do today?
+
+Big primary card:
+
+Title: Diagnose Leaf Disease
+
+Subtitle: Upload a leaf photo and let LeafSense AI analyze it.
+
+Clicking it switches to Diagnose tab.
+
+Smaller cards/tiles for:
+
+Open Disease Packs
+
+Go to Chat
+
+View Last Scan
+
+Screen B: Diagnose
+
+Title: Diagnose Leaf Disease
+
+Text: Capture or upload a leaf photo to analyze with LeafSense AI.
+
+File input (for now)
+
+Button: Predict Disease
+
+Use fetch to call POST http://localhost:8000/predict with FormData.
+
+While waiting: show Predicting....
+
+After response:
+
+Show disease name + confidence in a card.
+
+Optionally show basic actions text (map disease → message in frontend or use data from packs later).
+
+Store last predicted disease name in state (to be used in Chat screen).
+
+Screen C: Disease Packs (NEW Feature)
+
+This screen uses the online predetermined disease packs from backend.
+
+On mount, call GET http://localhost:8000/disease-packs.
+
+Show:
+
+A list of crops as expandable cards or sections. Example:
+
+Tomato
+
+Early Blight
+
+Symptoms: …
+
+Treatment: …
+
+Prevention: …
+
+Late Blight
+
+Potato
+
+Black Scurf
+
+and so on.
+
+Each disease can be displayed as a card with:
+
+Disease Name
+
+Symptoms
+
+Treatment
+
+Prevention
+
+This demonstrates the “online knowledge” feature which farmers can browse even without scanning.
+
+Screen D: Chat (AI Chatbox)
+
+Heading: Ask LeafSense
+
+Chat bubble interface:
+
+Left: AI messages (green background)
+
+Right: user messages
+
+Input + send button at bottom.
+
+Logic:
+
+Keep a messages array in state.
+
+On send:
+
+Push user message.
+
+Call POST /chat with:
+
+disease: last predicted disease (or "unknown")
+
+question: user input
+
+Append AI response as a left bubble.
+
+Show temporary “LeafSense is thinking…” while waiting.
+
+Screen E: Profile
+
+Simple static screen:
+
+Title: Your Profile
+
+Display:
+
+Farmer Name (placeholder)
+
+Preferred Language: English (placeholder)
+
+App Version: 1.0.0
+
+Simple info section for “About LeafSense AI”.
+
+7. API Helper (frontend/src/api.js)
+
+Create a small helper:
+
+const API_BASE = "http://localhost:8000";
+
+export async function predictDisease(file) { ... }
+
+export async function askChat(disease, question) { ... }
+
+export async function fetchDiseasePacks() { ... }
+
+
+Use fetchDiseasePacks in DiseasePacksScreen.jsx.
+
+8. README
+
+Generate a README.md that clearly explains:
+
+What LeafSense AI does.
+
+How to train or simulate the CNN model.
+
+How to run the backend in Replit:
+
+cd backend
+
+pip install -r requirements.txt
+
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+How to run the frontend:
+
+cd frontend
+
+npm install
+
+npm run dev
+
+How to test:
+
+Open frontend dev URL.
+
+Use Diagnose tab to upload image and get prediction.
+
+Use Disease Packs tab to view online disease information.
+
+Use Chat tab to ask questions about the prediction.
+
+9. Output Requirements
+
+In your response, provide:
+
+The folder structure.
+
+Full backend code:
+
+backend/main.py
+
+backend/model_loader.py (if separated)
+
+backend/ml/train_cnn.py (training script)
+
+backend/disease_packs.json (sample data)
+
+backend/requirements.txt
+
+Full frontend code:
+
+frontend/package.json
+
+frontend/index.html (if needed for Vite)
+
+frontend/src/main.jsx
+
+frontend/src/App.jsx
+
+frontend/src/api.js
+
+Components: BottomNav.jsx, HomeScreen.jsx, DiagnoseScreen.jsx, DiseasePacksScreen.jsx, ChatScreen.jsx, ProfileScreen.jsx
+
+A clear README.md.
+
+Make everything consistent and runnable in a Replit environment with minimal tweaks. Focus on clean code, clear structure, professional mobile-first UI/UX, and the new online disease packs feature.
+
+Generate all code now.

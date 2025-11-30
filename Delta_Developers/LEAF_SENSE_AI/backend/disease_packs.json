@@ -1,0 +1,67 @@
+{
+  "packs": [
+    {
+      "crop": "Tomato",
+      "diseases": [
+        {
+          "name": "Early Blight",
+          "symptoms": "Dark spots with concentric rings on older leaves, yellowing around affected areas",
+          "treatment": "Use copper-based fungicides, remove infected leaves, ensure good air circulation",
+          "prevention": "Crop rotation, avoid overhead irrigation, mulch soil to prevent spore splash"
+        },
+        {
+          "name": "Late Blight",
+          "symptoms": "Water-soaked lesions on leaves and stems, fuzzy white growth under leaves, rapid plant collapse",
+          "treatment": "Fungicide spray with mancozeb or chlorothalonil, remove affected plants immediately",
+          "prevention": "Use resistant varieties, avoid waterlogged conditions, improve ventilation"
+        },
+        {
+          "name": "Septoria Leaf Spot",
+          "symptoms": "Small circular spots with dark borders and gray centers, tiny black dots in center",
+          "treatment": "Prune infected leaves, apply copper or sulfur fungicides",
+          "prevention": "Stake plants for air flow, avoid wetting foliage, sterilize tools"
+        }
+      ]
+    },
+    {
+      "crop": "Potato",
+      "diseases": [
+        {
+          "name": "Late Blight",
+          "symptoms": "Water-soaked spots on leaves, white mold on undersides, brown rot in tubers",
+          "treatment": "Remove infected plants, apply fungicides containing chlorothalonil or mancozeb",
+          "prevention": "Plant resistant varieties, avoid overhead watering, ensure good drainage"
+        },
+        {
+          "name": "Early Blight",
+          "symptoms": "Small circular lesions with concentric rings on lower leaves",
+          "treatment": "Remove lower leaves, apply fungicide at first sign of disease",
+          "prevention": "Crop rotation, adequate spacing, avoid excess nitrogen"
+        },
+        {
+          "name": "Black Scurf",
+          "symptoms": "Black crust-like spots on tuber surface, doesn't affect flesh quality",
+          "treatment": "Use certified disease-free seed potatoes, treat seed pieces with fungicide",
+          "prevention": "Crop rotation, proper soil drainage, seed piece treatment"
+        }
+      ]
+    },
+    {
+      "crop": "Rice",
+      "diseases": [
+        {
+          "name": "Leaf Blast",
+          "symptoms": "Diamond-shaped lesions with gray center and brown border on leaves",
+          "treatment": "Apply fungicides like tricyclazole, use resistant varieties",
+          "prevention": "Avoid excessive nitrogen, balanced fertilization, good water management"
+        },
+        {
+          "name": "Brown Spot",
+          "symptoms": "Small circular to irregular brown spots with darker borders on leaves",
+          "treatment": "Apply carbendazim or mancozeb fungicides",
+          "prevention": "Use certified seeds, proper spacing, avoid excess nitrogen"
+        }
+      ]
+    }
+  ]
+}
