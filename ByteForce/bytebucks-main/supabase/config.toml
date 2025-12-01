@@ -1,0 +1,19 @@
+project_id = "cipzdqpommgmwdhqnlmx"
+
+[functions.send-otp]
+verify_jwt = false
+
+[functions.verify-otp]
+verify_jwt = false
+
+[functions.create-payment]
+verify_jwt = false
+
+[functions.send-order-email]
+verify_jwt = false
+
+[functions.suggest-nft-price]
+verify_jwt = false
+
+[functions.nft-assistant]
+verify_jwt = false

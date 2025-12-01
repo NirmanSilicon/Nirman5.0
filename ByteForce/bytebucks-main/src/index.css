@@ -1,0 +1,331 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ByteBucks Elegant Dark Theme - Classy & Editorial */
+    --background: 240 10% 4%;
+    --foreground: 0 0% 95%;
+
+    --card: 240 10% 6%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 240 10% 6%;
+    --popover-foreground: 0 0% 95%;
+
+    /* Royal Purple Primary */
+    --primary: 270 70% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Soft Lavender Secondary */
+    --secondary: 280 40% 50%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Muted Neutrals */
+    --muted: 240 10% 15%;
+    --muted-foreground: 240 5% 55%;
+
+    /* Warm Accent */
+    --accent: 270 60% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Status Colors */
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 160 60% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 40 90% 55%;
+    --warning-foreground: 0 0% 10%;
+
+    --border: 240 10% 15%;
+    --input: 240 10% 10%;
+    --ring: 270 70% 60%;
+
+    --radius: 0.5rem;
+
+    /* Elegant Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(270 70% 60%), hsl(280 60% 50%));
+    --gradient-subtle: linear-gradient(180deg, hsl(240 10% 6%) 0%, hsl(240 10% 4%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(240 10% 8%) 0%, hsl(240 10% 5%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(270 70% 55%), hsl(300 50% 45%));
+
+    /* Refined Shadows */
+    --shadow-card: 0 4px 20px -4px rgba(0, 0, 0, 0.4);
+    --shadow-soft: 0 10px 40px -10px hsl(270 70% 60% / 0.15);
+    --shadow-hover: 0 20px 50px -15px hsl(270 70% 60% / 0.25);
+
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Sidebar */
+    --sidebar-background: 240 10% 5%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 270 70% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 10% 12%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 240 10% 15%;
+    --sidebar-ring: 270 70% 60%;
+  }
+
+  .light {
+    /* ByteBucks Light Theme */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 4%;
+
+    --card: 0 0% 98%;
+    --card-foreground: 240 10% 4%;
+
+    --popover: 0 0% 98%;
+    --popover-foreground: 240 10% 4%;
+
+    /* Primary color remains the same */
+    --primary: 270 70% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary color remains the same */
+    --secondary: 280 40% 50%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Muted Neutrals for light mode */
+    --muted: 0 0% 95%;
+    --muted-foreground: 240 5% 45%;
+
+    /* Accent color remains the same */
+    --accent: 270 60% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Status Colors */
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 160 60% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 40 90% 55%;
+    --warning-foreground: 0 0% 10%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 92%;
+    --ring: 270 70% 60%;
+
+    /* Sidebar for light mode */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 10% 4%;
+    --sidebar-primary: 270 70% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 92%;
+    --sidebar-accent-foreground: 240 10% 4%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 270 70% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', 'Georgia', serif;
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer utilities {
+  /* Elegant Glass morphism */
+  .glass {
+    @apply bg-card/60 backdrop-blur-xl border border-border/50;
+  }
+
+  .glass-strong {
+    @apply bg-card/80 backdrop-blur-2xl border border-border/60;
+  }
+
+  /* Subtle glow effects */
+  .glow-primary {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .glow-hover {
+    box-shadow: var(--shadow-hover);
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+
+  .text-gradient-accent {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-accent);
+  }
+
+  /* Elegant underline animation */
+  .link-underline {
+    position: relative;
+  }
+
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: hsl(var(--primary));
+    transition: width var(--transition-base);
+  }
+
+  .link-underline:hover::after {
+    width: 100%;
+  }
+
+  /* Subtle shine animation */
+  @keyframes subtle-shine {
+    0% { transform: translateX(-100%); opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { transform: translateX(100%); opacity: 0; }
+  }
+
+  .shine-hover {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shine-hover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: translateX(-100%);
+  }
+
+  .shine-hover:hover::after {
+    animation: subtle-shine 0.8s ease-in-out;
+  }
+
+  /* Fade animations */
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.6s ease-out forwards;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+
+  /* Float animation - subtle */
+  @keyframes gentle-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-float {
+    animation: gentle-float 6s ease-in-out infinite;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/40;
+  }
+}
+
+@layer components {
+  /* Elegant NFT Card */
+  .nft-card {
+    @apply relative overflow-hidden rounded-xl transition-all duration-500;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .nft-card:hover {
+    @apply -translate-y-1;
+    border-color: hsl(var(--primary) / 0.3);
+    box-shadow: var(--shadow-hover);
+  }
+
+  /* Badge styles - Refined */
+  .badge-verified {
+    @apply bg-primary/15 text-primary border border-primary/30;
+  }
+
+  .badge-trending {
+    @apply bg-accent/15 text-accent border border-accent/30;
+  }
+
+  .badge-limited {
+    @apply bg-secondary/15 text-secondary border border-secondary/30;
+  }
+
+  .badge-lucky {
+    @apply bg-success/15 text-success border border-success/30;
+  }
+
+  /* Stats card - Elegant */
+  .stats-card {
+    @apply glass rounded-xl p-6 transition-all duration-500;
+  }
+
+  .stats-card:hover {
+    @apply border-primary/30;
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* Search input - Clean */
+  .search-input {
+    @apply glass rounded-full px-6 py-3 w-full outline-none;
+    @apply focus:ring-2 focus:ring-primary/30 focus:border-primary/30;
+    @apply placeholder:text-muted-foreground/50;
+  }
+
+  /* Tag/Category pill */
+  .tag-pill {
+    @apply inline-flex items-center px-3 py-1 text-xs font-medium rounded-md;
+    @apply bg-primary/10 text-primary border border-primary/20;
+    @apply transition-colors hover:bg-primary/20;
+  }
+
+  /* Divider with subtle gradient */
+  .divider-gradient {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(var(--border)), transparent);
+  }
+}
