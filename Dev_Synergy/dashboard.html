@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Road Guardian — Real-Time Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- MQTT.js -->
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:#f5f7fa; --card:#ffffff; --muted:#4b5563;
+      --accent:#2563eb; --danger:#dc2626; --success:#16a34a;
+    }
+    body {
+      margin:0;
+      font-family: Inter, system-ui;
+      background: var(--bg);
+      color: var(--muted);
+    }
+    header {
+      background: var(--card);
+      padding: 12px 18px;
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .brand { font-size:22px;font-weight:800;color:var(--accent); }
+    .btn { padding:8px 14px;border:0;border-radius:8px;font-weight:700;cursor:pointer }
+    .btn.primary { background: var(--accent); color:white; }
+    .container { padding:20px; }
+
+    .top-grid {
+      display:grid;
+      grid-template-columns:repeat(6, 1fr);
+      gap:15px;
+    }
+    .card {
+      background:var(--card);
+      padding:16px;
+      border-radius:12px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.05);
+    }
+    .label { font-size:14px;font-weight:700;opacity:0.7 }
+    .value { font-size:22px;font-weight:800;margin-top:6px }
+
+    .main-grid {
+      display:grid;
+      grid-template-columns: 2fr 1fr;
+      gap:18px;
+      margin-top:18px;
+    }
+
+    #eventFeed { max-height:360px;overflow-y:auto;list-style:none;padding:0;margin:0; }
+    .feed-item {
+      padding:10px;border-radius:8px;margin-bottom:10px;background:#f1f5f9;
+    }
+    .feed-item.critical { border-left:5px solid var(--danger); }
+    .feed-item.info { border-left:5px solid var(--accent); }
+    .feed-item.normal { border-left:5px solid var(--success); }
+    .feed-time { font-size:12px;opacity:0.7; }
+    .feed-text { font-weight:800;margin-top:4px; }
+
+    #map { width:100%; height:350px;border-radius:8px; }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">Road Guardian Dashboard</div>
+  <button id="connectBtn" class="btn primary">Connect MQTT</button>
+</header>
+
+<div class="container">
+
+  <!-- TOP METRIC CARDS -->
+  <div class="top-grid">
+
+    <div class="card">
+      <div class="label">Speed</div>
+      <div id="speed" class="value"><strong>0</strong> km/h</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Temperature</div>
+      <div id="temperature" class="value"><strong>--</strong> °C</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Humidity</div>
+      <div id="humidity" class="value"><strong>--</strong> %</div>
+    </div>
+
+    <div class="card">
+      <div class="label">Call Status</div>
+      <div id="callStatus" class="value"><strong>--</strong></div>
+    </div>
+
+    <div class="card">
+      <div class="label">SMS Status</div>
+      <div id="smsStatus" class="value"><strong>--</strong></div>
+    </div>
+
+    <div class="card">
+      <div class="label">Critical Events</div>
+      <div id="criticalEvents" class="value"><strong>0</strong></div>
+    </div>
+
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="main-grid">
+
+    <!-- LEFT -->
+    <div>
+      <div class="card">
+        <h3>MPU Acceleration (XYZ)</h3>
+        <canvas id="accChart"></canvas>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h3>Accident Probability</h3>
+        <canvas id="anomalyChart"></canvas>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div>
+      <div class="card">
+        <h3>Vehicle Location</h3>
+        <div id="map"></div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h3>Live Event Feed</h3>
+        <ul id="eventFeed"></ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* MQTT broker with your PI IP */
+const MQTT_BROKER = "ws://10.179.161.174:9001";
+
+const MQTT_TOPIC = "roadguardian/data";
+
+/* UI references */
+const speedEl = document.getElementById("speed");
+const tempEl = document.getElementById("temperature");
+const humEl = document.getElementById("humidity");
+const callEl = document.getElementById("callStatus");
+const smsEl = document.getElementById("smsStatus");
+const criticalEl = document.getElementById("criticalEvents");
+const eventFeed = document.getElementById("eventFeed");
+
+/* MAP SETUP */
+const map = L.map("map").setView([20.3507, 85.8063], 15);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+const carIcon = L.icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/743/743131.png",
+  iconSize: [36,36],
+  iconAnchor: [18,18]
+});
+const marker = L.marker([20.3507, 85.8063], { icon: carIcon }).addTo(map);
+
+/* CHARTS */
+const accChart = new Chart(document.getElementById("accChart").getContext("2d"), {
+  type: "line",
+  data: { labels: [], datasets:[
+    { label:"X", data:[], borderColor:"#2563eb", tension:0.4 },
+    { label:"Y", data:[], borderColor:"#16a34a", tension:0.4 },
+    { label:"Z", data:[], borderColor:"#f59e0b", tension:0.4 }
+  ]},
+  options:{ animation:false, responsive:true, scales:{ x:{display:false} } }
+});
+
+const anomalyChart = new Chart(document.getElementById("anomalyChart").getContext("2d"), {
+  type:"line",
+  data:{ labels:[], datasets:[{label:"Probability", data:[], borderColor:"#8b5cf6", tension:0.4}] },
+  options:{ animation:false, responsive:true, scales:{ x:{display:false}, y:{min:0,max:1} } }
+});
+
+/* EVENT LOGGING */
+function logFeed(type, text){
+  const li = document.createElement("li");
+  li.className = "feed-item " + type;
+  li.innerHTML = `
+    <div class="feed-time">${new Date().toLocaleTimeString()}</div>
+    <div class="feed-text">${text}</div>
+  `;
+  eventFeed.prepend(li);
+}
+
+/* TELEMETRY HANDLER */
+function handleData(d){
+  speedEl.innerHTML = `<strong>${d.speed.toFixed(1)}</strong> km/h`;
+  tempEl.innerHTML = `<strong>${d.temperature.toFixed(1)}</strong>`;
+  humEl.innerHTML = `<strong>${d.humidity.toFixed(1)}</strong>`;
+
+  callEl.innerHTML = `<strong>${d.call_status || "--"}</strong>`;
+  smsEl.innerHTML = `<strong>${d.sms_status || "--"}</strong>`;
+
+  /* MPU Graph */
+  accChart.data.labels.push("");
+  accChart.data.datasets[0].data.push(d.g.x);
+  accChart.data.datasets[1].data.push(d.g.y);
+  accChart.data.datasets[2].data.push(d.g.z);
+
+  if(accChart.data.labels.length > 150){
+    accChart.data.labels.shift();
+    accChart.data.datasets.forEach(ds => ds.data.shift());
+  }
+  accChart.update("none");
+
+  /* Probability graph */
+  anomalyChart.data.labels.push("");
+  anomalyChart.data.datasets[0].data.push(d.accident_prob);
+
+  if(anomalyChart.data.labels.length > 150){
+    anomalyChart.data.labels.shift();
+    anomalyChart.data.datasets[0].data.shift();
+  }
+  anomalyChart.update("none");
+
+  /* Map */
+  marker.setLatLng([d.lat, d.lng]);
+
+  /* Live feed logs */
+  if(d.event_type === "ACCIDENT"){
+    logFeed("critical", `Accident detected. Probability=${d.accident_prob.toFixed(3)}`);
+    criticalEl.innerHTML = `<strong>${parseInt(criticalEl.innerText)+1}</strong>`;
+  }
+
+  if(d.call_status === "CALLING"){
+    logFeed("info", "Emergency call initiated");
+  }
+
+  if(d.call_status === "ENDED"){
+    logFeed("info", "Call ended");
+  }
+
+  if(d.sms_status === "SENT"){
+    logFeed("info", "SMS sent successfully");
+  }
+}
+
+/* MQTT CONNECT */
+document.getElementById("connectBtn").onclick = () => {
+  logFeed("info", "Connecting to MQTT broker...");
+
+  const client = mqtt.connect(MQTT_BROKER);
+
+  client.on("connect", () => {
+    logFeed("info", "Connected to MQTT!");
+    client.subscribe(MQTT_TOPIC);
+  });
+
+  client.on("message", (topic, msg) => {
+    const data = JSON.parse(msg.toString());
+    handleData(data);
+  });
+
+  client.on("error", err => {
+    logFeed("critical", "MQTT Error: " + err.message);
+  });
+};
+</script>
+
+</body>
+</html>

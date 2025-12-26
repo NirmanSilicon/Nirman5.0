@@ -1,0 +1,8 @@
+pandas
+numpy
+joblib
+requests
+smbus2
+pyserial
+tflite-runtime
+scikit-learn
